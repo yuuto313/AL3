@@ -62,6 +62,7 @@ void GameScene::Update() {
 		audio_->StopWave(voiceHandle_);
 	}
 
+
 #ifdef _DEBUG
 
 	//ウィンドウの作成
