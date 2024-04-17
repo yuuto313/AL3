@@ -3,12 +3,14 @@
 #include <cassert>
 #include "ImGuiManager.h"
 #include "PrimitiveDrawer.h"
+#include "AxisIndicator.h"
 
 GameScene::GameScene() {}
 
 GameScene::~GameScene() {
 	delete sprite_;
 	delete model_;
+	delete debugCamera_;
 }
 
 void GameScene::Initialize() {
@@ -45,7 +47,10 @@ void GameScene::Initialize() {
 	//ライン描画が参照するビュープロジェクションを指定する（アドレス渡し）
 	PrimitiveDrawer::GetInstance()->SetViewProjection(&viewProjection_);
 	
+	debugCamera_ = new DebugCamera(1280,720);
 
+	AxisIndicator::GetInstance()->SetVisible(true);
+	AxisIndicator::GetInstance()->SetTargetViewProjection(&debugCamera_->GetViewProjection());
 }
 
 void GameScene::Update() {
@@ -78,6 +83,8 @@ void GameScene::Update() {
 	ImGui::End();
 
 #endif
+	//デバッグカメラの更新
+	debugCamera_->Update();
 
 }
 
@@ -110,7 +117,7 @@ void GameScene::Draw() {
 
 	
     //3Dモデル描画
-	model_->Draw(worldTransform_, viewProjection_, textureHandle_);
+	model_->Draw(worldTransform_, debugCamera_->GetViewProjection(), textureHandle_);
 
 	// 3Dオブジェクト描画後処理
 	Model::PostDraw();
