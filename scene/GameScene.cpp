@@ -5,9 +5,11 @@
 #include "PrimitiveDrawer.h"
 #include "AxisIndicator.h"
 
+
 GameScene::GameScene() {}
 
 GameScene::~GameScene() {
+	//解放
 	delete sprite_;
 	delete model_;
 	delete debugCamera_;
@@ -19,29 +21,13 @@ void GameScene::Initialize() {
 	input_ = Input::GetInstance();
 	audio_ = Audio::GetInstance();
 
-	//---------------------------------------------
-	//01_03の変更。サウンドやテクスチャの追加と起動。
-	//---------------------------------------------
-
 	//ファイル名を指定してテクスチャを読み込む
 	textureHandle_ = TextureManager::Load("sample.png");
 
+	//3Dモデルデータの生成
 	sprite_ = Sprite::Create(textureHandle_, {100, 50});
 
-	//サウンドデータの読み込み
-	soundDataHandle_ = audio_->LoadWave("fanfare.wav");
-	//音声再生
-	audio_->PlayWave(soundDataHandle_);
-
-	//音声再生をループ
-	voiceHandle_ = audio_->PlayWave(soundDataHandle_,true);
-
-	// 3Dモデルの生成
-	model_ = Model::Create();
-
-	// ワールドトランスフォームの初期化
-	worldTransform_.Initialize();
-	// ビュープロジェクションの初期化
+	//ビュープロジェクションの初期化
 	viewProjection_.Initialize();
 
 	//ライン描画が参照するビュープロジェクションを指定する（アドレス渡し）
@@ -122,8 +108,6 @@ void GameScene::Draw() {
 	// 3Dオブジェクト描画後処理
 	Model::PostDraw();
 
-	//ラインを描画する{Vector3 始点座標},{Vector3 終点座標},{Vector4 RGBA指定}
-	PrimitiveDrawer::GetInstance()->DrawLine3d({0, 0, 0}, {0, 10, 0}, {1.0f, 0.0f, 0.0f, 1.0f});
 
 #pragma endregion
 
@@ -135,8 +119,6 @@ void GameScene::Draw() {
 	/// ここに前景スプライトの描画処理を追加できる
 	/// </summary>
 
-	//スプライトの描画
-	//sprite_->Draw();
 
 	// スプライト描画後処理
 	Sprite::PostDraw();
