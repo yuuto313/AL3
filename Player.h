@@ -1,6 +1,7 @@
 #include "Model.h"
 #include "WorldTransform.h"
 #include "cassert"
+#include "DebugCamera.h"
 
 #pragma once
 /// <summary>
@@ -8,6 +9,9 @@
 /// </summary>
 class Player {
 public:
+
+	Player();
+	~Player();
 	/// <summary>
 	/// 初期化
 	/// </summary>
@@ -18,6 +22,8 @@ public:
 	void Update();
 	void Draw();
 
+	
+
 private:
 	//ワールド変換データ
 	WorldTransform worldTransform_;
@@ -26,4 +32,9 @@ private:
 	//テクスチャハンドル
 	uint32_t textureHandle_ = 0u;
 	ViewProjection* viewProjection_ = nullptr;
+
+	// 一応追加
+	// デバッグカメラ
+	DebugCamera* debugCamera_ = nullptr;
+
 };

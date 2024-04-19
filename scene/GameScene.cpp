@@ -32,7 +32,7 @@ void GameScene::Initialize() {
 }
 
 void GameScene::Update() {
-//自キャラの更新
+    //自キャラの更新
 	player_->Update();
 }
 	
