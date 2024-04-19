@@ -25,10 +25,21 @@ void GameScene::Initialize() {
 	textureHandle_ = TextureManager::Load("sample.png");
 
 	//3Dモデルデータの生成
+	model_ = Model::Create();
+
+	//スプライト
 	sprite_ = Sprite::Create(textureHandle_, {100, 50});
 
+	//ワールドトランスフォームの初期化
+	worldTransform_.Initialize();
 	//ビュープロジェクションの初期化
 	viewProjection_.Initialize();
+
+	//サウンドデータ読み込み
+	soundDataHandle_ = audio_->LoadWave("fanfare.wav");
+
+	//音声再生
+	voiceHandle_ = audio_ -> PlayWave(soundDataHandle_,true);
 
 	//ライン描画が参照するビュープロジェクションを指定する（アドレス渡し）
 	PrimitiveDrawer::GetInstance()->SetViewProjection(&viewProjection_);
@@ -48,6 +59,7 @@ void GameScene::Update() {
 	// 移動した座標をスプライトに反映
 	sprite_->SetPosition(position);
 
+	//スペースキーを押した瞬間
 	if (input_->TriggerKey(DIK_SPACE)) {
 		//音声停止
 		audio_->StopWave(voiceHandle_);
@@ -108,6 +120,10 @@ void GameScene::Draw() {
 	// 3Dオブジェクト描画後処理
 	Model::PostDraw();
 
+	//ライン描画
+	//DrawLine3D（始点座標、終点座標、色（RGB)）
+	PrimitiveDrawer::GetInstance()->DrawLine3d({0, 0, 0}, {0, 10, 0}, {1.0f, 0.0f, 0.0f, 1.0f});
+
 
 #pragma endregion
 
@@ -119,6 +135,7 @@ void GameScene::Draw() {
 	/// ここに前景スプライトの描画処理を追加できる
 	/// </summary>
 
+	sprite_->Draw();
 
 	// スプライト描画後処理
 	Sprite::PostDraw();
