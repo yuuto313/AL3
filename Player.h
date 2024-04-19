@@ -1,12 +1,20 @@
 #include "Model.h"
 #include "WorldTransform.h"
+#include "cassert"
+
 #pragma once
 /// <summary>
 /// 自キャラ
 /// </summary>
 class Player {
 public:
-	void Init();
+	/// <summary>
+	/// 初期化
+	/// </summary>
+	/// <param name="model">モデル</param>
+	/// <param name="textureHandle">テクスチャハンドル</param>
+	/// <param name="viewProjection">ビュープロジェクション</param>
+	void Init(Model* model,uint32_t textureHandle,ViewProjection* viewProjection);
 	void Update();
 	void Draw();
 
@@ -17,4 +25,5 @@ private:
 	Model* model_ = nullptr;
 	//テクスチャハンドル
 	uint32_t textureHandle_ = 0u;
+	ViewProjection* viewProjection_ = nullptr;
 };

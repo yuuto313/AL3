@@ -1,14 +1,13 @@
 #include "GameScene.h"
 #include "TextureManager.h"
 #include <cassert>
-#include "ImGuiManager.h"
-#include "PrimitiveDrawer.h"
 
 GameScene::GameScene() {}
 
 GameScene::~GameScene() {
-	delete sprite_;
+	//解放
 	delete model_;
+	delete player_;
 }
 
 void GameScene::Initialize() {
@@ -19,14 +18,23 @@ void GameScene::Initialize() {
 	//ファイル名を指定してテクスチャを読み込む
 	textureHandle_ = TextureManager::Load("sample.png");
 
-	sprite_ = Sprite::Create(textureHandle_, {100, 50});
+	//3Dモデルデータの生成
+	model_ = Model::Create();
 
-	// ビュープロジェクションの初期化
+	//ビュープロジェクションの初期化
 	viewProjection_.Initialize();
+
+	//自キャラの生成
+	player_ = new Player();
+	//自キャラの初期化
+	player_->Init(model_,textureHandle_,&viewProjection_);
 
 }
 
-void GameScene::Update() {}
+void GameScene::Update() {
+//自キャラの更新
+	player_->Update();
+}
 	
 
 void GameScene::Draw() {
@@ -55,6 +63,8 @@ void GameScene::Draw() {
 	/// <summary>
 	/// ここに3Dオブジェクトの描画処理を追加できる
 	/// </summary>
+
+	player_->Draw();
 
 	// 3Dオブジェクト描画後処理
 	Model::PostDraw();

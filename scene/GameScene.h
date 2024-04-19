@@ -1,12 +1,10 @@
 #pragma once
-
-#include "Audio.h"
 #include "DirectXCommon.h"
 #include "Input.h"
 #include "Model.h"
 #include "Sprite.h"
 #include "ViewProjection.h"
-#include "WorldTransform.h"
+#include "Player.h"
 
 /// <summary>
 /// ゲームシーン
@@ -42,27 +40,17 @@ public: // メンバ関数
 private: // メンバ変数
 	DirectXCommon* dxCommon_ = nullptr;
 	Input* input_ = nullptr;
-	Audio* audio_ = nullptr;
+
+	//自キャラ
+	Player* player_ = nullptr;
 	
 	//テクスチャハンドル
 	uint32_t textureHandle_ = 0;
-	//スプライト
-	Sprite* sprite_ = nullptr;
 	// 3Dモデル
 	Model* model_ = nullptr;
-	//サウンドデータハンドル
-	uint32_t soundDataHandle_ = 0;
-	//音声再生ハンドル
-	uint32_t voiceHandle_ = 0;
-
-	// ワールドトランスフォーム
-	WorldTransform worldTransform_;
-	// ビュープロジェクション
-	ViewProjection viewProjection_;
-
-	//ImGuiで値を入力する変数
-	float inputFloat3[3] = {0, 0, 0};
 	
+	//ビュープロジェクション
+	ViewProjection viewProjection_;
 	/// <summary>
 	/// ゲームシーン用
 	/// </summary>
