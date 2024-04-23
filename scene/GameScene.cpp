@@ -6,8 +6,13 @@ GameScene::GameScene() {}
 
 GameScene::~GameScene() {
 	//解放
+
+	//02_01
+
 	delete playerModel_;
 	delete player_;
+
+	//02_02
 
 	delete dataModel_;
 	for (WorldTransform* worldTransformBlock : worldTransformBlocks_) {
@@ -20,6 +25,8 @@ void GameScene::Initialize() {
 
 	dxCommon_ = DirectXCommon::GetInstance();
 	input_ = Input::GetInstance();
+
+	//02_01
 
 	//ファイル名を指定してテクスチャを読み込む
 	textureHandle_ = TextureManager::Load("sample.png");
@@ -35,6 +42,8 @@ void GameScene::Initialize() {
 	//自キャラの初期化
 	player_->Init(playerModel_,textureHandle_,&viewProjection_);
 
+	//02_02
+
 	dataModel_ = Model::Create();
 
 	// 要素数
@@ -48,15 +57,20 @@ void GameScene::Initialize() {
 	for (uint32_t i = 0; i < kNumBlockHorizontal; ++i) {
 		worldTransformBlocks_[i] = new WorldTransform();
 		worldTransformBlocks_[i]->Initialize();
-		worldTransformBlocks_[i]->translation_.x = kBlockWidth * 1;
+		worldTransformBlocks_[i]->translation_.x = kBlockWidth * i;
 		worldTransformBlocks_[i]->translation_.y = 0.0f;
 	}
 
 }
 
 void GameScene::Update() {
+	
+	//02_01
+
     //自キャラの更新
 	player_->Update();
+
+	//02_02
 
 	// ブロックの更新
 	for (WorldTransform* worldTransformBlock : worldTransformBlocks_) {
@@ -99,6 +113,7 @@ void GameScene::Draw() {
 	/// </summary>
 
 	//player_->Draw();
+
 	for (WorldTransform* worldTransformBlock : worldTransformBlocks_) {
 		dataModel_->Draw(*worldTransformBlock, viewProjection_);
 	}
