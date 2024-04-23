@@ -62,7 +62,8 @@ private: // メンバ変数
 
 	// ブロック用のワールドトランスフォーム
 	// 複数並べるように配列にする
-	std::vector<WorldTransform*> worldTransformBlocks_;
+	//std::vectorを重ねることで二次元配列となる
+	std::vector<std::vector<WorldTransform*>> worldTransformBlocks_;
 
 
 	/// <summary>
