@@ -112,6 +112,8 @@ void GameScene::Update() {
 	if (isDebugCameraActive_) {
 		// デバッグカメラの更新
 		debugCamera_->Update();
+
+		//未完
 		/*viewProjection_.matView;
 		viewProjection_.matProjection;*/
 		
