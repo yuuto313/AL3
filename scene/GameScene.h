@@ -7,6 +7,7 @@
 #include "Player.h"
 #include "MyMath.h"
 #include "vector"
+#include "DebugCamera.h"
 
 /// <summary>
 /// ゲームシーン
@@ -64,6 +65,12 @@ private: // メンバ変数
 	// 複数並べるように配列にする
 	//std::vectorを重ねることで二次元配列となる
 	std::vector<std::vector<WorldTransform*>> worldTransformBlocks_;
+
+	//デバッグカメラの有効
+	bool isDebugCameraActive_ = false;
+
+	//デバッグカメラ
+	DebugCamera* debugCamera_ = nullptr;
 
 
 	/// <summary>
