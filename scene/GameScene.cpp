@@ -69,8 +69,7 @@ void GameScene::Initialize() {
 			worldTransformBlocks_[i][j] = new WorldTransform();
 			worldTransformBlocks_[i][j] ->Initialize();
 			worldTransformBlocks_[i][j] ->translation_.x = kBlockWidth * j;
-			worldTransformBlocks_[i][j] ->translation_.y = kBlockHeight * i;
-			
+			worldTransformBlocks_[i][j]->translation_.y = kBlockHeight * i;
 		}
 	}
 
@@ -80,30 +79,34 @@ void GameScene::Initialize() {
 }
 
 void GameScene::Update() {
-	
-	//02_01
 
-    //自キャラの更新
+	// 02_01
+
+	// 自キャラの更新
 	player_->Update();
 
-	//02_02
+	// 02_02
 
 	// ブロックの更新
 	for (std::vector<WorldTransform*>& worldTransformBlockLine : worldTransformBlocks_) {
 		for (WorldTransform* worldTransformBlock : worldTransformBlockLine) {
 			if (!worldTransformBlock)
 				continue;
-			    worldTransformBlock->matWorld_ = MakeAffineMatrix(worldTransformBlock->scale_, worldTransformBlock->rotation_, worldTransformBlock->translation_);
+			worldTransformBlock->matWorld_ = MakeAffineMatrix(worldTransformBlock->scale_, worldTransformBlock->rotation_, worldTransformBlock->translation_);
 
-			    // 定数バッファに転送する
-			    worldTransformBlock->TransferMatrix();
+			// 定数バッファに転送する
+			worldTransformBlock->TransferMatrix();
 		}
 	}
 
 #ifdef _DEBUG
 
 	if (input_->TriggerKey(DIK_SPACE)) {
-		isDebugCameraActive_ = true;	
+		if (isDebugCameraActive_) {
+			isDebugCameraActive_ = false;
+		} else {
+			isDebugCameraActive_ = true;
+		}
 	}
 
 #endif // _DEBUG
@@ -113,17 +116,17 @@ void GameScene::Update() {
 		// デバッグカメラの更新
 		debugCamera_->Update();
 
-		//未完
-		/*viewProjection_.matView;
-		viewProjection_.matProjection;*/
+		viewProjection_.matView = debugCamera_ -> GetViewProjection().matView;
+
+		viewProjection_.matProjection = debugCamera_ -> GetViewProjection().matProjection;
 		
 		// ビュープロジェクション行列の転送
 		viewProjection_.TransferMatrix();
-	} else {
+	} 
+	else {
 		//ビュープロジェクション行列の更新と転送
 		viewProjection_.UpdateMatrix();
 	}
-
 
 }
 	

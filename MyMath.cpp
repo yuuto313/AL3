@@ -25,6 +25,7 @@ Matrix4x4 MakeTranslateMatrix(const Vector3& translate) {
 	result.m[3][3] = 1;
 	return result;
 }
+
 // 拡縮
 Matrix4x4 MakeScaleMatrix(const Vector3& scale) {
 	Matrix4x4 result{};
@@ -69,6 +70,7 @@ Matrix4x4 MakeRotateZMatrix(float radian) {
 	result.m[3][3] = 1;
 	return result;
 }
+
 // アフィン変換
 Matrix4x4 MakeAffineMatrix(const Vector3& scale, const Vector3& rotate, const Vector3& translate) {
 
@@ -84,6 +86,7 @@ Matrix4x4 MakeAffineMatrix(const Vector3& scale, const Vector3& rotate, const Ve
 	Matrix4x4 worldMatrix = Multiply(scaleMatrix, Multiply(rotateXYZMatrix, translateMatrix));
 	return worldMatrix;
 }
+
 // 正射影行列
 Matrix4x4 MakeOrthographicMatrix(float left, float top, float right, float bottom, float nearClip, float farClip) {
 	Matrix4x4 result{};
