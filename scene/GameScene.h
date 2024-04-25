@@ -8,6 +8,7 @@
 #include "MyMath.h"
 #include "vector"
 #include "DebugCamera.h"
+#include "Skydome.h"
 
 /// <summary>
 /// ゲームシーン
@@ -71,6 +72,13 @@ private: // メンバ変数
 
 	//デバッグカメラ
 	DebugCamera* debugCamera_ = nullptr;
+
+	//02_03	
+	Skydome* skydome_ = nullptr;
+
+	//3Dモデル描画
+	Model* modelSkydome_ = nullptr;
+
 
 
 	/// <summary>

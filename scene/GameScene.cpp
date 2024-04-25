@@ -22,6 +22,10 @@ GameScene::~GameScene() {
 	}
 	worldTransformBlocks_.clear();
 	delete debugCamera_;
+
+	//02_03
+	delete skydome_;
+	delete modelSkydome_;
 }
 
 void GameScene::Initialize() {
@@ -75,7 +79,14 @@ void GameScene::Initialize() {
 
 	//デバッグカメラの生成
 	debugCamera_ = new DebugCamera(1280, 720);
+	
+	//02_03
+	
 
+	modelSkydome_ = Model::CreateFromOBJ("skydome", true);
+
+    skydome_ = new Skydome();
+	skydome_->Init(modelSkydome_,&viewProjection_);
 }
 
 void GameScene::Update() {
@@ -128,6 +139,9 @@ void GameScene::Update() {
 		viewProjection_.UpdateMatrix();
 	}
 
+	//02_03
+	skydome_->Update();
+
 }
 	
 
@@ -159,6 +173,9 @@ void GameScene::Draw() {
 	/// </summary>
 
 	//player_->Draw();
+	
+	// //3Dモデル描画
+	skydome_->Draw();
 
 	for (std::vector<WorldTransform*>& worldTransformBlockLine : worldTransformBlocks_) {
 		for (WorldTransform* worldTransformBlock : worldTransformBlockLine) {
@@ -167,6 +184,8 @@ void GameScene::Draw() {
 			    dataModel_->Draw(*worldTransformBlock, viewProjection_);
 		}
 	}
+
+	
 
 	// 3Dオブジェクト描画後処理
 	Model::PostDraw();
