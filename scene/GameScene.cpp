@@ -41,7 +41,11 @@ void GameScene::Initialize() {
 	//プレイヤー3Dモデルデータの生成
 	playerModel_ = Model::Create();
 
+
 	//ビュープロジェクションの初期化
+
+	//farZを適度に大きい値に変更する
+	//viewProjection_.farZ = 400.f;
 	viewProjection_.Initialize();
 
 	//自キャラの生成
@@ -172,10 +176,9 @@ void GameScene::Draw() {
 	/// ここに3Dオブジェクトの描画処理を追加できる
 	/// </summary>
 
-	//player_->Draw();
+	player_->Draw();
 	
-	// //3Dモデル描画
-	skydome_->Draw();
+	
 
 	for (std::vector<WorldTransform*>& worldTransformBlockLine : worldTransformBlocks_) {
 		for (WorldTransform* worldTransformBlock : worldTransformBlockLine) {
@@ -185,7 +188,8 @@ void GameScene::Draw() {
 		}
 	}
 
-	
+    //3Dモデル描画
+	skydome_->Draw();
 
 	// 3Dオブジェクト描画後処理
 	Model::PostDraw();

@@ -4,7 +4,7 @@
 
 Player::Player() {}
 
-Player::~Player() {delete debugCamera_;}
+Player::~Player() {}
 
 void Player::Init(Model* model, uint32_t textureHandle, ViewProjection* viewProjection) { 
 	//NULLポインタチェック
@@ -16,22 +16,15 @@ void Player::Init(Model* model, uint32_t textureHandle, ViewProjection* viewProj
 	//ワールド変換初期化
 	worldTransform_.Initialize();
 
-	// 一応追加
-	debugCamera_ = new DebugCamera(1280, 720);
-
 }
 
 void Player::Update() { 
 	//ワールド行列の転送
 	worldTransform_.TransferMatrix(); 
-
-	debugCamera_->Update();
-
 }
 
 void Player::Draw() { 
-	//model_->Draw(worldTransform_, *viewProjection_, textureHandle_); 
-	model_->Draw(worldTransform_, debugCamera_->GetViewProjection(), textureHandle_);
+	model_->Draw(worldTransform_, *viewProjection_, textureHandle_); 
 }
 
 
