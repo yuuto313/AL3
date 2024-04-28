@@ -63,6 +63,10 @@ void GameScene::Initialize() {
 	// ブロック一個分の横幅
 	const float kBlockWidth = 2.0f;
 	const float kBlockHeight = 2.0f;
+
+	const float kBlockWidthSpace = 2.0f;
+	const float kBlockHeightSpace = 2.0f;
+
 	// 要素数を変更する
 	//列数を設定（縦方向のブロック数）
 	worldTransformBlocks_.resize(kNumBlockVirtical);
@@ -76,8 +80,8 @@ void GameScene::Initialize() {
 		for (uint32_t j = 0; j < kNumBlockHorizontal; ++j) {
 			worldTransformBlocks_[i][j] = new WorldTransform();
 			worldTransformBlocks_[i][j] ->Initialize();
-			worldTransformBlocks_[i][j] ->translation_.x = kBlockWidth * j;
-			worldTransformBlocks_[i][j]->translation_.y = kBlockHeight * i;
+			worldTransformBlocks_[i][j] ->translation_.x = kBlockWidth * j * kBlockWidthSpace;
+			worldTransformBlocks_[i][j]->translation_.y = kBlockHeight * i * kBlockHeightSpace;
 		}
 	}
 
