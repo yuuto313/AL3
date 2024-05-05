@@ -1,14 +1,19 @@
 #pragma once
+
+#include "Player.h"
+#include "Skydome.h"
+#include "MapChipField.h"
+#include "MyMath.h"
+
 #include "DirectXCommon.h"
 #include "Input.h"
 #include "Model.h"
 #include "Sprite.h"
 #include "ViewProjection.h"
-#include "Player.h"
-#include "MyMath.h"
 #include "vector"
 #include "DebugCamera.h"
-#include "Skydome.h"
+
+
 
 /// <summary>
 /// ゲームシーン
@@ -41,6 +46,8 @@ public: // メンバ関数
 	/// </summary>
 	void Draw();
 
+	//表示ブロックの生成
+	void GenerateBlocks();
 
 private: // メンバ変数
 	DirectXCommon* dxCommon_ = nullptr;
@@ -79,7 +86,7 @@ private: // メンバ変数
 	//3Dモデル描画
 	Model* modelSkydome_ = nullptr;
 
-
+	MapChipField* mapChipField_;
 
 	/// <summary>
 	/// ゲームシーン用
