@@ -2,6 +2,7 @@
 #include <cstdint>
 #include "vector"
 #include "Vector3.h"
+#include <string>
 
 
 enum class MapChipType {

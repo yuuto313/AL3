@@ -99,7 +99,7 @@ void GameScene::Initialize() {
 	skydome_->Init(modelSkydome_,&viewProjection_);
 
 	mapChipField_ = new MapChipField;
-	mapChipField_->LoadMapChipCsv("Resources/AL3_.csv");
+	mapChipField_->LoadMapChipCsv("./Resources/AL3.csv");
 
 	GenerateBlocks();
 
@@ -243,7 +243,7 @@ void GameScene::GenerateBlocks() {
 		for (uint32_t j = 0; j < numBlockHorizontal; ++j) {
 			if (mapChipField_->GetMapChipTypeByIndex(j, i) == MapChipType::kBlock) {
 				WorldTransform* worldTransform = new WorldTransform();
-				worldTransformBlocks_[i][j]->Initialize();
+				worldTransform->Initialize();
 				worldTransformBlocks_[i][j] = worldTransform;
 				worldTransformBlocks_[i][j]->translation_ = mapChipField_->GetMapChipPositionByIndex(j, i);
 			}
