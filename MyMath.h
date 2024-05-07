@@ -1,8 +1,8 @@
 #pragma once
-
-#include <Vector3.h>
+#include<Vector3.h>
 #include <cmath>
 #include <Matrix4x4.h>
+#include <corecrt_math_defines.h>
 
 // 積
 Matrix4x4 Multiply(const Matrix4x4& m1, const Matrix4x4& m2);
@@ -26,5 +26,7 @@ Matrix4x4 MakeOrthographicMatrix(float left, float top, float right, float botto
 // ビューポート変換行列
 Matrix4x4 MakeViewportMatrix(float left, float top, float width, float height, float minDepth, float maxDepth);
 
-
+float easeInOutSine(float x) { 
+	return -(cosf((static_cast<float>(M_PI)) * x) - 1.f) / 2.f;
+}
 
