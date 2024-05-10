@@ -83,7 +83,7 @@ void Player::Update() {
 	}
 
 	// 旋回制御
-	if (turnTimer_ > 0.0f)
+	//if (turnTimer_ > 0.0f)
 	{
 		//旋回タイマーを1/60秒分カウントダウンする	
 		turnTimer_ -= 1.f / 60.f;
@@ -97,7 +97,8 @@ void Player::Update() {
 		// 状態の応じた角度を取得する
 		float destinationRotationY = destinationRotationYTable[static_cast<uint32_t>(lrDirection_)];
 		// 自キャラの角度の設定をする
-		worldTransform_.rotation_.y = easeInOutSine(turnTimer_);
+		worldTransform_.rotation_.y = destinationRotationY;
+		//worldTransform_.rotation_.y = easeInOutSine(turnTimer_);
 	}
 	//移動
 	worldTransform_.translation_ += velocity_;
