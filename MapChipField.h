@@ -4,7 +4,6 @@
 #include "Vector3.h"
 #include <string>
 
-
 enum class MapChipType {
 	kBlank, // 空白
 	kBlock, // ブロック

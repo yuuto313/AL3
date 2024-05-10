@@ -6,7 +6,6 @@
 #include <cassert>
 #include <iostream>
 
-
 namespace {
 
 std::map<std::string, MapChipType> mapChipTable = {
