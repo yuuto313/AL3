@@ -1,6 +1,10 @@
+#define NOMINMAX
 #include "Player.h"
 #include <numbers>
 #include <algorithm>
+
+//速度減衰が微妙
+//角度補間が未完成
 
 float easeInOutSine(float t) { return -0.5f * (cosf(static_cast<float>(M_PI)) * t) - 1.0f; }
 float easeInSine(float t) { return 1.0f - cosf((t * static_cast<float>(M_PI)) / 2.0f); }
@@ -29,59 +33,108 @@ void Player::Update() {
 	// ワールド行列の転送
 	worldTransform_.TransferMatrix();
 
+	// 着地フラグ
+	bool landing = false;
+
+	// 地面との当たり判定
+	// 降下中？
+	if (velocity_.y < 0) {
+		// Y座標が地面以下になったら着地
+		if (worldTransform_.translation_.y <= 1.0f) {
+			landing = true;
+		}
+	}
+
 	// 移動入力
 	// 左右移動操作
-	if (Input::GetInstance()->PushKey(DIK_RIGHT) || Input::GetInstance()->PushKey(DIK_LEFT)) {
+	if (onGround_) {
+		// ジャンプ開始
+		if (velocity_.y > 0.0f) {
 
-		// 左右加速
-		Vector3 acceleration = {};
-		if (Input::GetInstance()->PushKey(DIK_RIGHT)) {
-			// 左移動中の右入力
-			if (velocity_.x < 0.0f) {
+			// 空中状態に移行
+			onGround_ = false;
+		}
+		if (Input::GetInstance()->PushKey(DIK_RIGHT) || Input::GetInstance()->PushKey(DIK_LEFT)) {
 
-				// 速度と逆方向に入力中は急ブレーキ
+			// 左右加速
+			Vector3 acceleration = {};
+			if (Input::GetInstance()->PushKey(DIK_RIGHT)) {
+				// 左移動中の右入力
+				if (velocity_.x < 0.0f) {
+
+					// 速度と逆方向に入力中は急ブレーキ
+					velocity_.x *= (1.0f - kAttenuation);
+				}
+
+				if (lrDirection_ != LRDirection::kRight) {
+
+					lrDirection_ = LRDirection::kRight;
+
+					// 旋回開始時の角度を記録する
+					turnFirstRotationY_ = worldTransform_.rotation_.y;
+					// 旋回タイマーに時間を設定する
+					turnTimer_ = 1.0f;
+				}
+				acceleration.x += kAcceleration;
+
+			} else if (Input::GetInstance()->PushKey(DIK_LEFT)) {
+				// 右移動中の左入力
+				if (velocity_.x > 0.0f) {
+
+					// 速度と逆方向に入力中は急ブレーキ
+					velocity_.x *= (1.0f - kAttenuation);
+				}
+
+				if (lrDirection_ != LRDirection::kLeft) {
+
+					lrDirection_ = LRDirection::kLeft;
+					// 旋回開始時の角度を記録する
+					turnFirstRotationY_ = worldTransform_.rotation_.y;
+					// 旋回タイマーに時間を設定する
+					turnTimer_ = 1.0f;
+				}
+				acceleration.x -= kAcceleration;
+			} else {
+
+				// 非入力時は移動減衰をかける
 				velocity_.x *= (1.0f - kAttenuation);
 			}
 
-			if (lrDirection_ != LRDirection::kRight) {
+			
 
-				lrDirection_ = LRDirection::kRight;
+			// 加速/減速
+			velocity_ += acceleration;
 
-				// 旋回開始時の角度を記録する
-				turnFirstRotationY_ = worldTransform_.rotation_.y;
-				// 旋回タイマーに時間を設定する
-				turnTimer_ = 1.0f;
-			}
-			acceleration.x += kAcceleration;
-
-		} else if (Input::GetInstance()->PushKey(DIK_LEFT)) {
-			// 右移動中の左入力
-			if (velocity_.x > 0.0f) {
-
-				// 速度と逆方向に入力中は急ブレーキ
-				velocity_.x *= (1.0f - kAttenuation);
-			}
-
-			if (lrDirection_ != LRDirection::kLeft) {
-
-				lrDirection_ = LRDirection::kLeft;
-				// 旋回開始時の角度を記録する
-				turnFirstRotationY_ = worldTransform_.rotation_.y;
-				// 旋回タイマーに時間を設定する
-				turnTimer_ = 1.0f;
-			}
-			acceleration.x -= kAcceleration;
-		} else {
-
-			// 非入力時は移動減衰をかける
-			velocity_.x *= (1.0f - kAttenuation);
+			// 最大速度制限
+			velocity_.x = std::clamp(velocity_.x, -kLimitRunSpeed, kLimitRunSpeed);
 		}
 
-		// 加速/減速
-		velocity_ += acceleration;
+		if (Input::GetInstance()->PushKey(DIK_UP)) {
 
-		// 最大速度制限
-		velocity_.x = std::clamp(velocity_.x, -kLimitRunSpeed, kLimitRunSpeed);
+			// ジャンプ初速
+			velocity_ += Vector3(0, kJumpAcceleration, 0);
+		}
+
+		//空中
+	} else {
+		//落下速度
+		velocity_ += Vector3(0.f, -kGravityAcceleration, 0.f);
+		//落下速度制限
+		velocity_.y = std::max(velocity_.y, -kLimitFallSpeed);
+	
+		// 着地
+		if (landing) {
+
+			// めり込み排斥
+			worldTransform_.translation_.y = 1.0f;
+			// 摩擦で横方向速度減衰
+			velocity_.x *= (1.0f - kAttenuation);
+			// 下方向速度をリセット
+			velocity_.y = 0.0f;
+			// 設置状態に移行
+			onGround_ = true;
+		}
+
 	}
 
 	// 旋回制御

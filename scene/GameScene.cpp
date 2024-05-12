@@ -51,7 +51,7 @@ void GameScene::Initialize() {
 	viewProjection_.Initialize();
 
 	//座標をマップチップ番号で指定
-	Vector3 playerPosition = mapChipField_->GetMapChipPositionByIndex(0, 10);
+	Vector3 playerPosition = mapChipField_->GetMapChipPositionByIndex(0, 18);
 
 	//自キャラの生成
 	player_ = new Player();
