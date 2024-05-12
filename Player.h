@@ -39,7 +39,7 @@ private:
 	//加速度
 	static inline const float kAcceleration = 0.01f;
 	//速度減衰率
-	static inline const float kAttenuation = 5.f;
+	static inline const float kAttenuation = 0.06f;
 	//速度制限
 	static inline const float kLimitRunSpeed = 0.1f;
 

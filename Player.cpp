@@ -3,7 +3,7 @@
 #include <numbers>
 #include <algorithm>
 
-//速度減衰が微妙
+
 //角度補間が未完成
 
 float easeInOutSine(float t) { return -0.5f * (cosf(static_cast<float>(M_PI)) * t) - 1.0f; }
@@ -45,8 +45,7 @@ void Player::Update() {
 		}
 	}
 
-	// 移動入力
-	// 左右移動操作
+	
 	if (onGround_) {
 		// ジャンプ開始
 		if (velocity_.y > 0.0f) {
@@ -54,6 +53,9 @@ void Player::Update() {
 			// 空中状態に移行
 			onGround_ = false;
 		}
+		
+		// 移動入力
+		// // 左右移動操作
 		if (Input::GetInstance()->PushKey(DIK_RIGHT) || Input::GetInstance()->PushKey(DIK_LEFT)) {
 
 			// 左右加速
@@ -94,20 +96,18 @@ void Player::Update() {
 					turnTimer_ = 1.0f;
 				}
 				acceleration.x -= kAcceleration;
-			} else {
+			}
+
+			// 加速/減速
+			velocity_ += acceleration;
+			// 最大速度制限
+			velocity_.x = std::clamp(velocity_.x, -kLimitRunSpeed, kLimitRunSpeed);
+		
+		} else {
 
 				// 非入力時は移動減衰をかける
 				velocity_.x *= (1.0f - kAttenuation);
 			}
-
-			
-
-			// 加速/減速
-			velocity_ += acceleration;
-
-			// 最大速度制限
-			velocity_.x = std::clamp(velocity_.x, -kLimitRunSpeed, kLimitRunSpeed);
-		}
 
 		if (Input::GetInstance()->PushKey(DIK_UP)) {
 
