@@ -6,7 +6,9 @@
 
 //角度補間が未完成
 
-float easeInOutSine(float t) { return -0.5f * (cosf(static_cast<float>(M_PI)) * t) - 1.0f; }
+//float easeInOutSine(float t,float theta) { return - (cosf(theta) * t) - 1.0f / 2.0f;}
+float easeInOutSine(float t) { return - (cosf(static_cast<float>(M_PI)) * t) - 1.0f / 2.0f;}
+
 float easeInSine(float t) { return 1.0f - cosf((t * static_cast<float>(M_PI)) / 2.0f); }
 
 Player::Player() {}
@@ -75,7 +77,7 @@ void Player::Update() {
 					// 旋回開始時の角度を記録する
 					turnFirstRotationY_ = worldTransform_.rotation_.y;
 					// 旋回タイマーに時間を設定する
-					turnTimer_ = 1.0f;
+					turnTimer_ = kTimeTurn;
 				}
 				acceleration.x += kAcceleration;
 
@@ -93,7 +95,7 @@ void Player::Update() {
 					// 旋回開始時の角度を記録する
 					turnFirstRotationY_ = worldTransform_.rotation_.y;
 					// 旋回タイマーに時間を設定する
-					turnTimer_ = 1.0f;
+					turnTimer_ = kTimeTurn;
 				}
 				acceleration.x -= kAcceleration;
 			}
@@ -143,6 +145,9 @@ void Player::Update() {
 		//旋回タイマーを1/60秒分カウントダウンする	
 		turnTimer_ -= 1.f / 60.f;
 
+		// 補間係数を計算する
+		float t = 1.0f - (turnTimer_ / kTimeTurn);
+
 		// 左右の自キャラ角度テーブル
 		float destinationRotationYTable[] = {
 			std::numbers::pi_v<float> / 2.0f,
@@ -150,11 +155,14 @@ void Player::Update() {
 		};
 
 		// 状態の応じた角度を取得する
-		//float destinationRotationY = destinationRotationYTable[static_cast<uint32_t>(lrDirection_)];
-		worldTransform_.rotation_.y = easeInOutSine(turnTimer_);
+		float destinationRotationY = destinationRotationYTable[static_cast<uint32_t>(lrDirection_)];
+		//worldTransform_.rotation_.y = easeInOutSine(t);
+		worldTransform_.rotation_.y += (destinationRotationY - worldTransform_.rotation_.y) * t;
+		;
 		//worldTransform_.rotation_.y = destinationRotationY;
 		
 	}
+
 	//移動
 	worldTransform_.translation_ += velocity_;
 

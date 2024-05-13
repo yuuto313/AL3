@@ -58,7 +58,7 @@ private:
 	float turnTimer_ = 0.0f;
 
 	//旋回時間＜秒＞
-	static inline const float kTimeTurn = 2.f;
+	static inline const float kTimeTurn = 0.3f;
 
 	//設置状態フラグ
 	bool onGround_ = true;
