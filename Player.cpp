@@ -3,13 +3,7 @@
 #include <numbers>
 #include <algorithm>
 
-
-//角度補間が未完成
-
-//float easeInOutSine(float t,float theta) { return - (cosf(theta) * t) - 1.0f / 2.0f;}
 float easeInOutSine(float t) { return - (cosf(static_cast<float>(M_PI)) * t) - 1.0f / 2.0f;}
-
-float easeInSine(float t) { return 1.0f - cosf((t * static_cast<float>(M_PI)) / 2.0f); }
 
 Player::Player() {}
 
@@ -174,6 +168,8 @@ void Player::Update() {
 void Player::Draw() { 
 	model_->Draw(worldTransform_, *viewProjection_); 
 }
+
+//WorldTransform& Player::GetWorldTransform() { return worldTransform_; }
 
 
 

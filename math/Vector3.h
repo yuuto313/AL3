@@ -15,7 +15,14 @@ struct Vector3 final {
 		y += other.y;
 		z += other.z;
 		return *this;
-	}
+	};
 
+	// + 演算子のオーバーロード
+	/*Vector3& operator+(const Vector3& other) {
+		other.x + x;
+		other.y + y;
+		other.z + z;
+		return *this;
+	};*/
 
 };

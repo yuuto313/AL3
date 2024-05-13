@@ -28,6 +28,8 @@ GameScene::~GameScene() {
 	delete modelSkydome_;
 
 	delete mapChipField_;
+
+	delete cameraController_;
 }
 
 void GameScene::Initialize() {
@@ -77,6 +79,15 @@ void GameScene::Initialize() {
 	mapChipField_->LoadMapChipCsv("./Resources/AL3.csv");
 
 	GenerateBlocks();
+
+	//生成
+	cameraController_ = new CameraController;
+	//初期化
+	cameraController_->Initialize();
+	//追従対象をセット
+	cameraController_->SetTarget(player_);
+	//リセット（瞬間合わせ）
+	cameraController_->Reset();
 
 }
 
@@ -133,6 +144,7 @@ void GameScene::Update() {
 	//02_03
 	skydome_->Update();
 
+	cameraController_->Update();
 }
 	
 

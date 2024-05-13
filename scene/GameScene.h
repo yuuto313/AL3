@@ -4,6 +4,7 @@
 #include "Skydome.h"
 #include "MapChipField.h"
 #include "MyMath.h"
+#include "CameraController.h"
 
 #include "DirectXCommon.h"
 #include "Input.h"
@@ -87,6 +88,9 @@ private: // メンバ変数
 	Model* modelSkydome_ = nullptr;
 
 	MapChipField* mapChipField_;
+
+	//カメラコントローラ
+	CameraController* cameraController_ = nullptr;
 
 	/// <summary>
 	/// ゲームシーン用
