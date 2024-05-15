@@ -53,8 +53,7 @@ void GameScene::Initialize() {
 	viewProjection_.Initialize();
 
 	//座標をマップチップ番号で指定
-	Vector3 playerPosition = mapChipField_->GetMapChipPositionByIndex(0, 18);
-
+	Vector3 playerPosition = mapChipField_->GetMapChipPositionByIndex(5, 18);
 	//自キャラの生成
 	player_ = new Player();
 	//自キャラの初期化
@@ -83,11 +82,13 @@ void GameScene::Initialize() {
 	//生成
 	cameraController_ = new CameraController;
 	//初期化
-	cameraController_->Initialize();
+	cameraController_->Initialize(&viewProjection_);
 	//追従対象をセット
 	cameraController_->SetTarget(player_);
 	//リセット（瞬間合わせ）
 	cameraController_->Reset();
+	//移動範囲の指定
+	cameraController_->SetMovableArea({20.f, 50.f, 0.f, 50.f});
 
 }
 
@@ -97,6 +98,11 @@ void GameScene::Update() {
 
 	// 自キャラの更新
 	player_->Update();
+	
+	//02_03
+	skydome_->Update();
+
+	cameraController_->Update();
 
 	// 02_02
 
@@ -140,11 +146,6 @@ void GameScene::Update() {
 		//ビュープロジェクション行列の更新と転送
 		viewProjection_.UpdateMatrix();
 	}
-
-	//02_03
-	skydome_->Update();
-
-	cameraController_->Update();
 }
 	
 

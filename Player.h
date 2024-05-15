@@ -23,7 +23,12 @@ public:
 	void Update();
 	void Draw();
 
-	WorldTransform& GetWorldTransform() { return worldTransform_; }
+	const WorldTransform& GetWorldTransform() { return worldTransform_; }
+	/// <summary>
+	/// 自キャラの速度を取得するためのゲッター
+	/// </summary>
+	/// <returns></returns>
+	const Vector3& GetVelocity() const { return velocity_; }
 
 private:
 	//ワールド変換データ
@@ -64,13 +69,10 @@ private:
 	bool onGround_ = true;
 
 	//重力加速度（下方向）
-	static inline const float kGravityAcceleration = 0.3f;
+	static inline const float kGravityAcceleration = 0.2f;
 	//最大重力加速度（下方向）
-	static inline const float kLimitFallSpeed = 3.0f;
+	static inline const float kLimitFallSpeed = 2.0f;
 	//ジャンプ初速（上方向）
 	static inline const float kJumpAcceleration = 1.0f;
-
-	/*public:
-	WorldTransform& GetWorldTransform();*/
 
 };

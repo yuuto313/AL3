@@ -87,7 +87,7 @@ private: // メンバ変数
 	//3Dモデル描画
 	Model* modelSkydome_ = nullptr;
 
-	MapChipField* mapChipField_;
+	MapChipField* mapChipField_ = nullptr;
 
 	//カメラコントローラ
 	CameraController* cameraController_ = nullptr;

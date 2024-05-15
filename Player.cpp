@@ -169,7 +169,3 @@ void Player::Draw() {
 	model_->Draw(worldTransform_, *viewProjection_); 
 }
 
-//WorldTransform& Player::GetWorldTransform() { return worldTransform_; }
-
-
-

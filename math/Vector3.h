@@ -17,12 +17,13 @@ struct Vector3 final {
 		return *this;
 	};
 
-	// + 演算子のオーバーロード
-	/*Vector3& operator+(const Vector3& other) {
-		other.x + x;
-		other.y + y;
-		other.z + z;
-		return *this;
-	};*/
+	// * 演算子のオーバーロード
+	Vector3 operator*(float other) const { return Vector3(x + other, y + other, z + other);}
+
+    // +演算子のオーバーロード
+	Vector3 operator+(const Vector3& other) const { return Vector3(x + other.x, y + other.y, z + other.z); }
+
+	// -演算子のオーバーロード
+	Vector3 operator-(const Vector3& other) const { return Vector3(x - other.x, y - other.y, z - other.z); }
 
 };

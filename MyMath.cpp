@@ -1,5 +1,9 @@
 #include "MyMath.h"
 
+// 線形補間
+Vector3 Lerp(const Vector3& a, const Vector3& b, float t) { 
+	return Vector3(a + (b - a) * t);
+}
 // 積
 Matrix4x4 Multiply(const Matrix4x4& m1, const Matrix4x4& m2) {
 	Matrix4x4 result{};
