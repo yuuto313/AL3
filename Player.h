@@ -2,8 +2,8 @@
 #include "WorldTransform.h"
 #include "cassert"
 #include "DebugCamera.h"
-#include "MapChipField.h"
-//class MapChipField;
+//#include "MapChipField.h"
+class MapChipField;
 
 #pragma once
 /// <summary>
@@ -48,7 +48,7 @@ private:
 	//加速度
 	static inline const float kAcceleration = 0.05f;
 	//速度減衰率
-	static inline const float kAttenuation = 0.06f;
+	static inline const float kAttenuation = 0.15f;
 	//速度制限
 	static inline const float kLimitRunSpeed = 0.3f;
 
@@ -73,25 +73,25 @@ private:
 	bool onGround_ = true;
 
 	//重力加速度（下方向）
-	static inline const float kGravityAcceleration = 0.2f;
+	static inline const float kGravityAcceleration = 0.125f;
 	//最大重力加速度（下方向）
-	static inline const float kLimitFallSpeed = 2.0f;
+	static inline const float kLimitFallSpeed = 1.0f;
 	//ジャンプ初速（上方向）
-	static inline const float kJumpAcceleration = 1.0f;
+	static inline const float kJumpAcceleration = 0.6f;
 
 	//マップチップによるフィールド
 	MapChipField* mapChipField_ = nullptr;
 
 	//キャラクターの当たり判定サイズ
-	static inline const float kWidth = 0.8f;
-	static inline const float kHeight = 0.8f;
+	static inline const float kWidth = 1.0f;
+	static inline const float kHeight = 1.0f;
 
 	//マップとの当たり判定情報
 	struct CollisionMapInfo {
 		bool ceilingCollision = false;//天井衝突フラグ
 		bool landing = false;//着地フラグ
 		bool contactWall = false;//壁接触フラグ
-		Vector3 amountOfMovement;//移動量
+		Vector3 amountOfMovement = {}; // 移動量
 	};
 
 	//角
@@ -104,7 +104,7 @@ private:
 	};
 
 	//余白
-	static inline const float kBlank = 0.5f;
+	static inline const float kBlank = 0.05f;
 
 public:
 	/// <summary>
@@ -121,7 +121,7 @@ public:
 	/// マップチップのセッター
 	/// </summary>
 	/// <param name="mapChipField"></param>
-	void SetMapChipField(MapChipField* mapChipField) { mapChipField = mapChipField_; }
+	void SetMapChipField(MapChipField* mapChipField) { mapChipField_ = mapChipField; }
 	/// <summary>
 	/// マップ衝突判定
 	/// </summary>

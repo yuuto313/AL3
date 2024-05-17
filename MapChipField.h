@@ -8,19 +8,18 @@
 enum class MapChipType {
 	kBlank, // 空白
 	kBlock, // ブロック
-	//kPlayer,//プレイヤー
 };
 
 struct MapChipData {
 	std::vector<std::vector<MapChipType>> data;
 };
 
-//範囲矩形
+// 範囲矩形
 struct Rect {
-	float left;//左端
-	float right;//右端
-	float bottom;//下端
-	float top;//上端
+	float left;   // 左端
+	float right;  // 右端
+	float bottom; // 下端
+	float top;    // 上端
 };
 
 class MapChipField {
@@ -39,6 +38,7 @@ private:
 	
 
 public:
+
 	struct IndexSet {
 		uint32_t xIndex;
 		uint32_t yIndex;
