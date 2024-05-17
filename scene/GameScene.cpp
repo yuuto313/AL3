@@ -51,6 +51,9 @@ void GameScene::Initialize() {
 	//farZを適度に大きい値に変更する
 	//viewProjection_.farZ = 400.f;
 	viewProjection_.Initialize();
+	
+	mapChipField_ = new MapChipField;
+	mapChipField_->LoadMapChipCsv("./Resources/AL3.csv");
 
 	//座標をマップチップ番号で指定
 	Vector3 playerPosition = mapChipField_->GetMapChipPositionByIndex(5, 18);
@@ -59,6 +62,8 @@ void GameScene::Initialize() {
 	//自キャラの初期化
 	player_->Init(playerModel_,&viewProjection_,playerPosition);
 
+
+	player_->SetMapChipField(mapChipField_);
 	//02_02
 
 	dataModel_ = Model::Create();
@@ -74,8 +79,7 @@ void GameScene::Initialize() {
     skydome_ = new Skydome();
 	skydome_->Init(modelSkydome_,&viewProjection_);
 
-	mapChipField_ = new MapChipField;
-	mapChipField_->LoadMapChipCsv("./Resources/AL3.csv");
+	
 
 	GenerateBlocks();
 

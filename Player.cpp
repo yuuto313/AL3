@@ -2,6 +2,9 @@
 #include "Player.h"
 #include <numbers>
 #include <algorithm>
+//#include "MapChipField.h"
+#include "DebugText.h"
+
 
 float easeInOutSine(float t) { return - (cosf(static_cast<float>(M_PI)) * t) - 1.0f / 2.0f;}
 
@@ -49,67 +52,22 @@ void Player::Update() {
 			// 空中状態に移行
 			onGround_ = false;
 		}
-		
-		// 移動入力
-		// // 左右移動操作
-		if (Input::GetInstance()->PushKey(DIK_RIGHT) || Input::GetInstance()->PushKey(DIK_LEFT)) {
+		//1.移動入力
+		MovementInput();
 
-			// 左右加速
-			Vector3 acceleration = {};
-			if (Input::GetInstance()->PushKey(DIK_RIGHT)) {
-				// 左移動中の右入力
-				if (velocity_.x < 0.0f) {
+		//2.移動量を加味して衝突判定する
+		//衝突情報を初期化
+		CollisionMapInfo collisionMapInfo;
+		collisionMapInfo.amountOfMovement = velocity_;
 
-					// 速度と逆方向に入力中は急ブレーキ
-					velocity_.x *= (1.0f - kAttenuation);
-				}
+		//マップ衝突チェック
+		IsCollision(collisionMapInfo);
 
-				if (lrDirection_ != LRDirection::kRight) {
+		//3.判定結果を反映して移動させる
+		Reflection(collisionMapInfo);
 
-					lrDirection_ = LRDirection::kRight;
-
-					// 旋回開始時の角度を記録する
-					turnFirstRotationY_ = worldTransform_.rotation_.y;
-					// 旋回タイマーに時間を設定する
-					turnTimer_ = kTimeTurn;
-				}
-				acceleration.x += kAcceleration;
-
-			} else if (Input::GetInstance()->PushKey(DIK_LEFT)) {
-				// 右移動中の左入力
-				if (velocity_.x > 0.0f) {
-
-					// 速度と逆方向に入力中は急ブレーキ
-					velocity_.x *= (1.0f - kAttenuation);
-				}
-
-				if (lrDirection_ != LRDirection::kLeft) {
-
-					lrDirection_ = LRDirection::kLeft;
-					// 旋回開始時の角度を記録する
-					turnFirstRotationY_ = worldTransform_.rotation_.y;
-					// 旋回タイマーに時間を設定する
-					turnTimer_ = kTimeTurn;
-				}
-				acceleration.x -= kAcceleration;
-			}
-
-			// 加速/減速
-			velocity_ += acceleration;
-			// 最大速度制限
-			velocity_.x = std::clamp(velocity_.x, -kLimitRunSpeed, kLimitRunSpeed);
-		
-		} else {
-
-				// 非入力時は移動減衰をかける
-				velocity_.x *= (1.0f - kAttenuation);
-			}
-
-		if (Input::GetInstance()->PushKey(DIK_UP)) {
-
-			// ジャンプ初速
-			velocity_ += Vector3(0, kJumpAcceleration, 0);
-		}
+		//4.天井に当たってる場合の処理
+		HitsTheCeiling(collisionMapInfo);
 
 		//空中
 	} else {
@@ -167,5 +125,139 @@ void Player::Update() {
 
 void Player::Draw() { 
 	model_->Draw(worldTransform_, *viewProjection_); 
+}
+
+void Player::MovementInput() {
+	// 移動入力
+	// // 左右移動操作
+	if (Input::GetInstance()->PushKey(DIK_RIGHT) || Input::GetInstance()->PushKey(DIK_LEFT)) {
+
+		// 左右加速
+		Vector3 acceleration = {};
+		if (Input::GetInstance()->PushKey(DIK_RIGHT)) {
+			// 左移動中の右入力
+			if (velocity_.x < 0.0f) {
+
+				// 速度と逆方向に入力中は急ブレーキ
+				velocity_.x *= (1.0f - kAttenuation);
+			}
+
+			if (lrDirection_ != LRDirection::kRight) {
+
+				lrDirection_ = LRDirection::kRight;
+
+				// 旋回開始時の角度を記録する
+				turnFirstRotationY_ = worldTransform_.rotation_.y;
+				// 旋回タイマーに時間を設定する
+				turnTimer_ = kTimeTurn;
+			}
+			acceleration.x += kAcceleration;
+
+		} else if (Input::GetInstance()->PushKey(DIK_LEFT)) {
+			// 右移動中の左入力
+			if (velocity_.x > 0.0f) {
+
+				// 速度と逆方向に入力中は急ブレーキ
+				velocity_.x *= (1.0f - kAttenuation);
+			}
+
+			if (lrDirection_ != LRDirection::kLeft) {
+
+				lrDirection_ = LRDirection::kLeft;
+				// 旋回開始時の角度を記録する
+				turnFirstRotationY_ = worldTransform_.rotation_.y;
+				// 旋回タイマーに時間を設定する
+				turnTimer_ = kTimeTurn;
+			}
+			acceleration.x -= kAcceleration;
+		}
+
+		// 加速/減速
+		velocity_ += acceleration;
+		// 最大速度制限
+		velocity_.x = std::clamp(velocity_.x, -kLimitRunSpeed, kLimitRunSpeed);
+
+	} else {
+
+		// 非入力時は移動減衰をかける
+		velocity_.x *= (1.0f - kAttenuation);
+	}
+
+	//if (Input::GetInstance()->PushKey(DIK_UP)) {
+
+		// ジャンプ初速
+		velocity_ += Vector3(0, kJumpAcceleration, 0);
+	//}
+}
+
+void Player::IsCollision(CollisionMapInfo& info) { 
+	IsCollisionUp(info);
+}
+
+Vector3 Player::CornerPosition(const Vector3& center, Corner corner) {
+	Vector3 offsetTable[kNumCorner] = {
+	    {+kWidth / 2.0f, -kHeight / 2.0f, 0.0f}, //  kRightBottom
+	    {-kWidth / 2.0f, -kHeight / 2.0f, 0.0f}, //  kLeftBottom
+	    {+kWidth / 2.0f, +kHeight / 2.0f, 0.0f}, //  kRightTop
+	    {-kWidth / 2.0f, +kHeight / 2.0f, 0.0f}  //  kLeftTop
+	};
+	return center + offsetTable[static_cast<uint32_t>(corner)];
+}
+
+void Player::IsCollisionUp(CollisionMapInfo& info) {
+	//上昇あり？
+	if (info.amountOfMovement.y <= 0) {
+		return;
+	}
+	
+	//移動後の4つの角の座標
+	std::array<Vector3, kNumCorner> positionNew;
+
+	for (uint32_t i = 0; i < positionNew.size(); ++i) {
+		positionNew[i] = CornerPosition(worldTransform_.translation_ + info.amountOfMovement, static_cast<Corner>(i));
+	}
+
+	MapChipType mapChipType;
+	//真上の当たり判定を行う
+	bool hit = false;
+	//左上点の当たり判定
+	MapChipField::IndexSet indexSet;
+	indexSet = mapChipField_->GetMapChipIndexSetByPosition(positionNew[kLeftTop]);
+	mapChipType = mapChipField_->GetMapChipTypeByIndex(indexSet.xIndex, indexSet.yIndex);
+	if (mapChipType == MapChipType::kBlock) {
+		hit = true;
+	}
+
+	//右上点の当たり判定
+	indexSet = mapChipField_->GetMapChipIndexSetByPosition(positionNew[kRightTop]);
+	mapChipType = mapChipField_->GetMapChipTypeByIndex(indexSet.xIndex, indexSet.yIndex);
+	if (mapChipType == MapChipType::kBlock) {
+		hit = true;
+	}
+
+	//ブロックにヒット
+	if (hit) {
+	    //めり込みを排除する方向に移動量を設定する
+		indexSet = mapChipField_->GetMapChipIndexSetByPosition(positionNew[kRightTop]);
+		//めり込み先ブロックの範囲矩形
+		Rect rect = mapChipField_->GetRectByIndex(indexSet.xIndex, indexSet.yIndex);
+
+		//Y移動量を求める
+		float yMovement = (rect.bottom - worldTransform_.translation_.y) - ((kHeight / 2) + kBlank);
+
+		info.amountOfMovement.y = std::max(0.0f, yMovement);
+		//天井に当たったことを記録する
+		info.ceilingCollision = true;
+	}
+}
+
+void Player::Reflection(const CollisionMapInfo& info) { 
+	worldTransform_.translation_ += info.amountOfMovement; }
+
+void Player::HitsTheCeiling(const CollisionMapInfo& info) {
+	if (info.ceilingCollision) {
+		DebugText::GetInstance()->ConsolePrintf("hit ceiling\n");
+		velocity_.y = 0;
+	}
 }
 
