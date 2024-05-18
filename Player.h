@@ -73,11 +73,11 @@ private:
 	bool onGround_ = true;
 
 	//重力加速度（下方向）
-	static inline const float kGravityAcceleration = 0.125f;
+	static inline const float kGravityAcceleration = 0.225f;
 	//最大重力加速度（下方向）
 	static inline const float kLimitFallSpeed = 1.0f;
 	//ジャンプ初速（上方向）
-	static inline const float kJumpAcceleration = 0.6f;
+	static inline const float kJumpAcceleration = 1.4f;
 
 	//マップチップによるフィールド
 	MapChipField* mapChipField_ = nullptr;
@@ -106,7 +106,14 @@ private:
 	//余白
 	static inline const float kBlank = 0.05f;
 
+	//着地時の速度減衰率
+	static inline const float kAttenuationLanding = 0.15f;
+
+	//微妙に下にずらす
+	static inline const float kAdjustment = 0.2f;
+
 public:
+
 	/// <summary>
 	/// 自キャラのWorldTransformを取得する
 	/// </summary>
@@ -140,6 +147,16 @@ public:
 	/// <param name="info"></param>
 	/// <returns></returns>
 	void IsCollisionUp(CollisionMapInfo& info);
+	/// <summary>
+	/// 下方向の当たり判定
+	/// </summary>
+	/// <param name="info"></param>
+	void IsCollisionDown(CollisionMapInfo& info);
+	/// <summary>
+	/// 設置状態の切り替え処理
+	/// </summary>
+	/// <param name="info"></param>
+	void InstallationStatus(const CollisionMapInfo& info);
 	/// <summary>
 	/// 判定結果を反映して移動させる
 	/// </summary>
