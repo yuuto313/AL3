@@ -240,9 +240,7 @@ void Player::IsCollisionUp(CollisionMapInfo& info) {
 		//めり込み先ブロックの範囲矩形
 		Rect rect = mapChipField_->GetRectByIndex(indexSet.xIndex, indexSet.yIndex);
 
-		//Y移動量を求める
-		float yMovement = (rect.bottom - worldTransform_.translation_.y) - ((kHeight / 2) + kBlank);
-		info.amountOfMovement.y = std::max(0.0f, yMovement);
+		info.amountOfMovement.y = std::max(0.0f, (rect.bottom - worldTransform_.translation_.y) - ((kHeight / 2) + kBlank));
 
 		//天井に当たったことを記録する
 		info.ceilingCollision = true;
