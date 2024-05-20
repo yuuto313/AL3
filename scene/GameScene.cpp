@@ -81,7 +81,7 @@ void GameScene::Initialize() {
 	//リセット（瞬間合わせ）
 	cameraController_->Reset();
 	//移動範囲の指定
-	cameraController_->SetMovableArea({20.f, 50.f, 0.f, 50.f});
+	cameraController_->SetMovableArea({20.f, 50.f, 0.f, 100.f});
 
 }
 
