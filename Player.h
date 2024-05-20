@@ -73,11 +73,11 @@ private:
 	bool onGround_ = true;
 
 	// 重力加速度（下方向）
-	static inline const float kGravityAcceleration = 0.25f;
+	static inline const float kGravityAcceleration = 0.2f;
 	// 最大重力加速度（下方向）
 	static inline const float kLimitFallSpeed = 50.0f;
 	// ジャンプ初速（上方向）
-	static inline const float kJumpAcceleration = 2.0f;
+	static inline const float kJumpAcceleration = 0.625f;
 
 	//マップチップによるフィールド
 	MapChipField* mapChipField_ = nullptr;
