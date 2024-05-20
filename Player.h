@@ -46,9 +46,9 @@ private:
 	Vector3 velocity_ = {};
 	
 	//加速度
-	static inline const float kAcceleration = 0.05f;
+	static inline const float kAcceleration = 0.15f;
 	//速度減衰率
-	static inline const float kAttenuation = 0.15f;
+	static inline const float kAttenuation = 0.3f;
 	//速度制限
 	static inline const float kLimitRunSpeed = 0.3f;
 
@@ -73,9 +73,9 @@ private:
 	bool onGround_ = true;
 
 	//重力加速度（下方向）
-	static inline const float kGravityAcceleration = 0.275f;
+	static inline const float kGravityAcceleration = 0.2f;
 	//最大重力加速度（下方向）
-	static inline const float kLimitFallSpeed = 50.0f;
+	static inline const float kLimitFallSpeed = 3.0f;
 	//ジャンプ初速（上方向）
 	static inline const float kJumpAcceleration = 2.0f;
 
@@ -90,7 +90,7 @@ private:
 	struct CollisionMapInfo {
 		bool ceilingCollision = false;//天井衝突フラグ
 		bool landing = false;//着地フラグ
-		bool contactWall = false;//壁接触フラグ
+		bool hitWall = false;//壁接触フラグ
 		Vector3 amountOfMovement = {}; // 移動量
 	};
 
@@ -104,13 +104,16 @@ private:
 	};
 
 	//余白
-	static inline const float kBlank = 0.1f;
+	static inline const float kBlank = 0.35f;
 
 	//着地時の速度減衰率
-	static inline const float kAttenuationLanding = 0.15f;
+	static inline const float kAttenuationLanding = 0.35f;
 
 	//微妙に下にずらす
-	static inline const float kAdjustment = 0.2f;
+	static inline const float kAdjustmentSpace = 0.25f;
+
+	//着地時の速度減衰率
+	static inline const float kAttenuationWall = 0.5f;
 
 public:
 
@@ -153,10 +156,20 @@ public:
 	/// <param name="info"></param>
 	void IsCollisionDown(CollisionMapInfo& info);
 	/// <summary>
+	/// 右方向の当たり判定
+	/// </summary>
+	/// <param name="info"></param>
+	void IsCollisionRight(CollisionMapInfo& info);
+	/// <summary>
+	/// 左方向の当たり判定
+	/// </summary>
+	/// <param name="info"></param>
+	void IsCollisionLeft(CollisionMapInfo& info);
+	/// <summary>
 	/// 設置状態の切り替え処理
 	/// </summary>
 	/// <param name="info"></param>
-	void InstallationStatus(const CollisionMapInfo& info);
+	void HitsTheLanding(const CollisionMapInfo& info);
 	/// <summary>
 	/// 判定結果を反映して移動させる
 	/// </summary>
@@ -167,5 +180,10 @@ public:
 	/// </summary>
 	/// <param name="info"></param>
 	void HitsTheCeiling(const CollisionMapInfo& info);
+	/// <summary>
+	/// 壁に接触してる場合の処理
+	/// </summary>
+	/// <param name="info"></param>
+	void HitsTheWall(const CollisionMapInfo& info);
 
 };
