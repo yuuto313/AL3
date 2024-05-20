@@ -72,6 +72,8 @@ void Player::Update() {
 		
 	}
 
+	// 行列計算
+	worldTransform_.UpdateMatrix();
 }
 
 void Player::Draw() { 
@@ -180,12 +182,7 @@ void Player::MovementInput() {
 	}
 
 	// 移動
-	worldTransform_.translation_ += velocity_;
-
-	// 行列計算
-	worldTransform_.UpdateMatrix();
-
-	
+	worldTransform_.translation_ += velocity_;	
 }
 
 void Player::IsCollision(CollisionMapInfo& info) { 
