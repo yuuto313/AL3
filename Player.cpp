@@ -236,7 +236,7 @@ void Player::IsCollisionUp(CollisionMapInfo& info) {
 	//ブロックにヒット
 	if (hit) {
 	    //めり込みを排除する方向に移動量を設定する
-		indexSet = mapChipField_->GetMapChipIndexSetByPosition(positionNew[kLeftBottom] + positionNew[kRightBottom]);
+		indexSet = mapChipField_->GetMapChipIndexSetByPosition({worldTransform_.translation_.x, worldTransform_.translation_.y - kHeight / 2.0f, worldTransform_.translation_.z});
 		//めり込み先ブロックの範囲矩形
 		Rect rect = mapChipField_->GetRectByIndex(indexSet.xIndex, indexSet.yIndex);
 
