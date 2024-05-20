@@ -104,7 +104,7 @@ private:
 	};
 
 	//余白
-	static inline const float kBlank = 0.05f;
+	static inline const float kBlank = 0.1f;
 
 public:
 	/// <summary>
