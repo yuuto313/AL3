@@ -1,5 +1,7 @@
 #include "MyMath.h"
 
+float Radians(float radian) { return radian * static_cast<float>(M_PI) / 180.0f; }
+
 // 線形補間
 Vector3 Lerp(const Vector3& a, const Vector3& b, float t) { 
 	return Vector3(a + (b - a) * t);

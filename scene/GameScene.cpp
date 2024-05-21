@@ -23,13 +23,15 @@ GameScene::~GameScene() {
 	worldTransformBlocks_.clear();
 	delete debugCamera_;
 
-	//02_03
 	delete skydome_;
 	delete modelSkydome_;
 
 	delete mapChipField_;
 
 	delete cameraController_;
+
+	delete enemy_;
+
 }
 
 void GameScene::Initialize() {
@@ -37,7 +39,6 @@ void GameScene::Initialize() {
 	dxCommon_ = DirectXCommon::GetInstance();
 	input_ = Input::GetInstance();
 
-	//02_01
 
 	//ファイル名を指定してテクスチャを読み込む
 	//textureHandle_ = TextureManager::Load("vector.png");
@@ -83,6 +84,10 @@ void GameScene::Initialize() {
 	//移動範囲の指定
 	cameraController_->SetMovableArea({20.f, 50.f, 0.f, 100.f});
 
+	enemy_ = new Enemy();
+	Vector3 enemyPosition = mapChipField_->GetMapChipPositionByIndex(8, 18);
+	enemy_->Initialize(playerModel_,&viewProjection_,enemyPosition);
+
 }
 
 void GameScene::Update() {
@@ -97,6 +102,7 @@ void GameScene::Update() {
 
 	cameraController_->Update();
 
+	enemy_->Update();
 	// 02_02
 
 	// ブロックの更新
@@ -171,7 +177,7 @@ void GameScene::Draw() {
 
 	player_->Draw();
 	
-	
+	enemy_->Draw();
 
 	for (std::vector<WorldTransform*>& worldTransformBlockLine : worldTransformBlocks_) {
 		for (WorldTransform* worldTransformBlock : worldTransformBlockLine) {

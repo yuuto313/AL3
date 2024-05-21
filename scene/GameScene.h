@@ -5,6 +5,7 @@
 #include "MapChipField.h"
 #include "MyMath.h"
 #include "CameraController.h"
+#include "Enemy.h"
 
 #include "DirectXCommon.h"
 #include "Input.h"
@@ -91,6 +92,9 @@ private: // メンバ変数
 
 	//カメラコントローラ
 	CameraController* cameraController_ = nullptr;
+
+	//敵
+	Enemy* enemy_ = nullptr;
 
 	/// <summary>
 	/// ゲームシーン用

@@ -4,6 +4,8 @@
 #include <Matrix4x4.h>
 #include <corecrt_math_defines.h>
 
+float Radians(float radian);
+
 // 線形補間
 Vector3 Lerp(const Vector3& a, const Vector3& b, float t);
 
