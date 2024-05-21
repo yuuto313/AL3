@@ -334,7 +334,7 @@ void Player::IsCollisionRight(CollisionMapInfo& info) {
 		// めり込み先ブロックの範囲矩形
 		Rect rect = mapChipField_->GetRectByIndex(indexSet.xIndex, indexSet.yIndex);
 
-		info.amountOfMovement.x = std::min(0.0f, (rect.right - worldTransform_.translation_.x) - ((kWidth) + kBlank));
+		info.amountOfMovement.x = std::min(0.0f, (rect.right - worldTransform_.translation_.x) - ((kWidth / 2) + kBlank));
 
 		// 壁に当たったことを記録する
 		info.hitWall = true;

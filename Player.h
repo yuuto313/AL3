@@ -46,7 +46,7 @@ private:
 	Vector3 velocity_ = {};
 	
 	//加速度
-	static inline const float kAcceleration = 0.15f;
+	static inline const float kAcceleration = 0.1f;
 	//速度減衰率
 	static inline const float kAttenuation = 0.3f;
 	//速度制限
@@ -73,7 +73,7 @@ private:
 	bool onGround_ = true;
 
 	//重力加速度（下方向）
-	static inline const float kGravityAcceleration = 0.2f;
+	static inline const float kGravityAcceleration = 0.16f;
 	//最大重力加速度（下方向）
 	static inline const float kLimitFallSpeed = 3.0f;
 	//ジャンプ初速（上方向）
@@ -83,8 +83,8 @@ private:
 	MapChipField* mapChipField_ = nullptr;
 
 	//キャラクターの当たり判定サイズ
-	static inline const float kWidth = 1.0f;
-	static inline const float kHeight = 1.0f;
+	static inline const float kWidth = 0.8f;
+	static inline const float kHeight = 0.8f;
 
 	//マップとの当たり判定情報
 	struct CollisionMapInfo {
@@ -104,7 +104,7 @@ private:
 	};
 
 	//余白
-	static inline const float kBlank = 0.35f;
+	static inline const float kBlank = 0.5f;
 
 	//着地時の速度減衰率
 	static inline const float kAttenuationLanding = 0.35f;
