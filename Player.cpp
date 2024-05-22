@@ -62,6 +62,23 @@ void Player::Update() {
 	worldTransform_.translation_.y = min(worldTransform_.translation_.y, kMoveLimitY);
 
 	//--------------------------------
+	//旋回
+	//--------------------------------
+
+	Rotate();
+
+	//--------------------------------
+	//攻撃処理
+	//--------------------------------
+
+	Attack();
+
+	//弾を更新
+	if (bullet_) {
+		bullet_->Update();
+	}
+
+	//--------------------------------
 	//行列の更新
 	//--------------------------------
 	// 行列を定数バッファに転送する
@@ -79,8 +96,35 @@ void Player::Update() {
 
 }
 
-void Player::Draw(ViewProjection& viewProjection) {
+void Player::Draw(ViewProjection& viewProjection) { 
+	model_->Draw(worldTransform_, viewProjection, textureHandle_); 
+	
+	//弾を描画
+	if (bullet_) {
+		bullet_->Draw(viewProjection);
+	}
+}
 
-	model_->Draw(worldTransform_, viewProjection, textureHandle_);
+
+void Player::Rotate() {
+	//回転速さ[ラジアン/frame]
+	const float kRotSpeed = 0.02f;
+
+	//押した方向で移動ベクトルを変更する
+	if (input_->PushKey(DIK_A)) {
+		worldTransform_.rotation_.y -= kRotSpeed;
+	} else if (input_->PushKey(DIK_D)) {
+		worldTransform_.rotation_.y += kRotSpeed;
+	}
+}
+
+void Player::Attack() {
+	if (input_->TriggerKey(DIK_W)) {
+	//弾を生成し、初期化
+	PlayerBullet* newBullet = new PlayerBullet();
+	newBullet->Initialize(model_, worldTransform_.translation_);
+	//弾を登録する
+	bullet_ = newBullet;
+	}
 }
 

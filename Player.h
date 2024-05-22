@@ -1,7 +1,7 @@
 #include "Model.h"
 #include "WorldTransform.h"
 #include "Input.h"
-
+#include "PlayerBullet.h"
 #pragma once
 /// <summary>
 /// 自キャラ
@@ -22,6 +22,14 @@ public:
 	/// 描画
 	/// </summary>
 	void Draw(ViewProjection& viewProjection);
+	/// <summary>
+	/// 旋回（回転）
+	/// </summary>
+	void Rotate();
+	/// <summary>
+	/// 攻撃
+	/// </summary>
+	void Attack();
 
 private:
 	// ワールド変換データ
@@ -36,4 +44,7 @@ private:
 
 	//ImGuiで値を入力する変数
 	float inputFloat3[3] = {worldTransform_.translation_.x,worldTransform_.translation_.y,worldTransform_.translation_.z};
+
+	//弾
+	PlayerBullet* bullet_ = nullptr;
 };
