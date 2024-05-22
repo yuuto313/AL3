@@ -13,7 +13,7 @@ public:
 	/// <summary>
 	/// 初期化
 	/// </summary>
-	void Initialize(Model* model,uint32_t textureHandle);
+	void Initialize(Model* model, uint32_t textureHandle);
 	/// <summary>
 	/// 更新
 	/// </summary>
@@ -24,15 +24,16 @@ public:
 	void Draw(ViewProjection& viewProjection);
 
 private:
-	//ワールド変換データ
+	// ワールド変換データ
 	WorldTransform worldTransform_;
-	//モデル
+	// モデル
 	Model* model_ = nullptr;
-	//テクスチャハンドル
+	// テクスチャハンドル
 	uint32_t textureHandle_ = 0u;
 
-	//キーボード入力
+	// キーボード入力
 	Input* input_ = nullptr;
 
-	std::vector<WorldTransform*> worldTransformBlocks_;
+	//ImGuiで値を入力する変数
+	float inputFloat3[3] = {worldTransform_.translation_.x,worldTransform_.translation_.y,worldTransform_.translation_.z};
 };
