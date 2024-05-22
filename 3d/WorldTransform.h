@@ -5,6 +5,7 @@
 #include <d3d12.h>
 #include <type_traits>
 #include <wrl.h>
+#include "MyMath.h"
 
 // 定数バッファ用データ構造体
 struct ConstBufferDataWorldTransform {
@@ -54,7 +55,7 @@ public:
 	/// <summary>
 	/// アフィン変換行列
 	/// </summary>
-	void UpdateMatrix();
+	void UpdateMatrix() { matWorld_ = MakeAffineMatrix(scale_, rotation_, translation_); };
 
 private:
 	// 定数バッファ

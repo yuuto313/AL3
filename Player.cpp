@@ -20,7 +20,7 @@ void Player::Initialize(Model* model, uint32_t textureHandle) {
 }
 
 void Player::Update() {
-
+	
 	
 	//行列を定数バッファに転送する
 	worldTransform_.TransferMatrix();
