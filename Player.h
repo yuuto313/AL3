@@ -2,13 +2,20 @@
 #include "WorldTransform.h"
 #include "Input.h"
 #include "PlayerBullet.h"
+#include <list>
 #pragma once
 /// <summary>
 /// 自キャラ
 /// </summary>
 class Player {
 public:
+	/// <summary>
+	/// コンストラクタ
+	/// </summary>
 	Player();
+	/// <summary>
+	/// デストラクタ
+	/// </summary>
 	~Player();
 	/// <summary>
 	/// 初期化
@@ -46,5 +53,5 @@ private:
 	float inputFloat3[3] = {worldTransform_.translation_.x,worldTransform_.translation_.y,worldTransform_.translation_.z};
 
 	//弾
-	PlayerBullet* bullet_ = nullptr;
+	std::list<PlayerBullet*> bullets_;
 };
