@@ -51,6 +51,10 @@ public:
 	/// </summary>
 	/// <returns>定数バッファ</returns>
 	const Microsoft::WRL::ComPtr<ID3D12Resource>& GetConstBuffer() const { return constBuffer_; }
+	/// <summary>
+	/// アフィン変換行列
+	/// </summary>
+	void UpdateMatrix();
 
 private:
 	// 定数バッファ
