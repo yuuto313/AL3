@@ -33,4 +33,6 @@ private:
 
 	//キーボード入力
 	Input* input_ = nullptr;
+
+	std::vector<std::vector<WorldTransform*>> worldTransformBlocks_;
 };
