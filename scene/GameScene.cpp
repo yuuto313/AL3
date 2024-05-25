@@ -41,7 +41,7 @@ void GameScene::Initialize() {
 	//敵キャラ生成
 	enemy_ = new Enemy();
 	//敵キャラ初期化
-	enemy_->Initialize(model_,pos_,velocity_);
+	enemy_->Initialize(model_,pos_,approachVelocity_,leaveVelocity_);
 
 	//デバッグカメラの生成
 	debugCamera_ = new DebugCamera(1280, 720);

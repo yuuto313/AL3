@@ -74,7 +74,8 @@ private: // メンバ変数
 	// 敵キャラの座標
 	Vector3 pos_ = {0.0f, 2.0f, 20.0};
 	// 敵キャラの速度
-	Vector3 velocity_ = {0.0f, 0.0f, -0.3f};
+	Vector3 approachVelocity_ = {0.0f, 0.0f, -0.3f};
+	Vector3 leaveVelocity_ = {0.1f, 0.1f, -0.3f};
 	
 	/// <summary>
 	/// ゲームシーン用

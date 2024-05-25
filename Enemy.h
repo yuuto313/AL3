@@ -1,6 +1,7 @@
 #include "Model.h"
 #include "WorldTransform.h"
 #pragma once
+
 /// <summary>
 /// 敵
 /// </summary>
@@ -20,7 +21,7 @@ public:
 	/// <param name="model"></param>
 	/// <param name="position"></param>
 	/// <param name="velocity"></param>
-	void Initialize(Model* model, const Vector3& position, const Vector3& velocity);
+	void Initialize(Model* model, const Vector3& position, const Vector3& approachVelocity,const Vector3& leaveVelocity);
 	/// <summary>
 	/// 更新
 	/// </summary>
@@ -29,6 +30,14 @@ public:
 	/// 描画
 	/// </summary>
 	void Draw(ViewProjection& viewProjection);
+	/// <summary>
+	/// 接近フェーズの更新関数
+	/// </summary>
+	void UpdateApploach();
+	/// <summary>
+	/// 離脱フェーズの更新関数
+	/// </summary>
+	void UpdateLeave();
 
 private:
 	// ワールド変換データ
@@ -38,5 +47,15 @@ private:
 	// テクスチャハンドル
 	uint32_t textureHandle_ = 0u;
 	// 速度
-	Vector3 velocity_;
+	Vector3 approachVelocity_;
+	Vector3 leaveVelocity_;
+
+	// 行動フェーズ
+	enum class Phase {
+		Approach, // 接近する
+		Leave,    // 離脱する
+	};
+
+	//フェーズ
+	Phase phase_ = Phase::Approach;
 };
