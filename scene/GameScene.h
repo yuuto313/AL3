@@ -1,4 +1,5 @@
 #include "Player.h"
+#include "Enemy.h"
 
 #include "Audio.h"
 #include "DirectXCommon.h"
@@ -66,6 +67,14 @@ private: // メンバ変数
 
 	//自キャラ
 	Player* player_ = nullptr;
+
+	//敵キャラ
+	Enemy* enemy_ = nullptr;
+
+	// 敵キャラの座標
+	Vector3 pos_ = {0.0f, 2.0f, 20.0};
+	// 敵キャラの速度
+	Vector3 velocity_ = {0.0f, 0.0f, -0.3f};
 	
 	/// <summary>
 	/// ゲームシーン用

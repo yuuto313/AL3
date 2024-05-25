@@ -1,26 +1,26 @@
 #include "Model.h"
 #include "WorldTransform.h"
-#include "Input.h"
-#include "PlayerBullet.h"
-#include <list>
 #pragma once
 /// <summary>
-/// 自キャラ
+/// 敵
 /// </summary>
-class Player {
+class Enemy {
 public:
 	/// <summary>
 	/// コンストラクタ
 	/// </summary>
-	Player();
+	Enemy();
 	/// <summary>
 	/// デストラクタ
 	/// </summary>
-	~Player();
+	~Enemy();
 	/// <summary>
 	/// 初期化
 	/// </summary>
-	void Initialize(Model* model, uint32_t textureHandle);
+	/// <param name="model"></param>
+	/// <param name="position"></param>
+	/// <param name="velocity"></param>
+	void Initialize(Model* model, const Vector3& position, const Vector3& velocity);
 	/// <summary>
 	/// 更新
 	/// </summary>
@@ -29,26 +29,14 @@ public:
 	/// 描画
 	/// </summary>
 	void Draw(ViewProjection& viewProjection);
-	/// <summary>
-	/// 旋回（回転）
-	/// </summary>
-	void Rotate();
-	/// <summary>
-	/// 攻撃
-	/// </summary>
-	void Attack();
 
 private:
 	// ワールド変換データ
 	WorldTransform worldTransform_;
-	// モデル
+	// モデルのポインタ
 	Model* model_ = nullptr;
 	// テクスチャハンドル
 	uint32_t textureHandle_ = 0u;
-
-	// キーボード入力
-	Input* input_ = nullptr;
-
-	//弾
-	std::list<PlayerBullet*> bullets_;
+	// 速度
+	Vector3 velocity_;
 };
