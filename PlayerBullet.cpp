@@ -2,7 +2,7 @@
 #include <cassert>
 #include "TextureManager.h"
 
-void PlayerBullet::Initialize(Model* model, const Vector3& position) { 
+void PlayerBullet::Initialize(Model* model, const Vector3& position,const Vector3& velocity) { 
 	//NULLポインタチェック
 	assert(model);
 
@@ -12,11 +12,20 @@ void PlayerBullet::Initialize(Model* model, const Vector3& position) {
 	worldTransform_.Initialize();
 	//引数で受け取った初期座標をセット
 	worldTransform_.translation_ = position;
+	velocity_ = velocity;
 }
 
-void PlayerBullet::Update() { 
+void PlayerBullet::Update(){
+	//時間経過でデス
+	if (--deathTimer_ <= 0) {
+		isDead_ = true;
+	}
+	//座標を移動させる
+	worldTransform_.translation_ += velocity_;
+	//行列を更新
 	worldTransform_.UpdateMatrix();
 	worldTransform_.TransferMatrix();
+
 }
 
 void PlayerBullet::Draw(const ViewProjection& viewProjection) {
