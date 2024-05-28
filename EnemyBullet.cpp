@@ -1,21 +1,24 @@
-#include "PlayerBullet.h"
+#include "EnemyBullet.h"
 #include <cassert>
 #include "TextureManager.h"
+EnemyBullet::EnemyBullet() {}
 
-void PlayerBullet::Initialize(Model* model, const Vector3& position,const Vector3& velocity) { 
-	//NULLポインタチェック
+EnemyBullet::~EnemyBullet() {}
+
+void EnemyBullet::Initialize(Model* model, const Vector3& position,const Vector3& velocity) { 
 	assert(model);
 
 	model_ = model;
-	//テクスチャを読み込む
-	textureHandle_ = TextureManager::Load("white1x1.png");
+	//テクスチャ読み込み
+	textureHandle_ = TextureManager::Load("bullet.png");
+
 	worldTransform_.Initialize();
-	//引数で受け取った初期座標をセット
 	worldTransform_.translation_ = position;
+
 	velocity_ = velocity;
 }
 
-void PlayerBullet::Update(){
+void EnemyBullet::Update() { 
 	//--------------------------------
 	// 時間経過でデス
 	//--------------------------------
@@ -23,17 +26,16 @@ void PlayerBullet::Update(){
 		isDead_ = true;
 	}
 
-	//座標を移動させる
 	worldTransform_.translation_ += velocity_;
+
 
 	//--------------------------------
 	// 行列の更新
 	//--------------------------------
 	worldTransform_.UpdateMatrix();
 	worldTransform_.TransferMatrix();
-
 }
 
-void PlayerBullet::Draw(const ViewProjection& viewProjection) {
+void EnemyBullet::Draw(const ViewProjection& viewProjection) { 
 	model_->Draw(worldTransform_, viewProjection, textureHandle_);
 }

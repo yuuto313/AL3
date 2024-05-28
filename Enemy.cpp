@@ -4,7 +4,12 @@
 
 Enemy::Enemy() {}
 
-Enemy::~Enemy() {}
+Enemy::~Enemy() {
+	// bullet_の解放
+	for (EnemyBullet* bullet : bullets_) {
+		delete bullet;
+	}
+}
 
 void Enemy::Initialize(Model* model, const Vector3& position, const Vector3& approachVelocity, const Vector3& leaveVelocity) { 
 	assert(model);
@@ -16,9 +21,28 @@ void Enemy::Initialize(Model* model, const Vector3& position, const Vector3& app
 	worldTransform_.translation_ = position;
 	approachVelocity_ = approachVelocity;
 	leaveVelocity_ = leaveVelocity;
+	
+	//接近フェーズ初期化
+	InitializeApploach();
+
 }
 
 void Enemy::Update() { 
+	//--------------------------------
+	// デスフラグの立った弾を削除
+	//--------------------------------
+
+	bullets_.remove_if([](EnemyBullet* bullet) {
+		if (bullet->IsDead()) {
+			delete bullet;
+			return true;
+		}
+		return false;
+	});
+
+	//--------------------------------
+	// 行動フェーズ
+	//--------------------------------
 	switch (phase_) {
 	case Enemy::Phase::Approach:
 		//移動（ベクトル加算）
@@ -31,13 +55,35 @@ void Enemy::Update() {
 	default:
 		break;
 	}
-	// 行列を更新
+
+
+	//--------------------------------
+	// 攻撃処理
+	//--------------------------------
+
+	// 弾更新
+	for (EnemyBullet* bullet : bullets_) {
+		bullet->Update();
+	}
+
+	//--------------------------------
+	// 行列の更新
+	//--------------------------------
 	worldTransform_.UpdateMatrix();
 	worldTransform_.TransferMatrix();
 }
 
 void Enemy::Draw(ViewProjection& viewProjection) { 
-	model_->Draw(worldTransform_, viewProjection, textureHandle_); }
+	for (EnemyBullet* bullet : bullets_) {
+		bullet->Draw(viewProjection);
+	}
+	model_->Draw(worldTransform_, viewProjection, textureHandle_);
+}
+
+void Enemy::InitializeApploach() {
+    //発射タイマー初期化
+	shotTimer_ = kFireInterval;
+}
 
 void Enemy::UpdateApploach() {
 	// 移動（ベクトル加算）
@@ -46,9 +92,33 @@ void Enemy::UpdateApploach() {
 	if (worldTransform_.translation_.z < 0.0f) {
 		phase_ = Phase::Leave;
 	}
+
+	//発射タイマーカウントダウン
+	--shotTimer_;
+	if (shotTimer_ <= 0) {
+	    //弾を発射
+		Fire();
+		//発射タイマーを初期化
+		shotTimer_ = kFireInterval;
+	}
+
 }
 
 void Enemy::UpdateLeave() {
 	// 移動（ベクトル加算）
 	worldTransform_.translation_ += leaveVelocity_;
+}
+
+void Enemy::Fire() {
+	const float kBulletSpeed = -1.0f;
+	Vector3 velocity(0.0f, 0.0f, kBulletSpeed);
+
+	//速度ベクトルを自機の向きに合わせて回転させる
+	velocity = TransformNormal(velocity, worldTransform_.matWorld_);
+
+	// 弾を生成し、初期化
+	EnemyBullet* newBullet = new EnemyBullet();
+	newBullet->Initialize(model_, worldTransform_.translation_,velocity);
+	// 弾を登録する
+	bullets_.push_back(newBullet);
 }
