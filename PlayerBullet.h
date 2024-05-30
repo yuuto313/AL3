@@ -16,19 +16,27 @@ public:
 	/// <param name="position"></param>
 	/// <param name="velocity"></param>
 	void Initialize(Model* model,const Vector3& position,const Vector3& velocity);
+
 	/// <summary>
 	/// 更新
 	/// </summary>
 	void Update();
+
 	/// <summary>
 	/// 描画
 	/// </summary>
 	void Draw(const ViewProjection& viewProjection);
+
 	/// <summary>
 	/// isDead_のゲッター
 	/// </summary>
 	/// <returns></returns>
 	bool IsDead() const { return isDead_; }
+
+	/// <summary>
+	/// 衝突を検出したら呼び出されるコールバック関数
+	/// </summary>
+	void OnCollision();
 
 private:
 	//ワールド変換データ

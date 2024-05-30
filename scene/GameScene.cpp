@@ -140,3 +140,30 @@ void GameScene::Draw() {
 
 #pragma endregion
 }
+
+void GameScene::CheckAllCollisions() {
+	//判定対象AとBの座標
+	Vector3 posA;
+	Vector3 posB;
+
+	//自弾リストの取得
+	const std::list<PlayerBullet*>& playerbullets = player_->GetBullets();
+	//敵弾リストの取得
+	const std::list<EnemyBullet*>& enemybullets = enemy_->GetBullets();
+
+	#pragma region 自キャラと敵弾の当たり判定
+	//自キャラの座標
+	posA = player_->GetWorldPosition();
+
+	//自キャラの敵弾すべての当たり判定
+	for (EnemyBullet* bullet : enemybullets) {
+		//敵弾の座標
+		posB = bullet->GetWorldPosition();
+		//座標AとBの距離を求める
+		Vector3 distance = posA - posB;
+		//弾と弾の交差判定
+		if ()
+	}
+
+	#pragma endregion
+}

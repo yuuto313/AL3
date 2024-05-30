@@ -15,20 +15,35 @@ public:
 	/// <param name="model"></param>
 	/// <param name="position"></param>
 	void Initialize(Model* model,const Vector3& position,const Vector3& velocity);
+
 	/// <summary>
 	/// 更新
 	/// </summary>
 	void Update();
+
 	/// <summary>
 	/// 描画
 	/// </summary>
 	/// <param name="viewProjection"></param>
 	void Draw(const ViewProjection& viewProjection);
+
 	/// <summary>
 	/// isDead_のゲッター
 	/// </summary>
 	/// <returns></returns>
+	/// 
 	bool IsDead() const { return isDead_; }
+
+	/// <summary>
+	/// 衝突を検出したら呼び出されるコールバック関数
+	/// </summary>
+	void OnCollision();
+
+	/// <summary>
+	/// ワールド座標を取得
+	/// </summary>
+	/// <returns></returns>
+	Vector3 GetWorldPosition();
 
 private:
 	// モデルのポインタ
@@ -48,4 +63,7 @@ private:
 	int32_t deathTimer_ = kLifeTime;
 	//デスフラグ
 	bool isDead_ = false;
+
+	//半径
+	static inline float kRadius = 1.0f;
 };

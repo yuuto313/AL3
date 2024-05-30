@@ -16,10 +16,12 @@ public:
 	/// コンストラクタ
 	/// </summary>
 	Enemy();
+
 	/// <summary>
 	/// デストラクタ
 	/// </summary>
 	~Enemy();
+
 	/// <summary>
 	/// 初期化
 	/// </summary>
@@ -27,40 +29,59 @@ public:
 	/// <param name="position"></param>
 	/// <param name="velocity"></param>
 	void Initialize(Model* model, const Vector3& position, const Vector3& approachVelocity,const Vector3& leaveVelocity);
+	
 	/// <summary>
 	/// 更新
 	/// </summary>
 	void Update();
+
 	/// <summary>
 	/// 描画
 	/// </summary>
 	void Draw(ViewProjection& viewProjection);
+
 	/// <summary>
 	/// 接近フェーズ初期化
 	/// </summary>
 	void InitializeApploach();
+
 	/// <summary>
 	/// 接近フェーズの更新関数
 	/// </summary>
 	void UpdateApploach();
+
 	/// <summary>
 	/// 離脱フェーズの更新関数
 	/// </summary>
 	void UpdateLeave();
+
 	/// <summary>
 	/// 弾発射
 	/// </summary>
 	void Fire();
+
 	/// <summary>
 	/// PlayerはGameSceneがもっているので借りるためのセッターを作成
 	/// </summary>
 	/// <param name="player"></param>
 	void SetPlayer(Player* player) { player_ = player; };
+
 	/// <summary>
 	/// ワールド座標を取得
 	/// </summary>
 	/// <returns></returns>
 	Vector3 GetWorldPosition();
+
+	/// <summary>
+	/// 衝突を検出したら呼び出されるコールバック関数
+	/// </summary>
+	void OnCollision();
+
+	/// <summary>
+	/// 弾リストを取得
+	/// </summary>
+	/// <returns></returns>
+	const std::list<EnemyBullet*>& GetBullets() const { return bullets_; }
 
 private:
 	// ワールド変換データ

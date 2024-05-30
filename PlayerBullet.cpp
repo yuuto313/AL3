@@ -35,5 +35,9 @@ void PlayerBullet::Update(){
 }
 
 void PlayerBullet::Draw(const ViewProjection& viewProjection) {
-	model_->Draw(worldTransform_, viewProjection, textureHandle_);
+	model_->Draw(worldTransform_, viewProjection, textureHandle_); }
+
+void PlayerBullet::OnCollision() { 
+	//デスフラグを立てる
+	isDead_ = true;
 }
