@@ -13,6 +13,7 @@ GameScene::~GameScene() {
 	//敵キャラ開放
 	delete enemy_;
 	delete debugCamera_;
+	delete skydome_;
 }
 
 void GameScene::Initialize() {
@@ -52,6 +53,10 @@ void GameScene::Initialize() {
 	AxisIndicator::GetInstance()->SetVisible(true);
 	//軸方向表示が参照するビュープロジェクションを指定する（アドレス渡し）
 	AxisIndicator::GetInstance()->SetTargetViewProjection(&viewProjection_);
+
+	//3Dモデルの生成
+	modelSkydome_ = Model::CreateFromOBJ("skydome", true);
+
 }
 
 void GameScene::Update() {

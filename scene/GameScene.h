@@ -1,5 +1,6 @@
 #include "Player.h"
 #include "Enemy.h"
+#include "Skydome.h"
 
 #include "Audio.h"
 #include "DirectXCommon.h"
@@ -82,6 +83,11 @@ private: // メンバ変数
 	Vector3 approachVelocity_ = {0.0f, 0.0f, -0.05f};
 	Vector3 leaveVelocity_ = {0.1f, 0.1f, -0.05f};
 	
+	//天球
+	Skydome* skydome_ = nullptr;
+	//3Dモデル
+	Model* modelSkydome_ = nullptr;
+
 	/// <summary>
 	/// ゲームシーン用
 	/// </summary>
