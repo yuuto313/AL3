@@ -44,6 +44,13 @@ public:
 	/// </summary>
 	/// <returns></returns>
 	Vector3 GetWorldPosition();
+	
+	/// <summary>
+	/// 半径を取得するゲッター
+	/// </summary>
+	/// <param name="radius"></param>
+	/// <returns></returns>
+	float GetRadius() { return kRadius; }
 
 private:
 	// モデルのポインタ

@@ -83,6 +83,13 @@ public:
 	/// <returns></returns>
 	const std::list<EnemyBullet*>& GetBullets() const { return bullets_; }
 
+	/// <summary>
+	/// 半径を取得するゲッター
+	/// </summary>
+	/// <param name="radius"></param>
+	/// <returns></returns>
+	float GetRadius() { return kRadius; }
+
 private:
 	// ワールド変換データ
 	WorldTransform worldTransform_;
@@ -111,6 +118,9 @@ private:
 
 	//自キャラ
 	Player* player_ = nullptr;
+
+	static inline const float kRadius = 1.0f;
+
 
 public:
 	//発射間隔

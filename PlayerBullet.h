@@ -38,6 +38,19 @@ public:
 	/// </summary>
 	void OnCollision();
 
+	/// <summary>
+	/// ワールド座標を取得
+	/// </summary>
+	/// <returns></returns>
+	Vector3 GetWorldPosition();
+
+	/// <summary>
+	/// 半径を取得するゲッター
+	/// </summary>
+	/// <param name="radius"></param>
+	/// <returns></returns>
+	float GetRadius() { return kRadius; }
+
 private:
 	//ワールド変換データ
 	WorldTransform worldTransform_;
@@ -53,4 +66,7 @@ private:
 	int32_t deathTimer_ = kLifeTime;
 	//デスフラグ
 	bool isDead_ = false;
+
+	// 半径
+	static inline const float kRadius = 1.0f;
 };

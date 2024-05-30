@@ -1,7 +1,6 @@
 #include "Enemy.h"
 #include <cassert>
 #include "TextureManager.h"
-#include "MyMath.h"
 #include "Player.h"
 
 Enemy::Enemy() {}

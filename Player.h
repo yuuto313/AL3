@@ -60,6 +60,13 @@ public:
 	/// <returns></returns>
 	const std::list<PlayerBullet*>& GetBullets() const { return bullets_; }
 
+	/// <summary>
+	/// 半径を取得するゲッター
+	/// </summary>
+	/// <param name="radius"></param>
+	/// <returns></returns>
+	float GetRadius() {return kRadius; }
+
 	private:
 	// ワールド変換データ
 	WorldTransform worldTransform_;
@@ -75,5 +82,5 @@ public:
 	std::list<PlayerBullet*> bullets_;
 
 	//半径
-
+	static inline const float kRadius = 1.0f;
 };
