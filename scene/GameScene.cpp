@@ -14,6 +14,7 @@ GameScene::~GameScene() {
 	delete enemy_;
 	delete debugCamera_;
 	delete skydome_;
+	delete modelSkydome_;
 }
 
 void GameScene::Initialize() {
@@ -56,6 +57,12 @@ void GameScene::Initialize() {
 
 	//3Dモデルの生成
 	modelSkydome_ = Model::CreateFromOBJ("skydome", true);
+	//天球を生成
+	skydome_ = new Skydome();
+	//初期化
+	skydome_->Initialize(modelSkydome_,&viewProjection_);
+
+	
 
 }
 
@@ -66,6 +73,8 @@ void GameScene::Update() {
 	enemy_->Update();
 	//当たり判定
 	CheckAllCollisions();
+	//天球の更新
+	skydome_->Update();
 
 #ifdef _DEBUG
 	if (input_->TriggerKey(DIK_SPACE)) {
@@ -123,8 +132,10 @@ void GameScene::Draw() {
 
 	//自キャラの描画
 	player_->Draw(viewProjection_);
-	//敵キャラ更新
+	//敵キャラの描画
 	enemy_->Draw(viewProjection_);
+	//天球の描画
+	skydome_->Draw();
 
 	// 3Dオブジェクト描画後処理
 	Model::PostDraw();

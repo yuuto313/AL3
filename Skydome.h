@@ -7,6 +7,8 @@
 /// </summary>
 class Skydome {
 public:
+	Skydome();
+	~Skydome();
 	/// <summary>
 	/// 初期化
 	/// </summary>

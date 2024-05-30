@@ -1,6 +1,10 @@
 #include "Skydome.h"
 #include <cassert>
 
+Skydome::Skydome() {}
+
+Skydome::~Skydome() {}
+
 void Skydome::Initialize(Model* model, ViewProjection* viewProjection) {
 	// nullptrチェック
 	assert(model);
