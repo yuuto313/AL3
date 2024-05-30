@@ -8,8 +8,19 @@ struct Vector3 final {
 	float y;
 	float z;
 
-	const Vector3 operator+=(const Vector3& other) { 
+	const Vector3 operator+=(const Vector3& other) 
+	{ 
 		return Vector3(this->x += other.x, this->y += other.y, this->z += other.z);
+	}
+
+	const Vector3 operator-(const Vector3& other) 
+	{ 
+		return Vector3(this->x - other.x, this->y - other.y, this->z - other.z);
+	}
+
+	const Vector3 operator*(const float& other) 
+	{ 
+		return Vector3(this->x * other, this->y * other, this->z * other);
 	}
 
 };

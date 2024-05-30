@@ -1,5 +1,17 @@
 #include "MyMath.h"
 
+// 長さ
+float Length(const Vector3& v) { return sqrtf(v.x * v.x + v.y * v.y + v.z * v.z); }
+
+// 正規化
+Vector3 Normalize(const Vector3& v) {
+	Vector3 result;
+	result.x = v.x / Length(v);
+	result.y = v.y / Length(v);
+	result.z = v.z / Length(v);
+	return Vector3(result);
+}
+
 // 積
 Matrix4x4 Multiply(const Matrix4x4& m1, const Matrix4x4& m2) {
 	Matrix4x4 result{};

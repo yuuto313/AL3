@@ -3,6 +3,8 @@
 #include "WorldTransform.h"
 #include <list>
 
+//自機クラスの前方宣言
+class Player;
 #pragma once
 
 /// <summary>
@@ -49,7 +51,16 @@ public:
 	/// 弾発射
 	/// </summary>
 	void Fire();
-
+	/// <summary>
+	/// PlayerはGameSceneがもっているので借りるためのセッターを作成
+	/// </summary>
+	/// <param name="player"></param>
+	void SetPlayer(Player* player) { player_ = player; };
+	/// <summary>
+	/// ワールド座標を取得
+	/// </summary>
+	/// <returns></returns>
+	Vector3 GetWorldPosition();
 
 private:
 	// ワールド変換データ
@@ -76,6 +87,9 @@ private:
 
 	//発射タイマー
 	int32_t shotTimer_ = 0;
+
+	//自キャラ
+	Player* player_ = nullptr;
 
 public:
 	//発射間隔
