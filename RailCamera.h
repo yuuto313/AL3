@@ -25,5 +25,8 @@ private:
 	//ワールド変換データ
 	WorldTransform worldTransform_;
 	ViewProjection viewProjection_;
-	   
+	//カメラの移動スピード
+	static inline const Vector3 kSpeed = {0.0f, 0.0f, -0.05f};
+	//カメラの回転
+	static inline const Vector3 kRotate = {0.0f, 0.0f, 0.0f};
 };

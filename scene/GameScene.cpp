@@ -40,6 +40,8 @@ void GameScene::Initialize() {
 	player_ = new Player();
 	//自キャラの初期化
 	player_->Initialize(model_,textureHandle_);
+	//自キャラとレールカメラの親子関係を結ぶ
+	player_->SetParent(&railCamera_->GetWorldTransform());
 
 	//敵キャラ生成
 	enemy_ = new Enemy();
