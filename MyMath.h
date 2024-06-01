@@ -10,6 +10,9 @@ float Length(const Vector3& v);
 // 正規化
 Vector3 Normalize(const Vector3& v);
 
+// 逆行列
+Matrix4x4 Inverse(const Matrix4x4& m);
+
 // 積
 Matrix4x4 Multiply(const Matrix4x4& m1, const Matrix4x4& m2);
 

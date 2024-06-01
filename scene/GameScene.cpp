@@ -15,6 +15,7 @@ GameScene::~GameScene() {
 	delete debugCamera_;
 	delete skydome_;
 	delete modelSkydome_;
+	delete railCamera_;
 }
 
 void GameScene::Initialize() {
@@ -62,8 +63,9 @@ void GameScene::Initialize() {
 	//初期化
 	skydome_->Initialize(modelSkydome_,&viewProjection_);
 
-	
-
+	//カメラオブジェクト
+	railCamera_ = new RailCamera();
+	railCamera_->Initialize(viewProjection_.translation_,viewProjection_.rotation_);
 }
 
 void GameScene::Update() {
@@ -75,6 +77,8 @@ void GameScene::Update() {
 	CheckAllCollisions();
 	//天球の更新
 	skydome_->Update();
+	//カメラオブジェクトの更新
+	railCamera_->Update();
 
 #ifdef _DEBUG
 	if (input_->TriggerKey(DIK_SPACE)) {
@@ -90,9 +94,9 @@ void GameScene::Update() {
 	if (isDebugCameraActive_) {
 	//デバッグカメラの更新
 	debugCamera_->Update();
-	viewProjection_.matView = debugCamera_->GetViewProjection().matView;
+	viewProjection_.matView = railCamera_->GetViewProjection().matView;
 
-	viewProjection_.matProjection = debugCamera_->GetViewProjection().matProjection;
+	viewProjection_.matProjection = railCamera_->GetViewProjection().matProjection;
 
 	// ビュープロジェクション行列の転送
 	viewProjection_.TransferMatrix();

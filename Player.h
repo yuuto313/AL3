@@ -67,7 +67,7 @@ public:
 	/// <returns></returns>
 	float GetRadius() {return kRadius; }
 
-	private:
+private:
 	// ワールド変換データ
 	WorldTransform worldTransform_;
 	// モデル
