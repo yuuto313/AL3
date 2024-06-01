@@ -1,5 +1,6 @@
 #include "RailCamera.h"
-#include "imgui.h"
+#include "ImGuiManager.h"
+
 void RailCamera::Initialize(Vector3 position,Vector3 rotate) {
 	//ワールドトランスフォームの初期化
 	worldTransform_.Initialize();
@@ -22,10 +23,13 @@ void RailCamera::Update() {
 	worldTransform_.UpdateMatrix();
 
 	//カメラの座標を画面表示
-	ImGui::Begin("Camera");
+#ifdef _DEBUG
+ImGui::Begin("Camera");
 	ImGui::SliderFloat3("translation", &worldTransform_.translation_.x, 0.0f,1.0f);
 	ImGui::SliderFloat3("rotation", &worldTransform_.rotation_.x, -1.0f,1.0f);
 	ImGui::End();
+#endif // _DEBUG
+
 }
 
 

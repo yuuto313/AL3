@@ -71,7 +71,6 @@ void Enemy::Update() {
 	// 行列の更新
 	//--------------------------------
 	worldTransform_.UpdateMatrix();
-	worldTransform_.TransferMatrix();
 }
 
 void Enemy::Draw(ViewProjection& viewProjection) { 

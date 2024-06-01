@@ -23,10 +23,14 @@ void GameScene::Initialize() {
 	dxCommon_ = DirectXCommon::GetInstance();
 	input_ = Input::GetInstance();
 	audio_ = Audio::GetInstance();
-
-	//ワールドトランスフォームの初期化
-	//worldTransform_.Initialize();
 	
+	// 3Dモデルの生成
+	modelSkydome_ = Model::CreateFromOBJ("skydome", true);
+	// 天球を生成
+	skydome_ = new Skydome();
+	// 初期化
+	skydome_->Initialize(modelSkydome_, &viewProjection_);
+
 	//３Dモデルデータの生成
 	model_ = Model::Create();
 
@@ -36,51 +40,47 @@ void GameScene::Initialize() {
 	//ビュープロジェクションの初期化
 	viewProjection_.Initialize();
 	
+	// デバッグカメラの生成
+	debugCamera_ = new DebugCamera(1280, 720);
+
+	// カメラオブジェクト
+	railCamera_ = new RailCamera();
+	railCamera_->Initialize(viewProjection_.translation_, viewProjection_.rotation_);
+
 	//自キャラの生成
 	player_ = new Player();
 	//自キャラの初期化
-	player_->Initialize(model_,textureHandle_);
+	//z = カメラから前にずらす量
+	Vector3 playerPosition(0.0f, 0.0f, 20.0f);
+	player_->Initialize(model_,textureHandle_,playerPosition);
 	//自キャラとレールカメラの親子関係を結ぶ
 	player_->SetParent(&railCamera_->GetWorldTransform());
 
 	//敵キャラ生成
 	enemy_ = new Enemy();
 	//敵キャラ初期化
-	enemy_->Initialize(model_,pos_,approachVelocity_,leaveVelocity_);
+	enemy_->Initialize(model_,enemyPosition_,approachVelocity_,leaveVelocity_);
 	//敵キャラに自キャラのアドレスを渡す
 	enemy_->SetPlayer(player_);
-
-	//デバッグカメラの生成
-	debugCamera_ = new DebugCamera(1280, 720);
 
 	//軸方向表示の表示を有効にする
 	AxisIndicator::GetInstance()->SetVisible(true);
 	//軸方向表示が参照するビュープロジェクションを指定する（アドレス渡し）
 	AxisIndicator::GetInstance()->SetTargetViewProjection(&viewProjection_);
-
-	//3Dモデルの生成
-	modelSkydome_ = Model::CreateFromOBJ("skydome", true);
-	//天球を生成
-	skydome_ = new Skydome();
-	//初期化
-	skydome_->Initialize(modelSkydome_,&viewProjection_);
-
-	//カメラオブジェクト
-	railCamera_ = new RailCamera();
-	railCamera_->Initialize(viewProjection_.translation_,viewProjection_.rotation_);
 }
 
 void GameScene::Update() {
+	//天球の更新
+	skydome_->Update();
+	//カメラオブジェクトの更新
+	railCamera_->Update();
 	//自キャラの更新
 	player_->Update();
 	//敵キャラ更新
 	enemy_->Update();
 	//当たり判定
 	CheckAllCollisions();
-	//天球の更新
-	skydome_->Update();
-	//カメラオブジェクトの更新
-	railCamera_->Update();
+	
 
 #ifdef _DEBUG
 	if (input_->TriggerKey(DIK_SPACE)) {

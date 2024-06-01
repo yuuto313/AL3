@@ -22,7 +22,7 @@ public:
 	/// <summary>
 	/// 初期化
 	/// </summary>
-	void Initialize(Model* model, uint32_t textureHandle);
+	void Initialize(Model* model, uint32_t textureHandle,const Vector3& position);
 
 	/// <summary>
 	/// 更新

@@ -68,7 +68,7 @@ private: // メンバ変数
 	ViewProjection viewProjection_;
 	
 	//デバッグカメラ有効
-	bool isDebugCameraActive_ = false;
+	bool isDebugCameraActive_ = true;
 	//デバッグカメラ
 	DebugCamera* debugCamera_ = nullptr;
 
@@ -79,7 +79,7 @@ private: // メンバ変数
 	Enemy* enemy_ = nullptr;
 
 	// 敵キャラの座標
-	Vector3 pos_ = {2.0f, 2.0f, 50.0};
+	Vector3 enemyPosition_ = {2.0f, 2.0f, 50.0};
 	// 敵キャラの速度
 	Vector3 approachVelocity_ = {0.0f, 0.0f, -0.05f};
 	Vector3 leaveVelocity_ = {0.1f, 0.1f, -0.05f};

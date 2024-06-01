@@ -10,7 +10,7 @@ Player::~Player() {
 	}
 }
 
-void Player::Initialize(Model* model, uint32_t textureHandle) {
+void Player::Initialize(Model* model, uint32_t textureHandle,const Vector3& position) {
 	// NULLポインタチェック
 	assert(model);
 	// 引数として受け取ったデータをメンバ変数に記録
@@ -19,7 +19,7 @@ void Player::Initialize(Model* model, uint32_t textureHandle) {
 
 	// ワールド変数の初期化
 	worldTransform_.Initialize();
-
+	worldTransform_.translation_ = position;
 	// シングルトンインスタンスを取得する
 	input_ = Input::GetInstance();
 
@@ -98,8 +98,6 @@ void Player::Update() {
 	//--------------------------------
 	//行列の更新
 	//--------------------------------
-	// 行列を定数バッファに転送する
-	worldTransform_.TransferMatrix();
 	worldTransform_.UpdateMatrix();
 
 	//--------------------------------
@@ -146,7 +144,7 @@ void Player::Attack() {
 
 	//弾を生成し、初期化
 	PlayerBullet* newBullet = new PlayerBullet();
-	newBullet->Initialize(model_, worldTransform_.translation_,velocity);
+	newBullet->Initialize(model_, GetWorldPosition(), velocity);
 	//弾を登録する
 	bullets_.push_back(newBullet);
 	}
@@ -156,9 +154,9 @@ Vector3 Player::GetWorldPosition() {
     //ワールド座標を入れる変数
 	Vector3 worldPos;
 	//ワールド行列の平行移動成分を取得（ワールド座標）
-	worldPos.x = worldTransform_.translation_.x;
-	worldPos.y = worldTransform_.translation_.y;
-	worldPos.z = worldTransform_.translation_.z;
+	worldPos.x = worldTransform_.matWorld_.m[3][0];
+	worldPos.y = worldTransform_.matWorld_.m[3][1];
+	worldPos.z = worldTransform_.matWorld_.m[3][2];
 	return worldPos;
 }
 

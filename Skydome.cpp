@@ -15,8 +15,7 @@ void Skydome::Initialize(Model* model, ViewProjection* viewProjection) {
 }
 
 void Skydome::Update() {
-	worldTransform_.matWorld_ = MakeAffineMatrix(worldTransform_.scale_, worldTransform_.rotation_, worldTransform_.translation_);
-	worldTransform_.TransferMatrix();
+	worldTransform_.UpdateMatrix();
 }
 
 void Skydome::Draw() { model_->Draw(worldTransform_, *viewProjection_); }

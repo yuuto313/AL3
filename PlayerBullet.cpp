@@ -30,7 +30,6 @@ void PlayerBullet::Update(){
 	// 行列の更新
 	//--------------------------------
 	worldTransform_.UpdateMatrix();
-	worldTransform_.TransferMatrix();
 
 }
 
