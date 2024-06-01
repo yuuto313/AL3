@@ -10,7 +10,7 @@ Player::~Player() {
 	}
 }
 
-void Player::Initialize(Model* model, uint32_t textureHandle,const Vector3& position) {
+void Player::Initialize(Model* model, uint32_t textureHandle) {
 	// NULLポインタチェック
 	assert(model);
 	// 引数として受け取ったデータをメンバ変数に記録
@@ -19,7 +19,6 @@ void Player::Initialize(Model* model, uint32_t textureHandle,const Vector3& posi
 
 	// ワールド変数の初期化
 	worldTransform_.Initialize();
-	worldTransform_.translation_ = position;
 	// シングルトンインスタンスを取得する
 	input_ = Input::GetInstance();
 

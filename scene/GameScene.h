@@ -1,7 +1,6 @@
 #include "Player.h"
 #include "Enemy.h"
 #include "Skydome.h"
-#include "RailCamera.h"
 
 #include "Audio.h"
 #include "DirectXCommon.h"
@@ -68,7 +67,7 @@ private: // メンバ変数
 	ViewProjection viewProjection_;
 	
 	//デバッグカメラ有効
-	bool isDebugCameraActive_ = true;
+	bool isDebugCameraActive_ = false;
 	//デバッグカメラ
 	DebugCamera* debugCamera_ = nullptr;
 
@@ -88,9 +87,6 @@ private: // メンバ変数
 	Skydome* skydome_ = nullptr;
 	//3Dモデル
 	Model* modelSkydome_ = nullptr;
-
-	//カメラオブジェクト
-	RailCamera* railCamera_ = nullptr;
 
 	/// <summary>
 	/// ゲームシーン用
