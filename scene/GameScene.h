@@ -11,9 +11,11 @@
 #include "ViewProjection.h"
 #include "WorldTransform.h"
 #include "DebugCamera.h"
+#include <sstream>
 #pragma once
 
-
+//14、敵のデスフラグがたったら…と、当たり判定の変更が未完成
+//15、敵に弾を充てると消えるのも未完
 
 /// <summary>
 /// ゲームシーン
@@ -51,6 +53,22 @@ public: // メンバ関数
 	/// </summary>
 	void CheckAllCollisions();
 
+	/// <summary>
+	/// 敵弾を追加する
+	/// </summary>
+	/// <param name="enemyBullet"></param>
+	void AddEnemyBullet(EnemyBullet* enemyBullet);
+
+	/// <summary>
+	/// 敵発生データの読み込み
+	/// </summary>
+	void LoadEnemyPopData();
+
+	/// <summary>
+	/// 敵発生コマンドの更新
+	/// </summary>
+	void UpdateEnemyPopCommands();
+
 private: // メンバ変数
 	DirectXCommon* dxCommon_ = nullptr;
 	Input* input_ = nullptr;
@@ -78,8 +96,6 @@ private: // メンバ変数
 	//敵キャラ
 	Enemy* enemy_ = nullptr;
 
-	// 敵キャラの座標
-	Vector3 enemyPosition_ = {2.0f, 2.0f, 50.0};
 	// 敵キャラの速度
 	Vector3 approachVelocity_ = {0.0f, 0.0f, -0.05f};
 	Vector3 leaveVelocity_ = {0.1f, 0.1f, -0.05f};
@@ -92,7 +108,15 @@ private: // メンバ変数
 	//カメラオブジェクト
 	RailCamera* railCamera_ = nullptr;
 
-	/// <summary>
-	/// ゲームシーン用
-	/// </summary>
+	// 敵弾リスト
+	std::list<EnemyBullet*> enemyBullets_;
+
+	//敵発生コマンド
+	std::stringstream enemyPopCommands;
+
+	//待機中フラグ
+	static inline bool isWait = false;
+	
+	//待機タイマー
+	static inline int32_t waitTimer = 0;
 };

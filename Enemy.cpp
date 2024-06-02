@@ -2,24 +2,18 @@
 #include <cassert>
 #include "TextureManager.h"
 #include "Player.h"
-
+#include "GameScene.h"
 Enemy::Enemy() {}
 
-Enemy::~Enemy() {
-	// bullet_の解放
-	for (EnemyBullet* bullet : bullets_) {
-		delete bullet;
-	}
-}
+Enemy::~Enemy() {}
 
-void Enemy::Initialize(Model* model, const Vector3& position, const Vector3& approachVelocity, const Vector3& leaveVelocity) { 
+void Enemy::Initialize(Model* model,const Vector3& approachVelocity, const Vector3& leaveVelocity) { 
 	assert(model);
 	// テクスチャを読み込む
 	textureHandle_ = TextureManager::Load("enemy.png"); 
 	model_ = model;
 	worldTransform_.Initialize();
 	// 引数で受け取った初期座標をセット
-	worldTransform_.translation_ = position;
 	approachVelocity_ = approachVelocity;
 	leaveVelocity_ = leaveVelocity;
 	
@@ -29,18 +23,6 @@ void Enemy::Initialize(Model* model, const Vector3& position, const Vector3& app
 }
 
 void Enemy::Update() { 
-	//--------------------------------
-	// デスフラグの立った弾を削除
-	//--------------------------------
-
-	bullets_.remove_if([](EnemyBullet* bullet) {
-		if (bullet->IsDead()) {
-			delete bullet;
-			return true;
-		}
-		return false;
-	});
-
 	//--------------------------------
 	// 行動フェーズ
 	//--------------------------------
@@ -57,16 +39,6 @@ void Enemy::Update() {
 		break;
 	}
 
-
-	//--------------------------------
-	// 攻撃処理
-	//--------------------------------
-
-	// 弾更新
-	for (EnemyBullet* bullet : bullets_) {
-		bullet->Update();
-	}
-
 	//--------------------------------
 	// 行列の更新
 	//--------------------------------
@@ -74,9 +46,6 @@ void Enemy::Update() {
 }
 
 void Enemy::Draw(ViewProjection& viewProjection) { 
-	for (EnemyBullet* bullet : bullets_) {
-		bullet->Draw(viewProjection);
-	}
 	model_->Draw(worldTransform_, viewProjection, textureHandle_);
 }
 
@@ -134,17 +103,17 @@ void Enemy::Fire() {
 	// 弾を生成し、初期化
 	EnemyBullet* newBullet = new EnemyBullet();
 	newBullet->Initialize(model_, worldTransform_.translation_,velocity);
-	// 弾を登録する
-	bullets_.push_back(newBullet);
+	// ゲームシーンの敵弾リストに弾を登録する
+	gameScene_->AddEnemyBullet(newBullet);
 }
 
 Vector3 Enemy::GetWorldPosition() {
 	// ワールド座標を入れる変数
 	Vector3 worldPos;
 	// ワールド行列の平行移動成分を取得（ワールド座標）
-	worldPos.x = worldTransform_.translation_.x;
-	worldPos.y = worldTransform_.translation_.y;
-	worldPos.z = worldTransform_.translation_.z;
+	worldPos.x = worldTransform_.matWorld_.m[3][0];
+	worldPos.y = worldTransform_.matWorld_.m[3][1];
+	worldPos.z = worldTransform_.matWorld_.m[3][2];
 
 	return worldPos;
 }

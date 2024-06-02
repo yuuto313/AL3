@@ -5,6 +5,8 @@
 
 //自機クラスの前方宣言
 class Player;
+//GameSceneの前方宣言
+class GameScene;
 #pragma once
 
 /// <summary>
@@ -28,7 +30,7 @@ public:
 	/// <param name="model"></param>
 	/// <param name="position"></param>
 	/// <param name="velocity"></param>
-	void Initialize(Model* model, const Vector3& position, const Vector3& approachVelocity,const Vector3& leaveVelocity);
+	void Initialize(Model* model,const Vector3& approachVelocity,const Vector3& leaveVelocity);
 	
 	/// <summary>
 	/// 更新
@@ -90,6 +92,19 @@ public:
 	/// <returns></returns>
 	float GetRadius() { return kRadius; }
 
+	/// <summary>
+	/// ゲームシーンのセッター
+	/// </summary>
+	/// <param name="gameScene"></param>
+	void SetGameScene(GameScene* gameScene) { gameScene_ = gameScene; }
+
+	/// <summary>
+	/// 敵発生場所を指定するセッター
+	/// </summary>
+	/// <param name="position"></param>
+	/// <returns></returns>
+	void SetPosition(Vector3 position) { worldTransform_.translation_ = position; }
+
 private:
 	// ワールド変換データ
 	WorldTransform worldTransform_;
@@ -121,6 +136,8 @@ private:
 
 	static inline const float kRadius = 1.0f;
 
+	//ゲームシーン
+	GameScene* gameScene_ = nullptr;
 
 public:
 	//発射間隔
