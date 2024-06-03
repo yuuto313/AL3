@@ -30,7 +30,7 @@ public:
 	/// <param name="model"></param>
 	/// <param name="position"></param>
 	/// <param name="velocity"></param>
-	void Initialize(Model* model,const Vector3& approachVelocity,const Vector3& leaveVelocity);
+	void Initialize(Model* model,const Vector3 position);
 	
 	/// <summary>
 	/// 更新
@@ -105,6 +105,12 @@ public:
 	/// <returns></returns>
 	void SetPosition(Vector3 position) { worldTransform_.translation_ = position; }
 
+	/// <summary>
+	/// isDead_のゲッター
+	/// </summary>
+	/// <returns></returns>
+	bool IsDead() const { return isDead_; }
+
 private:
 	// ワールド変換データ
 	WorldTransform worldTransform_;
@@ -112,9 +118,10 @@ private:
 	Model* model_ = nullptr;
 	// テクスチャハンドル
 	uint32_t textureHandle_ = 0u;
-	// 速度
-	Vector3 approachVelocity_;
-	Vector3 leaveVelocity_;
+	
+	// 敵キャラの速度
+	Vector3 approachVelocity_ = {0.f, 0.f, -1.f};
+	Vector3 leaveVelocity_ = {0.0f, 0.0f, 0.f};
 
 	// 行動フェーズ
 	enum class Phase {
@@ -138,6 +145,9 @@ private:
 
 	//ゲームシーン
 	GameScene* gameScene_ = nullptr;
+
+	//デスフラグ
+	bool isDead_ = false;
 
 public:
 	//発射間隔

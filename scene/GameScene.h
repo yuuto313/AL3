@@ -69,7 +69,9 @@ public: // メンバ関数
 	/// </summary>
 	void UpdateEnemyPopCommands();
 
-private: // メンバ変数
+	void Spawn(Vector3 position);
+
+	private: // メンバ変数
 	DirectXCommon* dxCommon_ = nullptr;
 	Input* input_ = nullptr;
 	Audio* audio_ = nullptr;
@@ -94,11 +96,7 @@ private: // メンバ変数
 	Player* player_ = nullptr;
 
 	//敵キャラ
-	Enemy* enemy_ = nullptr;
-
-	// 敵キャラの速度
-	Vector3 approachVelocity_ = {0.0f, 0.0f, -0.05f};
-	Vector3 leaveVelocity_ = {0.1f, 0.1f, -0.05f};
+	std::list<Enemy*> enemies_;
 	
 	//天球
 	Skydome* skydome_ = nullptr;
@@ -113,6 +111,8 @@ private: // メンバ変数
 
 	//敵発生コマンド
 	std::stringstream enemyPopCommands;
+
+	Vector3 enemyPosition_;
 
 	//待機中フラグ
 	static inline bool isWait = false;

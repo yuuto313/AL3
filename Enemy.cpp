@@ -7,19 +7,19 @@ Enemy::Enemy() {}
 
 Enemy::~Enemy() {}
 
-void Enemy::Initialize(Model* model,const Vector3& approachVelocity, const Vector3& leaveVelocity) { 
+void Enemy::Initialize(Model* model,const Vector3 position) { 
 	assert(model);
 	// テクスチャを読み込む
 	textureHandle_ = TextureManager::Load("enemy.png"); 
 	model_ = model;
 	worldTransform_.Initialize();
 	// 引数で受け取った初期座標をセット
-	approachVelocity_ = approachVelocity;
-	leaveVelocity_ = leaveVelocity;
+	worldTransform_.translation_ = position;
+	approachVelocity_ = approachVelocity_;
+	leaveVelocity_ = leaveVelocity_;
 	
 	//接近フェーズ初期化
 	InitializeApploach();
-
 }
 
 void Enemy::Update() { 
@@ -119,5 +119,5 @@ Vector3 Enemy::GetWorldPosition() {
 }
 
 void Enemy::OnCollision() {
-	// 何もしない
+	isDead_ = true;
 }
