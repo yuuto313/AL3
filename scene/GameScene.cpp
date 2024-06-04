@@ -65,10 +65,11 @@ void GameScene::Initialize() {
 	// 自キャラの初期化
 	// z = カメラから前にずらす量
 	Vector3 playerPosition(0.0f, 0.0f, 20.0f);
-	player_->Initialize(model_, textureHandle_, playerPosition);
+	player_->Initialize(model_, textureHandle_,reticleTextureHandle_, playerPosition);
 
 	//ファイル名を指定してテクスチャを読み込む
 	textureHandle_ = TextureManager::Load("sample.png");
+	reticleTextureHandle_ = TextureManager::Load("reticle.png");
 
 	//自キャラとレールカメラの親子関係を結ぶ
 	player_->SetParent(&railCamera_->GetWorldTransform());

@@ -69,9 +69,14 @@ public: // メンバ関数
 	/// </summary>
 	void UpdateEnemyPopCommands();
 
+	/// <summary>
+	/// 敵の生成
+	/// </summary>
+	/// <param name="position"></param>
 	void Spawn(Vector3 position);
 
-	private: // メンバ変数
+	private:
+	// メンバ変数
 	DirectXCommon* dxCommon_ = nullptr;
 	Input* input_ = nullptr;
 	Audio* audio_ = nullptr;
@@ -81,8 +86,10 @@ public: // メンバ関数
 	//3Dモデルデータ
 	Model* model_ = nullptr;
 
+
 	//テクスチャハンドル
-	uint32_t textureHandle_ = 0;
+	uint32_t textureHandle_ = 0u;
+	uint32_t reticleTextureHandle_ = 0u;
 
 	// ビュープロジェクション
 	ViewProjection viewProjection_;

@@ -120,7 +120,7 @@ private:
 	uint32_t textureHandle_ = 0u;
 	
 	// 敵キャラの速度
-	Vector3 approachVelocity_ = {0.f, 0.f, -1.f};
+	Vector3 approachVelocity_ = {0.f, 0.f, -0.2f};
 	Vector3 leaveVelocity_ = {0.0f, 0.0f, 0.f};
 
 	// 行動フェーズ

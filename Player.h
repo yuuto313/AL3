@@ -22,7 +22,7 @@ public:
 	/// <summary>
 	/// 初期化
 	/// </summary>
-	void Initialize(Model* model, uint32_t textureHandle,const Vector3& position);
+	void Initialize(Model* model, uint32_t textureHandle,uint32_t reticleTextureHandle,const Vector3& position);
 
 	/// <summary>
 	/// 更新
@@ -89,4 +89,9 @@ private:
 
 	//半径
 	static inline const float kRadius = 1.0f;
+
+	//3Dレティクル用ワールドトランスフォーム
+	WorldTransform worldTransform3Dreticle_;
+	//レティクルのテクスチャハンドル
+	uint32_t reticleTextureHandle_ = 0u;
 };
