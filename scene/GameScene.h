@@ -80,7 +80,6 @@ public: // メンバ関数
 	
 	//3Dモデルデータ
 	Model* model_ = nullptr;
-	Model* reticleModel_ = nullptr;
 
 	//テクスチャハンドル
 	uint32_t textureHandle_ = 0u;

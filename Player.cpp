@@ -2,6 +2,7 @@
 #include <cassert>
 #include "ImGuiManager.h"
 #include "TextureManager.h"
+#include "WinApp.h"
 
 Player::Player() {}
 
@@ -10,16 +11,16 @@ Player::~Player() {
 	for (PlayerBullet* bullet : bullets_) {
 		delete bullet;
 	}
+	delete sprite2DReticle_;
 }
 
-void Player::Initialize(Model* model,Model* reticleModel, uint32_t textureHandle,const Vector3& position) {
+void Player::Initialize(Model* model, uint32_t textureHandle,const Vector3& position) {
 	// NULLポインタチェック
 	assert(model);
 	
 	// 引数として受け取ったデータをメンバ変数に記録
 	model_ = model;
 	textureHandle_ = textureHandle;
-	reticleModel_ = reticleModel;
 	// ワールド変数の初期化
 	worldTransform_.Initialize();
 	worldTransform_.translation_ = position;
@@ -27,11 +28,16 @@ void Player::Initialize(Model* model,Model* reticleModel, uint32_t textureHandle
 	input_ = Input::GetInstance();
 	//3Dレティクルのワールドトランスフォーム初期化
 	worldTransform3Dreticle_.Initialize();
-	reticleTextureHandle_ = TextureManager::Load("reticle.png");
+	worldTransform3Dreticle_.translation_ = GetWorldPosition();
+
+	textureHandleReticle_ = TextureManager::Load("reticle.png");
+	//スプライト生成
+	sprite2DReticle_ = Sprite::Create(textureHandleReticle_, {0.0f,0.0f}, {1.0f, 1.0f, 1.0f, 1.0f}, {0.5f, 0.5f});
+
 }
 
 
-void Player::Update() {
+void Player::Update(ViewProjection& viewProjection) {
 	//--------------------------------
 	// デスフラグの立った弾を削除
 	//--------------------------------
@@ -105,22 +111,10 @@ void Player::Update() {
 	worldTransform_.UpdateMatrix();
 
 	//--------------------------------
-	// 3Dレティクルの配置
+	// レティクルの配置
 	//--------------------------------
-	// 自機のワールド座標から3Dレティクルのワールド座標を計算する
-	{
-		// 自機から3Dレティクルへの距離
-		const float kDistancePlayerTo3DReticle = 50.0f;
-		// 時期から3Dレティクルへのオフセット(Z+向き)
-		Vector3 offset = {0, 0, 1.0f};
-		// 自機のワールド行列の回転を反映
-		offset = TransformNormal(offset, worldTransform_.matWorld_);
-		// ベクトルの長さを整える
-		offset = Normalize(offset) * kDistancePlayerTo3DReticle;
-		// 3Dレティクル座標を設定
-		worldTransform3Dreticle_.translation_ = offset;
-		worldTransform3Dreticle_.UpdateMatrix();
-	}
+	
+	Reticle(viewProjection);
 
 	//--------------------------------
 	//ImGuiで座標表示
@@ -136,9 +130,8 @@ void Player::Update() {
 void Player::Draw(ViewProjection& viewProjection) { 
 	//プレイヤー
 	model_->Draw(worldTransform_, viewProjection, textureHandle_); 
-	
-	//レティクル
-	//reticleModel_->Draw(worldTransform3Dreticle_, viewProjection,reticleTextureHandle_);
+	// レティクル
+	//model_->Draw(worldTransform3Dreticle_, viewProjection, textureHandleReticle_);
 
 	//弾を描画
 	for (PlayerBullet* bullet : bullets_) {
@@ -207,5 +200,50 @@ void Player::OnCollision() {
 void Player::SetParent(const WorldTransform* parent) {
 	//親子関係を結ぶ
 	worldTransform_.parent_ = parent;
+}
+
+void Player::DrawUI() {
+	sprite2DReticle_->Draw();
+}
+
+void Player::Reticle(ViewProjection& viewProjection) {
+	//--------------------------------
+	// 3Dレティクルの配置
+	//--------------------------------
+	// 自機のワールド座標から3Dレティクルのワールド座標を計算する
+	{
+		worldTransform3Dreticle_.translation_ = GetWorldPosition();
+		// 自機から3Dレティクルへの距離
+		const float kDistancePlayerTo3DReticle = 50.0f;
+		// 時期から3Dレティクルへのオフセット(Z+向き)
+		Vector3 offset = {0, 0, 1.0f};
+		// 自機のワールド行列の回転を反映
+		offset = TransformNormal(offset, worldTransform_.matWorld_);
+		// ベクトルの長さを整える
+		offset = Normalize(offset) * kDistancePlayerTo3DReticle;
+		// 3Dレティクル座標を設定
+		worldTransform3Dreticle_.translation_ += offset;
+		worldTransform3Dreticle_.UpdateMatrix();
+	}
+
+	//--------------------------------
+	// 2Dレティクルの配置
+	//--------------------------------
+	// 3Dレティクルのワールド座標から2Dレティクルのスクリーン座標を計算する
+	{
+		Vector3 positionReticle = GetReticleWorldPosition(worldTransform3Dreticle_);
+
+		// ビューポート行列
+		Matrix4x4 matViewport = MakeViewportMatrix(0, 0, WinApp::kWindowWidth, WinApp::kWindowHeight, 0, 1);
+
+		// ビュー行列とプロジェクション行列、ビューポート行列を合成する
+		Matrix4x4 matViewProjectionViewport = viewProjection.matView * viewProjection.matProjection * matViewport;
+
+		//ワールド->スクリーン座標変換（ここで3D->2Dになる）
+		positionReticle = Transform(positionReticle, matViewProjectionViewport);
+
+		//スプライトのレティクルに座標設定
+		sprite2DReticle_->SetPosition(Vector2(positionReticle.x, positionReticle.y));
+	}
 }
 

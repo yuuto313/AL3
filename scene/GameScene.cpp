@@ -11,7 +11,6 @@ GameScene::~GameScene() {
 	//解放処理
 	//--------------------------------
 	delete model_;
-	delete reticleModel_;
 	delete player_;
 	for (Enemy* enemy : enemies_) {
 		delete enemy;
@@ -51,7 +50,7 @@ void GameScene::Initialize() {
 
 	// ３Dモデルデータの生成
 	model_ = Model::Create();
-	reticleModel_ = Model::Create();
+
 
 	//--------------------------------
 	//Initializeの処理
@@ -64,13 +63,16 @@ void GameScene::Initialize() {
 	// 天球の初期化
 	skydome_->Initialize(modelSkydome_, &viewProjection_);
 
+	//ファイル名を指定してテクスチャを読み込む
+	textureHandle_ = TextureManager::Load("sample.png");
+	TextureManager::Load("reticle.png");
+
 	// 自キャラの初期化
 	// z = カメラから前にずらす量
 	Vector3 playerPosition(0.0f, 0.0f, 20.0f);
-	player_->Initialize(model_,reticleModel_, textureHandle_, playerPosition);
+	player_->Initialize(model_, textureHandle_, playerPosition);
 
-	//ファイル名を指定してテクスチャを読み込む
-	textureHandle_ = TextureManager::Load("sample.png");
+	
 
 	//自キャラとレールカメラの親子関係を結ぶ
 	player_->SetParent(&railCamera_->GetWorldTransform());
@@ -94,7 +96,7 @@ void GameScene::Update() {
 	//カメラオブジェクトの更新
 	railCamera_->Update();
 	//自キャラの更新
-	player_->Update();
+	player_->Update(viewProjection_);
 	//敵キャラ更新
 	for (Enemy* enemy : enemies_) {
 		enemy->Update();
@@ -223,6 +225,7 @@ void GameScene::Draw() {
 	/// ここに前景スプライトの描画処理を追加できる
 	/// </summary>
 
+	player_->DrawUI();
 
 	// スプライト描画後処理
 	Sprite::PostDraw();

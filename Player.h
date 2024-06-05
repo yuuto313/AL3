@@ -3,6 +3,8 @@
 #include "Input.h"
 #include "PlayerBullet.h"
 #include <list>
+#include "Sprite.h"
+
 #pragma once
 /// <summary>
 /// 自キャラ
@@ -22,17 +24,18 @@ public:
 	/// <summary>
 	/// 初期化
 	/// </summary>
-	void Initialize(Model* model, Model* reticleModel, uint32_t reticleTextureHandle, const Vector3& position);
+	void Initialize(Model* model,uint32_t reticleTextureHandle, const Vector3& position);
 
 	/// <summary>
 	/// 更新
 	/// </summary>
-	void Update();
+	void Update(ViewProjection& viewProjection);
 
 	/// <summary>
 	/// 描画
 	/// </summary>
 	void Draw(ViewProjection& viewProjection);
+
 	/// <summary>
 	/// 旋回（回転）
 	/// </summary>
@@ -80,16 +83,26 @@ public:
 	/// <param name="parent"></param>
 	void SetParent(const WorldTransform* parent);
 
+	/// <summary>
+	/// UI描画
+	/// </summary>
+	void DrawUI();
+
+	/// <summary>
+	/// レティクルの更新処理
+	/// </summary>
+	/// <param name="viewProjection"></param>
+	void Reticle(ViewProjection& viewProjection);
+
 private:
 	// ワールド変換データ
 	WorldTransform worldTransform_;
 	// モデル
 	Model* model_ = nullptr;
-	Model* reticleModel_ = nullptr;
 	// テクスチャハンドル
 	uint32_t textureHandle_ = 0u;
 	// レティクルのテクスチャハンドル
-	uint32_t reticleTextureHandle_ = 0u;
+	uint32_t textureHandleReticle_ = 0u;
 
 	// キーボード入力
 	Input* input_ = nullptr;
@@ -102,4 +115,7 @@ private:
 
 	//3Dレティクル用ワールドトランスフォーム
 	WorldTransform worldTransform3Dreticle_;
+
+	//2Dレティクル用スプライト
+	Sprite* sprite2DReticle_ = nullptr;
 };
