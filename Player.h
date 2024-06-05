@@ -22,7 +22,7 @@ public:
 	/// <summary>
 	/// 初期化
 	/// </summary>
-	void Initialize(Model* model, uint32_t textureHandle,uint32_t reticleTextureHandle,const Vector3& position);
+	void Initialize(Model* model, Model* reticleModel, uint32_t reticleTextureHandle, const Vector3& position);
 
 	/// <summary>
 	/// 更新
@@ -48,6 +48,13 @@ public:
 	/// </summary>
 	/// <returns></returns>
 	Vector3 GetWorldPosition();
+
+	/// <summary>
+	/// レティクルのワールド座標を取得
+	/// </summary>
+	/// <param name="worldTransform"></param>
+	/// <returns></returns>
+	Vector3 GetReticleWorldPosition(WorldTransform& worldTransform);
 
 	/// <summary>
 	/// 衝突を検出したら呼び出されるコールバック関数
@@ -78,8 +85,11 @@ private:
 	WorldTransform worldTransform_;
 	// モデル
 	Model* model_ = nullptr;
+	Model* reticleModel_ = nullptr;
 	// テクスチャハンドル
 	uint32_t textureHandle_ = 0u;
+	// レティクルのテクスチャハンドル
+	uint32_t reticleTextureHandle_ = 0u;
 
 	// キーボード入力
 	Input* input_ = nullptr;
@@ -92,6 +102,4 @@ private:
 
 	//3Dレティクル用ワールドトランスフォーム
 	WorldTransform worldTransform3Dreticle_;
-	//レティクルのテクスチャハンドル
-	uint32_t reticleTextureHandle_ = 0u;
 };

@@ -1,6 +1,8 @@
 #include "Player.h"
 #include <cassert>
 #include "ImGuiManager.h"
+#include "TextureManager.h"
+
 Player::Player() {}
 
 Player::~Player() {
@@ -10,13 +12,14 @@ Player::~Player() {
 	}
 }
 
-void Player::Initialize(Model* model, uint32_t textureHandle, uint32_t reticleTextureHandle,const Vector3& position) {
+void Player::Initialize(Model* model,Model* reticleModel, uint32_t textureHandle,const Vector3& position) {
 	// NULLポインタチェック
 	assert(model);
+	
 	// 引数として受け取ったデータをメンバ変数に記録
 	model_ = model;
 	textureHandle_ = textureHandle;
-	reticleTextureHandle_ = reticleTextureHandle;
+	reticleModel_ = reticleModel;
 	// ワールド変数の初期化
 	worldTransform_.Initialize();
 	worldTransform_.translation_ = position;
@@ -24,6 +27,7 @@ void Player::Initialize(Model* model, uint32_t textureHandle, uint32_t reticleTe
 	input_ = Input::GetInstance();
 	//3Dレティクルのワールドトランスフォーム初期化
 	worldTransform3Dreticle_.Initialize();
+	reticleTextureHandle_ = TextureManager::Load("reticle.png");
 }
 
 
@@ -134,7 +138,7 @@ void Player::Draw(ViewProjection& viewProjection) {
 	model_->Draw(worldTransform_, viewProjection, textureHandle_); 
 	
 	//レティクル
-	model_->Draw(worldTransform3Dreticle_, viewProjection);
+	//reticleModel_->Draw(worldTransform3Dreticle_, viewProjection,reticleTextureHandle_);
 
 	//弾を描画
 	for (PlayerBullet* bullet : bullets_) {
@@ -162,8 +166,8 @@ void Player::Attack() {
 	Vector3 velocity(0.0f, 0.0f, kBulletSpeed);
 
 	//自機から標準オブジェクトへのベクトル
-	velocity = worldTransform3Dreticle_.translation_ - worldTransform_.translation_;
-	velocity = Normalize(velocity)*kBulletSpeed;
+	velocity = GetReticleWorldPosition(worldTransform3Dreticle_) - GetWorldPosition();
+	velocity = Normalize(velocity) * kBulletSpeed;
 
 	//速度ベクトルを自機の向きに合わせて回転させる
 	velocity = TransformNormal(velocity, worldTransform_.matWorld_);
@@ -183,6 +187,16 @@ Vector3 Player::GetWorldPosition() {
 	worldPos.x = worldTransform_.matWorld_.m[3][0];
 	worldPos.y = worldTransform_.matWorld_.m[3][1];
 	worldPos.z = worldTransform_.matWorld_.m[3][2];
+	return worldPos;
+}
+
+Vector3 Player::GetReticleWorldPosition(WorldTransform& worldTransform) {
+	// ワールド座標を入れる変数
+	Vector3 worldPos;
+	// ワールド行列の平行移動成分を取得（ワールド座標）
+	worldPos.x = worldTransform.matWorld_.m[3][0];
+	worldPos.y = worldTransform.matWorld_.m[3][1];
+	worldPos.z = worldTransform.matWorld_.m[3][2];
 	return worldPos;
 }
 

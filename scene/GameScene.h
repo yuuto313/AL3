@@ -14,9 +14,6 @@
 #include <sstream>
 #pragma once
 
-//14、敵のデスフラグがたったら…と、当たり判定の変更が未完成
-//15、敵に弾を充てると消えるのも未完
-
 /// <summary>
 /// ゲームシーン
 /// </summary>
@@ -80,16 +77,13 @@ public: // メンバ関数
 	DirectXCommon* dxCommon_ = nullptr;
 	Input* input_ = nullptr;
 	Audio* audio_ = nullptr;
-	// ワールドトランスフォーム
-	//WorldTransform worldTransform_;
 	
 	//3Dモデルデータ
 	Model* model_ = nullptr;
-
+	Model* reticleModel_ = nullptr;
 
 	//テクスチャハンドル
 	uint32_t textureHandle_ = 0u;
-	uint32_t reticleTextureHandle_ = 0u;
 
 	// ビュープロジェクション
 	ViewProjection viewProjection_;
