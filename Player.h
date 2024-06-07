@@ -94,6 +94,9 @@ public:
 	/// <param name="viewProjection"></param>
 	void Reticle(ViewProjection& viewProjection);
 
+
+	void MouseCursor(ViewProjection& viewProjection);
+
 private:
 	// ワールド変換データ
 	WorldTransform worldTransform_;
