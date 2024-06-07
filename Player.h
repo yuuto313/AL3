@@ -94,8 +94,26 @@ public:
 	/// <param name="viewProjection"></param>
 	void Reticle(ViewProjection& viewProjection);
 
-
+	/// <summary>
+	/// マウスカーソルによる標準
+	/// </summary>
+	/// <param name="viewProjection"></param>
 	void MouseCursor(ViewProjection& viewProjection);
+
+	/// <summary>
+	/// キーボードによる操作
+	/// </summary>
+	void ActiveKeyboard();
+
+	/// <summary>
+	/// ゲームパッドによる操作
+	/// </summary>
+	void ActiveGamePad();
+
+	/// <summary>
+	/// 移動制限
+	/// </summary>
+	void LimitMovement();
 
 private:
 	// ワールド変換データ

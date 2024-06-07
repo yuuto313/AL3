@@ -53,52 +53,47 @@ void Player::Update(ViewProjection& viewProjection) {
 	//--------------------------------
 	// キーボード入力によって移動ベクトルを変更する処理
 	//--------------------------------
-	// キャラクターの移動ベクトル
-	Vector3 move = {0.0f, 0.0f, 0.0f};
 
-	// キャラクターの移動速さ
-	const float kcharacterSpeed = 0.2f;
-
-	// 押した方向で移動ベクトルを変更する（左右）
-	if (input_->PushKey(DIK_LEFT)) {
-		move.x -= kcharacterSpeed;
-	} else if (input_->PushKey(DIK_RIGHT)) {
-		move.x += kcharacterSpeed;
-	}
-
-	// 押した方向で移動ベクトルを変更する（上下）
-	if (input_->PushKey(DIK_UP)) {
-		move.y += kcharacterSpeed;
-	} else if (input_->PushKey(DIK_DOWN)) {
-		move.y -= kcharacterSpeed;
-	}
-	// 座標移動(ベクトルの加算）
-	worldTransform_.translation_ += move;
+	ActiveKeyboard();
 
 	//--------------------------------
-	//移動制限
+	// ゲームパッド入力によって移動ベクトルを変更する処理
 	//--------------------------------
-	//移動限界座標
-	const float kMoveLimitX = 30;
-	const float kMoveLimitY = 17;
 
-	//範囲を超えない処理
-	worldTransform_.translation_.x = max(worldTransform_.translation_.x, -kMoveLimitX);
-	worldTransform_.translation_.x = min(worldTransform_.translation_.x, kMoveLimitX);
-	worldTransform_.translation_.y = max(worldTransform_.translation_.y, -kMoveLimitY);
-	worldTransform_.translation_.y = min(worldTransform_.translation_.y, kMoveLimitY);
+	//ActiveGamePad();
 
 	//--------------------------------
-	//旋回
+	// 移動制限
+	//--------------------------------
+	
+	LimitMovement();
+
+	//--------------------------------
+	// 旋回
 	//--------------------------------
 
 	Rotate();
 
 	//--------------------------------
-	//攻撃処理
+	// 攻撃処理
 	//--------------------------------
+	{
+		// XINPUT_STATE joyState;
 
-	Attack();
+		////ゲームパッド未接続なら何もせず抜ける
+		// if (!Input::GetInstance()->GetJoystickState(0, joyState)) {
+		//	return;
+		// }
+		//
+		////Rトリガーを押していたら
+		// if (joyState.Gamepad.wButtons & XINPUT_GAMEPAD_RIGHT_SHOULDER) {
+		//  攻撃処理
+		// }
+	}
+
+	if (input_->TriggerKey(DIK_W)) {
+		Attack();
+	}
 
 	//弾を更新
 	for (PlayerBullet* bullet : bullets_) {
@@ -157,24 +152,24 @@ void Player::Rotate() {
 }
 
 void Player::Attack() {
-	if (input_->TriggerKey(DIK_W)) {
-	//弾の速度
+
+	// 弾の速度
 	const float kBulletSpeed = 1.0f;
 	Vector3 velocity(0.0f, 0.0f, kBulletSpeed);
 
-	//自機から標準オブジェクトへのベクトル
+	// 自機から標準オブジェクトへのベクトル
 	velocity = GetReticleWorldPosition(worldTransform3Dreticle_) - GetWorldPosition();
 	velocity = Normalize(velocity) * kBulletSpeed;
 
-	//速度ベクトルを自機の向きに合わせて回転させる
+	// 速度ベクトルを自機の向きに合わせて回転させる
 	velocity = TransformNormal(velocity, worldTransform_.matWorld_);
 
-	//弾を生成し、初期化
+	// 弾を生成し、初期化
 	PlayerBullet* newBullet = new PlayerBullet();
 	newBullet->Initialize(model_, GetWorldPosition(), velocity);
-	//弾を登録する
+	// 弾を登録する
 	bullets_.push_back(newBullet);
-	}
+
 }
 
 Vector3 Player::GetWorldPosition() {
@@ -286,7 +281,7 @@ void Player::MouseCursor(ViewProjection& viewProjection) {
 	mouseDirection = Normalize(mouseDirection);
 
 	//カメラから標準オブジェクトへの距離
-	const float kDistanceTestObject = GetWorldPosition().z - 10.0f;
+	const float kDistanceTestObject = 50.f;
 	worldTransform3Dreticle_.translation_ = posNear + mouseDirection * kDistanceTestObject;
 	worldTransform3Dreticle_.UpdateMatrix();
 
@@ -299,5 +294,74 @@ void Player::MouseCursor(ViewProjection& viewProjection) {
 	ImGui::End();
 #endif // _DEBUG
 
+}
+
+void Player::ActiveKeyboard() {
+	// キャラクターの移動ベクトル
+	Vector3 move = {0.0f, 0.0f, 0.0f};
+
+	// キャラクターの移動速さ
+	const float kCharacterSpeed = 0.2f;
+
+	// 押した方向で移動ベクトルを変更する（左右）
+	if (input_->PushKey(DIK_LEFT)) {
+		move.x -= kCharacterSpeed;
+	} else if (input_->PushKey(DIK_RIGHT)) {
+		move.x += kCharacterSpeed;
+	}
+
+	// 押した方向で移動ベクトルを変更する（上下）
+	if (input_->PushKey(DIK_UP)) {
+		move.y += kCharacterSpeed;
+	} else if (input_->PushKey(DIK_DOWN)) {
+		move.y -= kCharacterSpeed;
+	}
+	// 座標移動(ベクトルの加算）
+	worldTransform_.translation_ += move;
+}
+
+void Player::ActiveGamePad() {
+	// キャラクターの移動ベクトル
+	Vector3 move = {0.0f, 0.0f, 0.0f};
+
+	// キャラクターの移動速さ
+	const float kCharacterSpeed = 0.2f;
+
+	//ゲームパッドの状態を得る関数(XINPUT)
+	XINPUT_STATE joyState;
+
+	//ゲームパッド状態取得
+	//SHRT_MAX...short型の最大値。sThumbLXとsThumbLYがshort型なので最大値で割ることで[-1,+1]の範囲に変換している
+	if (Input::GetInstance()->GetJoystickState(0, joyState)) {
+		move.x += (float)joyState.Gamepad.sThumbLX / SHRT_MAX * kCharacterSpeed;
+		move.y += (float)joyState.Gamepad.sThumbLY / SHRT_MAX * kCharacterSpeed;
+	}
+
+	// 座標移動(ベクトルの加算）
+	worldTransform_.translation_ += move;
+
+	//スプライトの現在座標を取得
+	Vector2 spritePosition = sprite2DReticle_->GetPosition();
+
+	//ジョイスティック状態を取得
+	if (Input::GetInstance()->GetJoystickState(0, joyState)) {
+		spritePosition.x += (float)joyState.Gamepad.sThumbRX / SHRT_MAX * 5.0f;
+		spritePosition.y -= (float)joyState.Gamepad.sThumbRY / SHRT_MAX * 5.0f;
+		//スプライトの座標変更を反映
+		sprite2DReticle_->SetPosition(spritePosition);
+	}
+
+}
+
+void Player::LimitMovement() {
+	// 移動限界座標
+	const float kMoveLimitX = 30;
+	const float kMoveLimitY = 17;
+
+	// 範囲を超えない処理
+	worldTransform_.translation_.x = max(worldTransform_.translation_.x, -kMoveLimitX);
+	worldTransform_.translation_.x = min(worldTransform_.translation_.x, kMoveLimitX);
+	worldTransform_.translation_.y = max(worldTransform_.translation_.y, -kMoveLimitY);
+	worldTransform_.translation_.y = min(worldTransform_.translation_.y, kMoveLimitY);
 }
 
