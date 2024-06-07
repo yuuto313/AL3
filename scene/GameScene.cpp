@@ -234,8 +234,9 @@ void GameScene::Draw() {
 }
 
 void GameScene::CheckAllCollisions() {
-	if (player_->GetBullets().empty() || enemies_.empty() || enemyBullets_.empty())
-		return;
+	if (player_->GetBullets().empty() || enemies_.empty() || enemyBullets_.empty()) {
+		return;	
+	}
 
 	// 判定対象AとBの座標
 	Vector3 posA;
