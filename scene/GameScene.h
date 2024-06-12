@@ -4,7 +4,10 @@
 #include "Model.h"
 #include "Sprite.h"
 #include "ViewProjection.h"
+
 #include "Player.h"
+#include "Skydome.h"
+
 #include <memory>
 
 /// <summary>
@@ -46,10 +49,18 @@ private:
 	//自キャラ
 	std::unique_ptr<Player> player_ = nullptr;
 	
-	//テクスチャハンドル
-	uint32_t textureHandle_ = 0;
+	//スカイドーム（天球）
+	std::unique_ptr<Skydome> skydome_ = nullptr;
+
 	// 3Dモデル
 	std::unique_ptr<Model> model_ = nullptr;
+
+	//天球のモデル
+	std::unique_ptr<Model> modelSkydome_ = nullptr;
+
+	//テクスチャハンドル
+	uint32_t textureHandle_ = 0;
+	
 
 	//ビュープロジェクション
 	ViewProjection viewProjection_;
