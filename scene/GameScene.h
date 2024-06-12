@@ -59,6 +59,8 @@ private:
 	//天球のモデル
 	std::unique_ptr<Model> modelSkydome_ = nullptr;
 
+	// デバッグカメラ
+	std::unique_ptr<DebugCamera> debugCamera_ = nullptr;
 	//テクスチャハンドル
 	uint32_t textureHandle_ = 0;
 
@@ -67,8 +69,7 @@ private:
 
 	// デバッグカメラ有効
 	bool isDebugCameraActive_ = false;
-	// デバッグカメラ
-	DebugCamera* debugCamera_ = nullptr;
+	
 
 	/// <summary>
 	/// ゲームシーン用

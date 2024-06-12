@@ -4,7 +4,7 @@
 
 GameScene::GameScene() {}
 
-GameScene::~GameScene() { delete debugCamera_; }
+GameScene::~GameScene() {}
 
 void GameScene::Initialize() {
 	dxCommon_ = DirectXCommon::GetInstance();
@@ -32,6 +32,8 @@ void GameScene::Initialize() {
 	//天球を生成
 	skydome_ = std::make_unique<Skydome>();
 
+	// デバッグカメラの生成
+	debugCamera_ = std::make_unique<DebugCamera>(1280, 720);
 
 	//--------------------------------
 	// 初期化
