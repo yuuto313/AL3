@@ -43,7 +43,7 @@ void GameScene::Initialize() {
 	player_->Initialize(model_.get(), textureHandle_, &viewProjection_);
 
 	//天球を初期化
-	skydome_->Initialize();
+	skydome_->Initialize(modelSkydome_.get(),&viewProjection_);
 
 
 }
@@ -89,7 +89,7 @@ void GameScene::Draw() {
 
 	player_->Draw();
 
-	skydome_->Draw(&viewProjection_);
+	skydome_->Draw();
 
 	// 3Dオブジェクト描画後処理
 	Model::PostDraw();
