@@ -4,6 +4,7 @@
 #include "Model.h"
 #include "Sprite.h"
 #include "ViewProjection.h"
+#include "DebugCamera.h"
 
 #include "Player.h"
 #include "Skydome.h"
@@ -60,10 +61,15 @@ private:
 
 	//テクスチャハンドル
 	uint32_t textureHandle_ = 0;
-	
 
 	//ビュープロジェクション
 	ViewProjection viewProjection_;
+
+	// デバッグカメラ有効
+	bool isDebugCameraActive_ = false;
+	// デバッグカメラ
+	DebugCamera* debugCamera_ = nullptr;
+
 	/// <summary>
 	/// ゲームシーン用
 	/// </summary>

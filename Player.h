@@ -36,9 +36,4 @@ private:
 	//テクスチャハンドル
 	uint32_t textureHandle_ = 0u;
 	ViewProjection* viewProjection_ = nullptr;
-
-	// 一応追加
-	// デバッグカメラ
-	DebugCamera* debugCamera_ = nullptr;
-
 };
