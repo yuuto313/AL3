@@ -4,6 +4,8 @@
 #include "TextureManager.h"
 #include "WinApp.h"
 
+//コントローラーで動くか確認
+
 Player::Player() {}
 
 Player::~Player() {
@@ -60,12 +62,12 @@ void Player::Update(ViewProjection& viewProjection) {
 	// ゲームパッド入力によって移動ベクトルを変更する処理
 	//--------------------------------
 
-	//ActiveGamePad();
+	ActiveGamePad();
 
 	//--------------------------------
 	// 移動制限
 	//--------------------------------
-	
+
 	LimitMovement();
 
 	//--------------------------------
@@ -77,23 +79,8 @@ void Player::Update(ViewProjection& viewProjection) {
 	//--------------------------------
 	// 攻撃処理
 	//--------------------------------
-	{
-		// XINPUT_STATE joyState;
 
-		////ゲームパッド未接続なら何もせず抜ける
-		// if (!Input::GetInstance()->GetJoystickState(0, joyState)) {
-		//	return;
-		// }
-		//
-		////Rトリガーを押していたら
-		// if (joyState.Gamepad.wButtons & XINPUT_GAMEPAD_RIGHT_SHOULDER) {
-		//  攻撃処理
-		// }
-	}
-
-	if (input_->TriggerKey(DIK_W)) {
-		Attack();
-	}
+	Attack();
 
 	//弾を更新
 	for (PlayerBullet* bullet : bullets_) {
@@ -153,23 +140,33 @@ void Player::Rotate() {
 
 void Player::Attack() {
 
-	// 弾の速度
-	const float kBulletSpeed = 1.0f;
-	Vector3 velocity(0.0f, 0.0f, kBulletSpeed);
+	XINPUT_STATE joyState;
 
-	// 自機から標準オブジェクトへのベクトル
-	velocity = GetReticleWorldPosition(worldTransform3Dreticle_) - GetWorldPosition();
-	velocity = Normalize(velocity) * kBulletSpeed;
+	// ゲームパッド未接続なら何もせず抜ける
+	if (!Input::GetInstance()->GetJoystickState(0, joyState)) {
+		return;
+	}
 
-	// 速度ベクトルを自機の向きに合わせて回転させる
-	//velocity = TransformNormal(velocity, worldTransform_.matWorld_);
+	// Rトリガーを押していたら
+	if (joyState.Gamepad.wButtons & XINPUT_GAMEPAD_RIGHT_SHOULDER) {
 
-	// 弾を生成し、初期化
-	PlayerBullet* newBullet = new PlayerBullet();
-	newBullet->Initialize(model_, GetWorldPosition(), velocity);
-	// 弾を登録する
-	bullets_.push_back(newBullet);
+		// 弾の速度
+		const float kBulletSpeed = 1.0f;
+		Vector3 velocity(0.0f, 0.0f, kBulletSpeed);
 
+		// 自機から標準オブジェクトへのベクトル
+		velocity = GetReticleWorldPosition(worldTransform3Dreticle_) - GetWorldPosition();
+		velocity = Normalize(velocity) * kBulletSpeed;
+
+		// 速度ベクトルを自機の向きに合わせて回転させる
+		// velocity = TransformNormal(velocity, worldTransform_.matWorld_);
+
+		// 弾を生成し、初期化
+		PlayerBullet* newBullet = new PlayerBullet();
+		newBullet->Initialize(model_, GetWorldPosition(), velocity);
+		// 弾を登録する
+		bullets_.push_back(newBullet);
+	}
 }
 
 Vector3 Player::GetWorldPosition() {
