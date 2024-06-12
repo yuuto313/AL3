@@ -4,18 +4,24 @@
 
 GameScene::GameScene() {}
 
-GameScene::~GameScene() {
-}
+GameScene::~GameScene() {}
 
 void GameScene::Initialize() {
 	dxCommon_ = DirectXCommon::GetInstance();
 	input_ = Input::GetInstance();
 
 	//--------------------------------
+	// テクスチャ読み込み
+	//--------------------------------
+	
+	//ファイル名を指定してテクスチャを読み込む
+	textureHandle_ = TextureManager::Load("sample.png");
+
+	//--------------------------------
 	// 生成
 	//--------------------------------
 	//3Dモデルデータの生成
-	model_ = Model::Create();
+	model_.reset(Model::Create());
 
 	//自キャラの生成
 	player_ = std::make_unique<Player>();
@@ -27,11 +33,10 @@ void GameScene::Initialize() {
 	viewProjection_.Initialize();
 
 	//自キャラの初期化
-	player_->Initialize(model_, textureHandle_, &viewProjection_);
+	player_->Initialize(model_.get(), textureHandle_, &viewProjection_);
 
 
-	//ファイル名を指定してテクスチャを読み込む
-	textureHandle_ = TextureManager::Load("sample.png");
+
 
 }
 
