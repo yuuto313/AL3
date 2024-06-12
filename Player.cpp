@@ -6,7 +6,7 @@ Player::Player() {}
 
 Player::~Player() {delete debugCamera_;}
 
-void Player::Init(Model* model, uint32_t textureHandle, ViewProjection* viewProjection) { 
+void Player::Initialize(Model* model, uint32_t textureHandle, ViewProjection* viewProjection) { 
 	//NULLポインタチェック
 	assert(model);
 	//引数として受け取ったデータをメンバ変数に記録する

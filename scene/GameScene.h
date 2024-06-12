@@ -5,6 +5,7 @@
 #include "Sprite.h"
 #include "ViewProjection.h"
 #include "Player.h"
+#include <memory>
 
 /// <summary>
 /// ゲームシーン
@@ -37,12 +38,13 @@ public: // メンバ関数
 	/// </summary>
 	void Draw();
 
-private: // メンバ変数
+private:
+	// メンバ変数
 	DirectXCommon* dxCommon_ = nullptr;
 	Input* input_ = nullptr;
 
 	//自キャラ
-	Player* player_ = nullptr;
+	std::unique_ptr<Player> player_ = nullptr;
 	
 	//テクスチャハンドル
 	uint32_t textureHandle_ = 0;
