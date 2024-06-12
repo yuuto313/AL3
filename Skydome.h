@@ -7,7 +7,7 @@ public:
 	/// <summary>
 	/// 初期化
 	/// </summary>
-	void Initialize();
+	void Initialize(Model* model,ViewProjection* viewProjection);
 	/// <summary>
 	/// 更新
 	/// </summary>
@@ -15,11 +15,12 @@ public:
 	/// <summary>
 	/// 描画
 	/// </summary>
-	void Draw(ViewProjection viewProjection);
+	void Draw();
 
 private:
 	//ワールド変換データ
 	WorldTransform worldTransform_;
+	ViewProjection* viewProjection_ = nullptr;
 	//モデル
 	Model* model_;
 
