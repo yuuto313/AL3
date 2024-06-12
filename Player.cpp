@@ -211,7 +211,6 @@ void Player::Reticle(ViewProjection& viewProjection) {
 	//--------------------------------
 	// 自機のワールド座標から3Dレティクルのワールド座標を計算する
 	{
-		worldTransform3Dreticle_.translation_ = GetWorldPosition();
 		// 自機から3Dレティクルへの距離
 		const float kDistancePlayerTo3DReticle = 50.0f;
 		// 時期から3Dレティクルへのオフセット(Z+向き)
@@ -221,15 +220,15 @@ void Player::Reticle(ViewProjection& viewProjection) {
 		// ベクトルの長さを整える
 		offset = Normalize(offset) * kDistancePlayerTo3DReticle;
 		// 3Dレティクル座標を設定
-		worldTransform3Dreticle_.translation_ += offset;
+		worldTransform3Dreticle_.translation_ = GetWorldPosition() + offset;
 		worldTransform3Dreticle_.UpdateMatrix();
 	}
-
 	//--------------------------------
 	// 2Dレティクルの配置
 	//--------------------------------
-	// 3Dレティクルのワールド座標から2Dレティクルのスクリーン座標を計算する
 	{
+		// 3Dレティクルのワールド座標から2Dレティクルのスクリーン座標を計算する
+
 		Vector3 positionReticle = GetReticleWorldPosition(worldTransform3Dreticle_);
 
 		// ビューポート行列
@@ -238,11 +237,16 @@ void Player::Reticle(ViewProjection& viewProjection) {
 		// ビュー行列とプロジェクション行列、ビューポート行列を合成する
 		Matrix4x4 matViewProjectionViewport = viewProjection.matView * viewProjection.matProjection * matViewport;
 
-		//ワールド->スクリーン座標変換（ここで3D->2Dになる）
+		// ワールド->スクリーン座標変換（ここで3D->2Dになる）
 		positionReticle = Transform(positionReticle, matViewProjectionViewport);
 
-		//スプライトのレティクルに座標設定
+		// スプライトのレティクルに座標設定
 		sprite2DReticle_->SetPosition(Vector2(positionReticle.x, positionReticle.y));
+
+		ImGui::Begin("Player");
+		ImGui::SliderFloat3("2Dreticle", &positionReticle.x, -20.0f, 20.0f);
+		ImGui::SliderFloat3("3Dreticle", &worldTransform3Dreticle_.translation_.x, -20.0f, 20.0f);
+		ImGui::End();
 	}
 }
 
