@@ -8,6 +8,7 @@
 
 #include "Player.h"
 #include "Skydome.h"
+#include "Ground.h"
 
 #include <memory>
 
@@ -53,16 +54,23 @@ private:
 	//スカイドーム（天球）
 	std::unique_ptr<Skydome> skydome_ = nullptr;
 
+	//地面
+	std::unique_ptr<Ground> ground_ = nullptr;
+
 	// 3Dモデル
 	std::unique_ptr<Model> model_ = nullptr;
 
 	//天球のモデル
 	std::unique_ptr<Model> modelSkydome_ = nullptr;
 
+	//地面のモデル
+	std::unique_ptr<Model> modelGround_ = nullptr;
+
 	// デバッグカメラ
 	std::unique_ptr<DebugCamera> debugCamera_ = nullptr;
+
 	//テクスチャハンドル
-	uint32_t textureHandle_ = 0;
+	//uint32_t textureHandle_ = 0;
 
 	//ビュープロジェクション
 	ViewProjection viewProjection_;

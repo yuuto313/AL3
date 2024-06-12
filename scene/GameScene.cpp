@@ -16,22 +16,28 @@ void GameScene::Initialize() {
 	//--------------------------------
 	
 	//ファイル名を指定してテクスチャを読み込む
-	textureHandle_ = TextureManager::Load("sample.png");
+	//textureHandle_ = TextureManager::Load("sample.png");
 
 	//--------------------------------
 	// 生成
 	//--------------------------------
 	//3Dモデルデータの生成
-	model_.reset(Model::Create());
+	model_.reset(Model::CreateFromOBJ("player",true));
 
 	//天球のモデルを生成
 	modelSkydome_.reset(Model::CreateFromOBJ("skydome", true));
+
+	//地面のモデルデータを生成
+	modelGround_.reset(Model::CreateFromOBJ("ground", true));
 
 	//自キャラの生成
 	player_ = std::make_unique<Player>();
 
 	//天球を生成
 	skydome_ = std::make_unique<Skydome>();
+
+	//地面の生成
+	ground_ = std::make_unique<Ground>();
 
 	// デバッグカメラの生成
 	debugCamera_ = std::make_unique<DebugCamera>(1280, 720);
@@ -43,11 +49,12 @@ void GameScene::Initialize() {
 	viewProjection_.Initialize();
 
 	//自キャラの初期化
-	player_->Initialize(model_.get(), textureHandle_, &viewProjection_);
+	player_->Initialize(model_.get(),&viewProjection_);
 
 	//天球を初期化
 	skydome_->Initialize(modelSkydome_.get(),&viewProjection_);
 
+	ground_->Initialize(modelGround_.get(), &viewProjection_);
 
 	//--------------------------------
 	// 軸方向表示の使用
@@ -68,6 +75,9 @@ void GameScene::Update() {
 
 	//天球の更新
 	skydome_->Update();
+
+	//地面の更新
+	ground_->Update();
 
 	//--------------------------------
 	// デバッグカメラ
@@ -131,6 +141,8 @@ void GameScene::Draw() {
 	player_->Draw();
 
 	skydome_->Draw();
+
+	ground_->Draw();
 
 	// 3Dオブジェクト描画後処理
 	Model::PostDraw();
