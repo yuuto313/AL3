@@ -115,6 +115,11 @@ public:
 	/// </summary>
 	void LimitMovement();
 
+	/// <summary>
+	/// ゲームパッドによるレティクル操作
+	/// </summary>
+	void PadReticle(ViewProjection& viewProjection);
+
 private:
 	// ワールド変換データ
 	WorldTransform worldTransform_;
