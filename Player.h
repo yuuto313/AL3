@@ -33,6 +33,12 @@ public:
 	/// </summary>
 	void Move();
 
+	/// <summary>
+	/// 自キャラのWorldTransformを取得する
+	/// </summary>
+	/// <returns></returns>
+	const WorldTransform& GetWorldTransform() { return worldTransform_; }
+
 private:
 	//ワールド変換データ
 	WorldTransform worldTransform_;

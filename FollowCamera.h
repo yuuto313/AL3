@@ -20,6 +20,14 @@ public:
 	/// <param name="target"></param>
 	void SetTarget(const WorldTransform* target) { target_ = target; }
 
+	void FollowTarget();
+
+	/// <summary>
+	/// 自キャラのWorldTransformを取得する
+	/// </summary>
+	/// <returns></returns>
+	const ViewProjection& GetViewProjection() { return viewProjection_; }
+
 	private:
 	ViewProjection viewProjection_;
 	

@@ -62,8 +62,8 @@ void GameScene::Initialize() {
 
 	//追従カメラの初期化
 	followCamera_->Initialize();
-	followCamera_
-	    ->SetTarget(&player_->Get)
+	followCamera_->SetTarget(&player_->GetWorldTransform());
+
 	//--------------------------------
 	// 軸方向表示の使用
 	//--------------------------------
@@ -87,6 +87,9 @@ void GameScene::Update() {
 	//地面の更新
 	ground_->Update();
 
+	//追従カメラの更新
+	followCamera_->Update();
+
 	//--------------------------------
 	// デバッグカメラ
 	//--------------------------------
@@ -104,10 +107,10 @@ void GameScene::Update() {
 
 	if (isDebugCameraActive_) {
 		// デバッグカメラの更新
-		debugCamera_->Update();
-		viewProjection_.matView = debugCamera_->GetViewProjection().matView;
+		followCamera_->Update();
+		viewProjection_.matView = followCamera_->GetViewProjection().matView;
 
-		viewProjection_.matProjection = debugCamera_->GetViewProjection().matProjection;
+		viewProjection_.matProjection = followCamera_->GetViewProjection().matProjection;
 
 		// ビュープロジェクション行列の転送
 		viewProjection_.TransferMatrix();
