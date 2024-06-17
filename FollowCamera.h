@@ -1,6 +1,10 @@
 #pragma once
 #include "ViewProjection.h"
 #include "WorldTransform.h"
+#include "Input.h"
+#include "MyMath.h"
+
+
 /// <summary>
 /// 追従カメラ
 /// </summary>
@@ -19,8 +23,14 @@ public:
 	/// </summary>
 	/// <param name="target"></param>
 	void SetTarget(const WorldTransform* target) { target_ = target; }
-
+	/// <summary>
+	/// 設定したターゲットに追従する
+	/// </summary>
 	void FollowTarget();
+	/// <summary>
+	/// カメラの旋回
+	/// </summary>
+	void RotateCamera();
 
 	/// <summary>
 	/// 自キャラのWorldTransformを取得する

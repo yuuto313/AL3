@@ -32,12 +32,6 @@ public:
 	/// 移動処理
 	/// </summary>
 	void Move();
-
-	/// <summary>
-	/// キーボードで移動処理
-	/// </summary>
-	void ActiveKeyboard();
-
 	/// <summary>
 	/// 自キャラのWorldTransformを取得する
 	/// </summary>
@@ -51,4 +45,7 @@ private:
 	Model* model_ = nullptr;
 
 	ViewProjection* viewProjection_ = nullptr;
+
+	// キーボード入力
+	Input* input_ = nullptr;
 };
