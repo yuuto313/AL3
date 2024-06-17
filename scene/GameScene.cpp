@@ -57,9 +57,13 @@ void GameScene::Initialize() {
 	//天球を初期化
 	skydome_->Initialize(modelSkydome_.get(),&viewProjection_);
 
+	//地面の初期化
 	ground_->Initialize(modelGround_.get(), &viewProjection_);
 
-	followCamera_->Initialize(&viewProjection_);
+	//追従カメラの初期化
+	followCamera_->Initialize();
+	followCamera_
+	    ->SetTarget(&player_->Get)
 	//--------------------------------
 	// 軸方向表示の使用
 	//--------------------------------

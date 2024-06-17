@@ -70,6 +70,7 @@ private:
 	// デバッグカメラ
 	std::unique_ptr<DebugCamera> debugCamera_ = nullptr;
 
+	//追従カメラ
 	std::unique_ptr<FollowCamera> followCamera_ = nullptr;
 
 	//テクスチャハンドル
