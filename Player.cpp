@@ -23,7 +23,7 @@ void Player::Update() {
 	//移動
 	//--------------------------------
 
-
+	Move();
 
 	//--------------------------------
 	//ワールド行列の転送
@@ -48,7 +48,11 @@ void Player::Move() {
 
 		//移動量
 		Vector3 move = {(float)joyState.Gamepad.sThumbLX / SHRT_MAX, 0.0f, (float)joyState.Gamepad.sThumbLY / SHRT_MAX};
-		move=Normalize
+		//移動量に速さを反映
+		move = Normalize(move) * speed;
+
+		//移動
+		worldTransform_.translation_ += move;
 	}
 
 }

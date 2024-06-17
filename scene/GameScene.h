@@ -9,6 +9,7 @@
 #include "Player.h"
 #include "Skydome.h"
 #include "Ground.h"
+#include "FollowCamera.h"
 
 #include <memory>
 
@@ -68,6 +69,8 @@ private:
 
 	// デバッグカメラ
 	std::unique_ptr<DebugCamera> debugCamera_ = nullptr;
+
+	std::unique_ptr<FollowCamera> followCamera_ = nullptr;
 
 	//テクスチャハンドル
 	//uint32_t textureHandle_ = 0;

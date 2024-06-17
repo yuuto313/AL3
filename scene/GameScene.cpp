@@ -42,6 +42,9 @@ void GameScene::Initialize() {
 	// デバッグカメラの生成
 	debugCamera_ = std::make_unique<DebugCamera>(1280, 720);
 
+	//追従カメラの生成
+	followCamera_ = std::make_unique<FollowCamera>();
+
 	//--------------------------------
 	// 初期化
 	//--------------------------------
@@ -56,6 +59,7 @@ void GameScene::Initialize() {
 
 	ground_->Initialize(modelGround_.get(), &viewProjection_);
 
+	followCamera_->Initialize(&viewProjection_);
 	//--------------------------------
 	// 軸方向表示の使用
 	//--------------------------------

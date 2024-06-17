@@ -2,6 +2,7 @@
 #include "WorldTransform.h"
 #include "cassert"
 #include "DebugCamera.h"
+#include "MyMath.h"
 
 #pragma once
 /// <summary>
