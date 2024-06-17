@@ -27,6 +27,10 @@ public:
 	/// 描画
 	/// </summary>
 	void Draw();
+	/// <summary>
+	/// 移動処理
+	/// </summary>
+	void Move();
 
 private:
 	//ワールド変換データ

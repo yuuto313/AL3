@@ -19,12 +19,38 @@ void Player::Initialize(Model* model,ViewProjection* viewProjection) {
 }
 
 void Player::Update() { 
+	//--------------------------------
+	//移動
+	//--------------------------------
+
+
+
+	//--------------------------------
 	//ワールド行列の転送
+	//--------------------------------
 	worldTransform_.TransferMatrix(); 
 }
 
 void Player::Draw() { 
 	model_->Draw(worldTransform_, *viewProjection_); 
+}
+
+void Player::Move() {
+	//--------------------------------
+	//コントローラーで移動処理
+	//--------------------------------
+
+	XINPUT_STATE joyState;
+
+	if (Input::GetInstance()->GetJoystickState(0, joyState)) {
+		//速さ
+		const float speed = 0.3f;
+
+		//移動量
+		Vector3 move = {(float)joyState.Gamepad.sThumbLX / SHRT_MAX, 0.0f, (float)joyState.Gamepad.sThumbLY / SHRT_MAX};
+		move=Normalize
+	}
+
 }
 
 
