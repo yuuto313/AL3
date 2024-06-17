@@ -34,6 +34,11 @@ public:
 	void Move();
 
 	/// <summary>
+	/// キーボードで移動処理
+	/// </summary>
+	void ActiveKeyboard();
+
+	/// <summary>
 	/// 自キャラのWorldTransformを取得する
 	/// </summary>
 	/// <returns></returns>
