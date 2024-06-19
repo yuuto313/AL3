@@ -24,12 +24,16 @@ void EnemyBullet::Initialize(Model* model, const Vector3& position,const Vector3
 
 	//Y軸周り角度(θy）
 	//atan2:第一引数に高さ、第二引数に底辺を指定する
-	worldTransform_.rotation_.y = std::atan2(velocity_.x, velocity_.z);
-	//Y軸まわりに-θy回す回転行列を計算
-	Matrix4x4 rotateY = MakeRotateYMatrix(-worldTransform_.rotation_.y);
-	velocity_ =velocity * rotateY;
+	worldTransform_.rotation_.y = std::atan2(velocity_.z, velocity_.x);
+	//横軸方向の長さを求める
+	/*velocity_.y = 0;
+	float velocityXZ_ = Length(velocity_);*/
+
+	Matrix4x4 rotateY = MakeRotateYMatrix(worldTransform_.rotation_.y);
+	Vector3 velocityZ = velocity_ * rotateY;
+
 	//X軸周り角度(θx）
-	worldTransform_.rotation_.x = std::atan2(-velocity.y,velocity.z);
+	worldTransform_.rotation_.x = std::atan2(velocityZ.z,-velocityZ.y);
 }
 
 void EnemyBullet::Update() { 
