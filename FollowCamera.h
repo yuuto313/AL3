@@ -13,7 +13,7 @@ public:
 	/// <summary>
 	/// 初期化
 	/// </summary>
-	void Initialize();
+	void Initialize(ViewProjection* viewProjection);
 	/// <summary>
 	/// 更新
 	/// </summary>
@@ -39,7 +39,8 @@ public:
 	const ViewProjection& GetViewProjection() { return viewProjection_; }
 
 	private:
-	ViewProjection viewProjection_;
+	ViewProjection* viewProjection_ = nullptr;
+
 	
 	//追従対象
 	const WorldTransform* target_ = nullptr;

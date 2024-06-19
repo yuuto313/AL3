@@ -1,7 +1,7 @@
 #include "FollowCamera.h"
 
-void FollowCamera::Initialize() {
-	viewProjection_.Initialize();
+void FollowCamera::Initialize(ViewProjection* viewProjection) {
+	viewProjection_=viewProjection;
 }
 
 void FollowCamera::Update() {
@@ -9,7 +9,7 @@ void FollowCamera::Update() {
 	//追従処理
 	//--------------------------------
 
-	//FollowTarget();
+	FollowTarget();
 
 	//--------------------------------
 	// カメラ旋回処理
@@ -26,19 +26,19 @@ void FollowCamera::Update() {
 
 void FollowCamera::FollowTarget() {
 	//追従対象がいれば
-	//if (target_) {
-	////追従対象からカメラまでのオフセット(0度の時の値)
-	//	Vector3 offset = {0.0f, 2.0f, -10.0f};
+	if (target_) {
+	//追従対象からカメラまでのオフセット(0度の時の値)
+		Vector3 offset = {0.0f, 2.0f, -10.0f};
 
-	//	//カメラの角度から回転行列を計算する
-	////https: // chatgpt.com/c/29947849-3dd7-4f56-93c8-47e009964be4
+		//カメラの角度から回転行列を計算する
+		//https: // chatgpt.com/c/29947849-3dd7-4f56-93c8-47e009964be4
 
-	//	// オフセットをカメラの回転に合わせて回転させる
-	//	offset = TransformNormal(offset, 回転行列);
+		// オフセットをカメラの回転に合わせて回転させる
+		//offset = TransformNormal(offset, 回転行列);
 
-	//	//座標をコピーしてオフセット分ずらす
-	//	viewProjection_.translation_ = target_->translation_ + offset;
-	//}
+		//座標をコピーしてオフセット分ずらす
+		viewProjection_.translation_ = target_->translation_ + offset;
+	}
 }
 
 void FollowCamera::RotateCamera() {
