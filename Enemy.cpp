@@ -115,7 +115,7 @@ void Enemy::Fire() {
 	assert(player_);
 
 	//弾の速さ（調整項目）
-	const float kBulletSpeed = -1.0f;
+	const float kBulletSpeed = -0.5f;
 	
 	//自キャラのワールド座標を取得
 	Vector3 playerWorldPos = player_->GetWorldPosition();
