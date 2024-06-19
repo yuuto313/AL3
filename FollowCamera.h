@@ -13,7 +13,7 @@ public:
 	/// <summary>
 	/// 初期化
 	/// </summary>
-	void Initialize(ViewProjection* viewProjection);
+	void Initialize();
 	/// <summary>
 	/// 更新
 	/// </summary>
@@ -39,7 +39,7 @@ public:
 	const ViewProjection& GetViewProjection() { return viewProjection_; }
 
 	private:
-	ViewProjection* viewProjection_ = nullptr;
+	ViewProjection viewProjection_;
 
 	
 	//追従対象

@@ -37,6 +37,16 @@ public:
 	/// </summary>
 	/// <returns></returns>
 	const WorldTransform& GetWorldTransform() { return worldTransform_; }
+	/// <summary>
+	/// 自キャラのWorldTransformを取得する
+	/// </summary>
+	/// <returns></returns>
+	const ViewProjection* GetViewProjection() { return cameraViewProjection_; }
+	/// <summary>
+	/// カメラのビュープロジェクションのみ参照するセッター
+	/// </summary>
+	/// <param name="viewProjection"></param>
+	void SetViewProjection(const ViewProjection* viewProjection) { cameraViewProjection_ = viewProjection;}
 
 private:
 	//ワールド変換データ
@@ -45,6 +55,8 @@ private:
 	Model* model_ = nullptr;
 
 	ViewProjection* viewProjection_ = nullptr;
+	//カメラのビュープロジェクション
+	const ViewProjection* cameraViewProjection_ = nullptr;
 
 	// キーボード入力
 	Input* input_ = nullptr;

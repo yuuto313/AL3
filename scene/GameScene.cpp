@@ -64,6 +64,9 @@ void GameScene::Initialize() {
 	followCamera_->Initialize();
 	followCamera_->SetTarget(&player_->GetWorldTransform());
 
+	//自キャラに追従カメラのビュープロジェクションをアドレス渡しする
+	player_->SetViewProjection(&followCamera_->GetViewProjection());
+
 	//--------------------------------
 	// 軸方向表示の使用
 	//--------------------------------
@@ -106,7 +109,7 @@ void GameScene::Update() {
 #endif // _DEBUG
 
 	if (isDebugCameraActive_) {
-		// デバッグカメラの更新
+		//追従カメラの更新
 		followCamera_->Update();
 		viewProjection_.matView = followCamera_->GetViewProjection().matView;
 
@@ -115,6 +118,12 @@ void GameScene::Update() {
 		// ビュープロジェクション行列の転送
 		viewProjection_.TransferMatrix();
 	} else {
+		// デバッグカメラの更新
+		debugCamera_->Update();
+		viewProjection_.matView = debugCamera_->GetViewProjection().matView;
+
+		viewProjection_.matProjection = debugCamera_->GetViewProjection().matProjection;
+
 		// ビュープロジェクション行列の更新と転送
 		viewProjection_.UpdateMatrix();
 	}
