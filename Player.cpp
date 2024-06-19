@@ -29,7 +29,7 @@ void Player::Update() {
 	//--------------------------------
 	//ワールド行列の転送
 	//--------------------------------
-	worldTransform_.Up; 
+	worldTransform_.UpdateMatrix();
 }
 
 void Player::Draw() { 
