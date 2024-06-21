@@ -24,16 +24,14 @@ void EnemyBullet::Initialize(Model* model, const Vector3& position,const Vector3
 
 	// Y軸周りの回転角度(θy)を計算
 	// atan2: 第一引数に高さ、第二引数に底辺を指定する
-	worldTransform_.rotation_.y = std::atan2(velocity_.z, velocity_.x);
+	worldTransform_.rotation_.y = std::atan2(velocity_.x, velocity_.z);
 
-	// Y軸回りの回転行列を生成
-	Matrix4x4 rotateY = MakeRotateYMatrix(worldTransform_.rotation_.y);
-
-	// 回転行列を用いて速度ベクトルを変換
-	Vector3 velocityZ = TransformNormal(velocity_,rotateY); // velocity_ * rotateYではなく、行列とベクトルの乗算関数を使用
+	Vector3 newVelocity = velocity_;
+	newVelocity.y = 0;
+	float velocityXZ = Length(newVelocity);
 
 	// X軸周りの回転角度(θx)を計算
-	worldTransform_.rotation_.x = std::atan2(velocityZ.z, -velocityZ.y);
+	worldTransform_.rotation_.x = std::atan2(-velocity_.y,velocityXZ );
 }
 
 void EnemyBullet::Update() { 
