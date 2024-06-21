@@ -1,4 +1,5 @@
 #include "Player.h"
+#include "iostream"
 
 Player::Player() {}
 
@@ -63,6 +64,9 @@ void Player::Move() {
 
 		//移動ベクトルをカメラの座標だけ回転する
 		move = TransformNormal(move, rotateXYZMatrix);
+
+		//Y軸周りの角度
+		worldTransform_.rotation_.y = std::atan2(move.x, move.z);
 
 		//移動
 		worldTransform_.translation_ += move;
