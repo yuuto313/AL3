@@ -22,7 +22,12 @@ void GameScene::Initialize() {
 	// 生成
 	//--------------------------------
 	//3Dモデルデータの生成
-	model_.reset(Model::CreateFromOBJ("player",true));
+	//model_.reset(Model::CreateFromOBJ("player",true));
+	modelFighterBody_.reset(Model::CreateFromOBJ("Body", true));
+	modelFighterHead_.reset(Model::CreateFromOBJ("Head", true));
+	modelFighterRightArm_.reset(Model::CreateFromOBJ("RightArm", true));
+	modelFighterLightArm_.reset(Model::CreateFromOBJ("LeftArm", true));
+
 
 	//天球のモデルを生成
 	modelSkydome_.reset(Model::CreateFromOBJ("skydome", true));
@@ -52,7 +57,7 @@ void GameScene::Initialize() {
 	viewProjection_.Initialize();
 
 	//自キャラの初期化
-	player_->Initialize(model_.get(),&viewProjection_);
+	player_->Initialize(modelFighterBody_.get(), modelFighterHead_.get(), modelFighterLightArm_.get(), modelFighterRightArm_.get(), &viewProjection_);
 
 	//天球を初期化
 	skydome_->Initialize(modelSkydome_.get(),&viewProjection_);

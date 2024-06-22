@@ -58,8 +58,15 @@ private:
 	//地面
 	std::unique_ptr<Ground> ground_ = nullptr;
 
+	// 3Dモデルデータ
+
 	// 3Dモデル
-	std::unique_ptr<Model> model_ = nullptr;
+	//std::unique_ptr<Model> model_ = nullptr;
+	std::unique_ptr<Model> modelFighterBody_ = nullptr;
+	std::unique_ptr<Model> modelFighterHead_ = nullptr;
+	std::unique_ptr<Model> modelFighterLightArm_ = nullptr;
+	std::unique_ptr<Model> modelFighterRightArm_ = nullptr;
+
 
 	//天球のモデル
 	std::unique_ptr<Model> modelSkydome_ = nullptr;
