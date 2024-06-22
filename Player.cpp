@@ -6,6 +6,9 @@ Player::Player() {}
 
 Player::~Player() {}
 
+//頭の位置が変えられない
+//worldTransformBase_の使いどころ
+
 void Player::Initialize(Model* modelFighterBody, Model* modelFighterHead, Model* modelFighterLightArm, Model* modelFighterRightArm, ViewProjection* viewProjection) { 
 	//NULLポインタチェック
 	assert(modelFighterBody);
@@ -28,7 +31,7 @@ void Player::Initialize(Model* modelFighterBody, Model* modelFighterHead, Model*
 	worldTransformBody_.translation_ = {0.0f, 2.0f, 0.0f};
 	//頭
 	worldTransformHead_.Initialize();
-	worldTransformHead_.translation_ = {0.0f, 5.0f, 0.0f};
+	worldTransformHead_.translation_ = {0.0f, 10.0f, 0.0f};
 	//右腕
 	worldTransformRightArm_.Initialize();
 	worldTransformRightArm_.translation_ = {2.0f, 0.0f, 0.0f};
@@ -125,38 +128,60 @@ void Player::Move() {
 }
 
 void Player::InitializeFloatingGimmick() { 
+	//浮遊ギミックに使う変数を初期化
 	floatingParameter_ = 0.0f;
 
+	// 浮遊移動のサイクル＜Frame＞
+	//何フレームでアニメーションするか
+	floatingCycle_ = 60;
+	tempFloat_ = static_cast<float>(floatingCycle_);
+
+	//そのフレーム数の回数だけ加算したら2πになる数値を求めて、毎フレーム加算する値とする
+	step_ = 2.0f * (float)M_PI / floatingCycle_;
+
+	//振幅<m>
+	amplitude_ = 0.5f;
 }
 
 void Player::UpdateFloatingGimmick() {
-	//浮遊移動のサイクル＜Frame＞
-	const uint16_t floatingCycle = 60;
+
 	//1フレームでのパラメータ加算値
 	//そのフレーム数の回数だけ加算したら2πになる数値を求めて、毎フレーム加算する数値となる
-	float step = 2.0f * (float)M_PI / floatingCycle;
+	step_= 2.0f * (float)M_PI / floatingCycle_;
+
 	//パラメータを1ステップ分加算
-	floatingParameter_ += step;
+	floatingParameter_ += step_;
+
 	//2πを超えたら0に戻す
 	floatingParameter_ = std::fmod(floatingParameter_, 2.0f * (float)M_PI);
-	//浮遊の振幅<m>
-	float amplitude = 0.5f;
+
 	//浮遊を座標に反映
-	worldTransformBody_.translation_.y = std::sin(floatingParameter_) * amplitude;
-	worldTransformHead_.translation_.y = std::sin(floatingParameter_) * amplitude;
-	worldTransformRightArm_.translation_.y = std::sin(floatingParameter_) * amplitude;
-	worldTransformRightArm_.rotation_.x = std::sin(floatingParameter_) * amplitude;
-	worldTransformLeftArm_.translation_.y = std::sin(floatingParameter_) * amplitude;
-	worldTransformLeftArm_.rotation_.x = std::sin(floatingParameter_) * amplitude;
+	worldTransformBody_.translation_.y = std::sin(floatingParameter_) * amplitude_;
+
+	worldTransformHead_.translation_.y = std::sin(floatingParameter_) * amplitude_;
+
+	worldTransformRightArm_.translation_.y = std::sin(floatingParameter_) * amplitude_;
+	worldTransformRightArm_.rotation_.x = std::sin(floatingParameter_) * amplitude_;
+
+	worldTransformLeftArm_.translation_.y = std::sin(floatingParameter_) * amplitude_;
+	worldTransformLeftArm_.rotation_.x = std::sin(floatingParameter_) * amplitude_;
 
 
 	ImGui::Begin("Player");
 	ImGui::SliderFloat3("Head_Translation",&worldTransformHead_.translation_.x,-10.0f,10.0f);
 	ImGui::SliderFloat3("LArm_Translation",&worldTransformLeftArm_.translation_.x,-10.0f,10.0f);
 	ImGui::SliderFloat3("RArm_Translation",&worldTransformRightArm_.translation_.x,-10.0f,10.0f);
-	ImGui::SliderFloat("step", reinterpret_cast<float>(floatingCycle), -120.0f, 120.0f);
-	ImGui::SliderFloat("amplitude", &amplitude,-10.0f, 10.0f);
+	if (ImGui::SliderFloat("step", &tempFloat_, 1.0f, 120.0f)) {
+		floatingCycle_ = static_cast<uint16_t>(tempFloat_);
+	}
+	ImGui::SliderFloat("amplitude", &amplitude_,-10.0f, 10.0f);
 	ImGui::End();
+
+	worldTransformBase_.UpdateMatrix();
+	worldTransformBody_.UpdateMatrix();
+	worldTransformHead_.UpdateMatrix();
+	worldTransformRightArm_.UpdateMatrix();
+	worldTransformLeftArm_.UpdateMatrix();
 
 }
 

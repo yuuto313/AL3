@@ -74,8 +74,16 @@ private:
 	//カメラのビュープロジェクション
 	const ViewProjection* cameraViewProjection_ = nullptr;
 
+
 	//浮遊ギミックの媒介変数
 	float floatingParameter_ = 0.0f;
+	
+	uint16_t floatingCycle_ = 60;
+	float tempFloat_ = 0.0f;
+
+	float step_ = 0.0f;
+
+	float amplitude_ = 0.5f;
 
 	// キーボード入力
 	Input* input_ = nullptr;
