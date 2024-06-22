@@ -4,11 +4,13 @@
 #include "DebugCamera.h"
 #include "MyMath.h"
 
+#include "BaseCharacter.h"
+
 #pragma once
 /// <summary>
 /// 自キャラ
 /// </summary>
-class Player {
+class Player : public BaseCharacter{
 public:
 
 	Player();
@@ -19,15 +21,15 @@ public:
 	/// <param name="model">モデル</param>
 	/// <param name="textureHandle">テクスチャハンドル</param>
 	/// <param name="viewProjection">ビュープロジェクション</param>
-	void Initialize(Model* modelFighterBody_, Model* modelFighterHead_, Model* modelFighterLightArm_, Model* modelFighterRightArm_, ViewProjection* viewProjection);
+	void Initialize(const std::vector<Model*>&models, ViewProjection* viewProjection) override;
 	/// <summary>
 	/// 更新
 	/// </summary>
-	void Update();
+	void Update() override;
 	/// <summary>
 	/// 描画
 	/// </summary>
-	void Draw();
+	void Draw() override;
 	/// <summary>
 	/// 移動処理
 	/// </summary>
