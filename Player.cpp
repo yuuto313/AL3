@@ -40,7 +40,7 @@ void Player::Initialize(Model* modelFighterBody, Model* modelFighterHead, Model*
 	worldTransformLeftArm_.translation_ = {-2.0f, 0.0f, 0.0f};
 
 	//親子関係を結ぶ
-	worldTransformBody_.parent_=
+	worldTransformBody_.parent_ = worldTransformBase_;
 
 
 	// シングルトンインスタンスを取得する
