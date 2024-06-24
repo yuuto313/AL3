@@ -39,6 +39,9 @@ void Player::Initialize(Model* modelFighterBody, Model* modelFighterHead, Model*
 	worldTransformLeftArm_.Initialize();
 	worldTransformLeftArm_.translation_ = {-2.0f, 0.0f, 0.0f};
 
+	//親子関係を結ぶ
+	worldTransformBody_.parent_=
+
 
 	// シングルトンインスタンスを取得する
 	input_ = Input::GetInstance();
@@ -144,7 +147,6 @@ void Player::InitializeFloatingGimmick() {
 }
 
 void Player::UpdateFloatingGimmick() {
-
 	//1フレームでのパラメータ加算値
 	//そのフレーム数の回数だけ加算したら2πになる数値を求めて、毎フレーム加算する数値となる
 	step_= 2.0f * (float)M_PI / floatingCycle_;
@@ -176,12 +178,6 @@ void Player::UpdateFloatingGimmick() {
 	}
 	ImGui::SliderFloat("amplitude", &amplitude_,-10.0f, 10.0f);
 	ImGui::End();
-
-	worldTransformBase_.UpdateMatrix();
-	worldTransformBody_.UpdateMatrix();
-	worldTransformHead_.UpdateMatrix();
-	worldTransformRightArm_.UpdateMatrix();
-	worldTransformLeftArm_.UpdateMatrix();
 
 }
 
