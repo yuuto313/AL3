@@ -28,20 +28,21 @@ void Player::Initialize(Model* modelFighterBody, Model* modelFighterHead, Model*
 	worldTransformBase_.Initialize();
 	//体
 	worldTransformBody_.Initialize();
-	worldTransformBody_.translation_ = {0.0f, 2.0f, 0.0f};
+	worldTransformBody_.translation_ = {0.0f, 5.0f, 0.0f};
 	//頭
 	worldTransformHead_.Initialize();
-	worldTransformHead_.translation_ = {0.0f, 10.0f, 0.0f};
+	worldTransformHead_.translation_ = {0.0f, 0.0f, 0.0f};
 	//右腕
 	worldTransformRightArm_.Initialize();
-	worldTransformRightArm_.translation_ = {2.0f, 0.0f, 0.0f};
+	worldTransformRightArm_.translation_ = {2.0f, 3.0f, 0.0f};
 	//左腕
 	worldTransformLeftArm_.Initialize();
-	worldTransformLeftArm_.translation_ = {-2.0f, 0.0f, 0.0f};
+	worldTransformLeftArm_.translation_ = {-2.0f, 3.0f, 0.0f};
 
 	//親子関係を結ぶ
-	worldTransformBody_.parent_ = worldTransformBase_;
-
+	worldTransformHead_.parent_ = &worldTransformBody_;
+	worldTransformLeftArm_.parent_ = &worldTransformBody_;
+	worldTransformRightArm_.parent_ = &worldTransformBody_;
 
 	// シングルトンインスタンスを取得する
 	input_ = Input::GetInstance();
@@ -160,12 +161,12 @@ void Player::UpdateFloatingGimmick() {
 	//浮遊を座標に反映
 	worldTransformBody_.translation_.y = std::sin(floatingParameter_) * amplitude_;
 
-	worldTransformHead_.translation_.y = std::sin(floatingParameter_) * amplitude_;
+	//worldTransformHead_.translation_.y = std::sin(floatingParameter_) * amplitude_;
 
-	worldTransformRightArm_.translation_.y = std::sin(floatingParameter_) * amplitude_;
+	//worldTransformRightArm_.translation_.y = std::sin(floatingParameter_) * amplitude_;
 	worldTransformRightArm_.rotation_.x = std::sin(floatingParameter_) * amplitude_;
 
-	worldTransformLeftArm_.translation_.y = std::sin(floatingParameter_) * amplitude_;
+	//worldTransformLeftArm_.translation_.y = std::sin(floatingParameter_) * amplitude_;
 	worldTransformLeftArm_.rotation_.x = std::sin(floatingParameter_) * amplitude_;
 
 
