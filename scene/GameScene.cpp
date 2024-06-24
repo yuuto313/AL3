@@ -2,6 +2,7 @@
 #include "TextureManager.h"
 #include <cassert>
 #include "AxisIndicator.h"
+#include "ImGuiManager.h"
 
 GameScene::GameScene() {}
 
@@ -22,12 +23,15 @@ void GameScene::Initialize() {
 	// 生成
 	//--------------------------------
 	//3Dモデルデータの生成
+	// プレイヤー
 	//model_.reset(Model::CreateFromOBJ("player",true));
 	modelFighterBody_.reset(Model::CreateFromOBJ("Body", true));
 	modelFighterHead_.reset(Model::CreateFromOBJ("Head", true));
 	modelFighterRightArm_.reset(Model::CreateFromOBJ("RightArm", true));
 	modelFighterLightArm_.reset(Model::CreateFromOBJ("LeftArm", true));
 
+	//敵
+	modelEnemy_.reset(Model::CreateFromOBJ("Enemy", true));
 
 	//天球のモデルを生成
 	modelSkydome_.reset(Model::CreateFromOBJ("skydome", true));
@@ -37,6 +41,9 @@ void GameScene::Initialize() {
 
 	//自キャラの生成
 	player_ = std::make_unique<Player>();
+
+	//敵の生成
+	enemy_ = std::make_unique<Enemy>();
 
 	//天球を生成
 	skydome_ = std::make_unique<Skydome>();
@@ -51,13 +58,25 @@ void GameScene::Initialize() {
 	followCamera_ = std::make_unique<FollowCamera>();
 
 	//--------------------------------
+	// モデルデータをモデルデータ配列に格納
+	//--------------------------------
+	//自キャラモデル
+	std::vector<Model*> playerModels = {modelFighterBody_.get(), modelFighterHead_.get(),modelFighterRightArm_.get(),modelFighterLightArm_.get()};
+
+	//敵キャラのモデル
+	std::vector<Model*> enemyMoldels = {modelEnemy_.get()};
+
+	//--------------------------------
 	// 初期化
 	//--------------------------------
 	//ビュープロジェクションの初期化
 	viewProjection_.Initialize();
 
 	//自キャラの初期化
-	player_->Initialize(modelFighterBody_.get(), modelFighterHead_.get(), modelFighterLightArm_.get(), modelFighterRightArm_.get(), &viewProjection_);
+	player_->Initialize(playerModels);
+
+	//敵の初期化
+	enemy_->Initialize(enemyMoldels);
 
 	//天球を初期化
 	skydome_->Initialize(modelSkydome_.get(),&viewProjection_);
@@ -89,6 +108,9 @@ void GameScene::Update() {
     //自キャラの更新
 	player_->Update();
 
+	//敵キャラの更新
+	enemy_->Update();
+
 	//天球の更新
 	skydome_->Update();
 
@@ -96,7 +118,7 @@ void GameScene::Update() {
 	ground_->Update();
 
 	//追従カメラの更新
-	followCamera_->Update();
+	//followCamera_->Update();
 
 	//--------------------------------
 	// デバッグカメラ
@@ -132,7 +154,6 @@ void GameScene::Update() {
 		// ビュープロジェクション行列の更新と転送
 		viewProjection_.UpdateMatrix();
 	}
-
 }
 	
 
@@ -163,7 +184,9 @@ void GameScene::Draw() {
 	/// ここに3Dオブジェクトの描画処理を追加できる
 	/// </summary>
 
-	player_->Draw();
+	player_->Draw(viewProjection_);
+
+	enemy_->Draw(viewProjection_);
 
 	skydome_->Draw();
 

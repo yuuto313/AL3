@@ -7,6 +7,7 @@
 #include "DebugCamera.h"
 
 #include "Player.h"
+#include "Enemy.h"
 #include "Skydome.h"
 #include "Ground.h"
 #include "FollowCamera.h"
@@ -52,6 +53,9 @@ private:
 	//自キャラ
 	std::unique_ptr<Player> player_ = nullptr;
 	
+	//敵
+	std::unique_ptr<Enemy> enemy_ = nullptr;
+
 	//スカイドーム（天球）
 	std::unique_ptr<Skydome> skydome_ = nullptr;
 
@@ -61,12 +65,15 @@ private:
 	// 3Dモデルデータ
 
 	// 3Dモデル
+	// プレイヤー
 	//std::unique_ptr<Model> model_ = nullptr;
 	std::unique_ptr<Model> modelFighterBody_ = nullptr;
 	std::unique_ptr<Model> modelFighterHead_ = nullptr;
 	std::unique_ptr<Model> modelFighterLightArm_ = nullptr;
 	std::unique_ptr<Model> modelFighterRightArm_ = nullptr;
 
+	//敵
+	std::unique_ptr<Model> modelEnemy_ = nullptr;
 
 	//天球のモデル
 	std::unique_ptr<Model> modelSkydome_ = nullptr;

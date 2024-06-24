@@ -21,7 +21,7 @@ public:
 	/// <param name="model">モデル</param>
 	/// <param name="textureHandle">テクスチャハンドル</param>
 	/// <param name="viewProjection">ビュープロジェクション</param>
-	void Initialize(const std::vector<Model*>&models, ViewProjection* viewProjection) override;
+	void Initialize(const std::vector<Model*>&models) override;
 	/// <summary>
 	/// 更新
 	/// </summary>
@@ -29,11 +29,11 @@ public:
 	/// <summary>
 	/// 描画
 	/// </summary>
-	void Draw() override;
+	void Draw(const ViewProjection& viewProjection) override;
 	/// <summary>
 	/// 移動処理
 	/// </summary>
-	void Move();
+	void Movement();
 	/// <summary>
 	/// 自キャラのWorldTransformを取得する
 	/// </summary>
@@ -67,12 +67,11 @@ private:
 	WorldTransform worldTransformRightArm_;
 
 	//モデル
-	Model* modelFighterBody_ = nullptr;
+	/*Model* modelFighterBody_ = nullptr;
 	Model* modelFighterHead_ = nullptr;
 	Model* modelFighterLeftArm_ = nullptr;
-	Model* modelFighterRightArm_ = nullptr;
+	Model* modelFighterRightArm_ = nullptr;*/
 
-	ViewProjection* viewProjection_ = nullptr;
 	//カメラのビュープロジェクション
 	const ViewProjection* cameraViewProjection_ = nullptr;
 

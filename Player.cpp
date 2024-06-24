@@ -9,21 +9,11 @@ Player::~Player() {}
 //頭の位置が変えられない
 //worldTransformBase_の使いどころ
 
-void Player::Initialize(Model* modelFighterBody, Model* modelFighterHead, Model* modelFighterLightArm, Model* modelFighterRightArm, ViewProjection* viewProjection) { 
-	//NULLポインタチェック
-	assert(modelFighterBody);
-	assert(modelFighterHead);
-	assert(modelFighterLightArm);
-	assert(modelFighterRightArm);
-	//引数として受け取ったデータをメンバ変数に記録する
-	modelFighterBody_ = modelFighterBody;
-	modelFighterHead_ = modelFighterHead;
-	modelFighterLeftArm_ = modelFighterLightArm;
-	modelFighterRightArm_ = modelFighterRightArm;
-	//model_ = model;
-	
+void Player::Initialize(const std::vector<Model*>&models) { 
+	//基底クラスの初期化
+	BaseCharacter::Initialize(models);
+
 	//textureHandle_ = textureHandle;
-	viewProjection_ = viewProjection;
 	//ワールド変換初期化
 	worldTransformBase_.Initialize();
 	//体
@@ -31,7 +21,7 @@ void Player::Initialize(Model* modelFighterBody, Model* modelFighterHead, Model*
 	worldTransformBody_.translation_ = {0.0f, 2.0f, 0.0f};
 	//頭
 	worldTransformHead_.Initialize();
-	worldTransformHead_.translation_ = {0.0f, 10.0f, 0.0f};
+	worldTransformHead_.translation_ = {0.0f, 0.0f, 0.0f};
 	//右腕
 	worldTransformRightArm_.Initialize();
 	worldTransformRightArm_.translation_ = {2.0f, 0.0f, 0.0f};
@@ -50,10 +40,16 @@ void Player::Initialize(Model* modelFighterBody, Model* modelFighterHead, Model*
 
 void Player::Update() { 
 	//--------------------------------
+	// 基底クラスの更新
+	//--------------------------------
+
+	BaseCharacter::Update();
+
+	//--------------------------------
 	//移動
 	//--------------------------------
 
-	Move();
+	Movement();
 
 	//--------------------------------
 	// 浮遊ギミック更新
@@ -71,15 +67,14 @@ void Player::Update() {
 	worldTransformLeftArm_.UpdateMatrix();
 }
 
-void Player::Draw() { 
-	modelFighterBody_->Draw(worldTransformBody_, *viewProjection_); 
-	modelFighterHead_->Draw(worldTransformHead_, *viewProjection_); 
-	modelFighterRightArm_->Draw(worldTransformRightArm_, *viewProjection_); 
-	modelFighterLeftArm_->Draw(worldTransformLeftArm_, *viewProjection_); 
-
+void Player::Draw(const ViewProjection& viewProjection) { 
+	models_[0]->Draw(worldTransformBody_, viewProjection);
+	models_[1]->Draw(worldTransformHead_, viewProjection);
+	models_[2]->Draw(worldTransformRightArm_, viewProjection);
+	models_[3]->Draw(worldTransformLeftArm_, viewProjection);
 }
 
-void Player::Move() {
+void Player::Movement() {
 	//--------------------------------
 	//コントローラーで移動処理
 	//--------------------------------
@@ -95,7 +90,6 @@ void Player::Move() {
 		move = move * speed;
 
 		// カメラの回転角度を取得
-
 		Vector3 rotationAngle = {GetViewProjection()->rotation_.x, GetViewProjection()->rotation_.y, GetViewProjection()->rotation_.z};
 
 		////カメラの角度から回転行列を計算する

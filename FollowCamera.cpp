@@ -1,5 +1,5 @@
 #include "FollowCamera.h"
-
+#include "ImGuiManager.h"
 void FollowCamera::Initialize() { 
 	viewProjection_.Initialize();
 }
@@ -22,6 +22,12 @@ void FollowCamera::Update() {
 	//--------------------------------
 	viewProjection_.UpdateMatrix();
 	viewProjection_.TransferMatrix();
+
+	ImGui::Begin("Camera");
+	ImGui::DragFloat3("debugCamera.translation", &viewProjection_.translation_.x, 0.03f);
+	ImGui::DragFloat3("debugCamera.rotate", &viewProjection_.rotation_.x, 0.03f);
+	ImGui::End();
+
 }
 
 void FollowCamera::FollowTarget() {
