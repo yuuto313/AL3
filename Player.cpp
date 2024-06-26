@@ -6,28 +6,31 @@ Player::Player() {}
 
 Player::~Player() {}
 
-//頭の位置が変えられない
-//worldTransformBase_の使いどころ
-
 void Player::Initialize(const std::vector<Model*>&models) { 
 	//基底クラスの初期化
 	BaseCharacter::Initialize(models);
 
 	//textureHandle_ = textureHandle;
-	//ワールド変換初期化
+	//  ワールド変換初期化
 	worldTransformBase_.Initialize();
-	//体
+	// 体
 	worldTransformBody_.Initialize();
-	worldTransformBody_.translation_ = {0.0f, 2.0f, 0.0f};
-	//頭
+	worldTransformBody_.translation_ = {0.0f, 10.0f, 0.0f};
+	// 頭
 	worldTransformHead_.Initialize();
 	worldTransformHead_.translation_ = {0.0f, 0.0f, 0.0f};
-	//右腕
+	// 右腕
 	worldTransformRightArm_.Initialize();
-	worldTransformRightArm_.translation_ = {2.0f, 0.0f, 0.0f};
-	//左腕
+	worldTransformRightArm_.translation_ = {2.0f, 3.0f, 0.0f};
+	// 左腕
 	worldTransformLeftArm_.Initialize();
-	worldTransformLeftArm_.translation_ = {-2.0f, 0.0f, 0.0f};
+	worldTransformLeftArm_.translation_ = {-2.0f, 3.0f, 0.0f};
+
+	// 親子関係を結ぶ
+	worldTransformBody_.parent_ = &worldTransformBase_;
+	worldTransformHead_.parent_ = &worldTransformBody_;
+	worldTransformLeftArm_.parent_ = &worldTransformBody_;
+	worldTransformRightArm_.parent_ = &worldTransformBody_;
 
 
 	// シングルトンインスタンスを取得する
@@ -35,6 +38,7 @@ void Player::Initialize(const std::vector<Model*>&models) {
 
 	//浮遊ギミック初期化
 	InitializeFloatingGimmick();
+
 
 }
 
@@ -103,10 +107,7 @@ void Player::Movement() {
 		
 		//移動
 		worldTransformBase_.translation_ += move;
-		worldTransformBody_.translation_ += move;
-		worldTransformHead_.translation_ += move;
-		worldTransformRightArm_.translation_ += move;
-		worldTransformLeftArm_.translation_ += move;
+		
 
 		//--------------------------------
 		// 移動方向に見た目を合わせる
@@ -114,10 +115,7 @@ void Player::Movement() {
 
 		//Y軸周りの角度
 		worldTransformBase_.rotation_.y = std::atan2(move.x, move.z);
-		worldTransformBody_.rotation_.y = std::atan2(move.x, move.z);
-		worldTransformHead_.rotation_.y = std::atan2(move.x, move.z);
-		worldTransformLeftArm_.rotation_.y = std::atan2(move.x, move.z);
-		worldTransformRightArm_.rotation_.y = std::atan2(move.x, move.z);
+		
 	}
 }
 
@@ -152,12 +150,8 @@ void Player::UpdateFloatingGimmick() {
 	//浮遊を座標に反映
 	worldTransformBody_.translation_.y = std::sin(floatingParameter_) * amplitude_;
 
-	worldTransformHead_.translation_.y = std::sin(floatingParameter_) * amplitude_;
-
-	worldTransformRightArm_.translation_.y = std::sin(floatingParameter_) * amplitude_;
+	//手をぶらぶらさせる
 	worldTransformRightArm_.rotation_.x = std::sin(floatingParameter_) * amplitude_;
-
-	worldTransformLeftArm_.translation_.y = std::sin(floatingParameter_) * amplitude_;
 	worldTransformLeftArm_.rotation_.x = std::sin(floatingParameter_) * amplitude_;
 
 
