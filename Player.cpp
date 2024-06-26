@@ -6,6 +6,8 @@ Player::Player() {}
 
 Player::~Player() {}
 
+//武器をの攻撃モーションを付ける
+
 void Player::Initialize(const std::vector<Model*>&models) { 
 	//基底クラスの初期化
 	BaseCharacter::Initialize(models);
@@ -25,13 +27,16 @@ void Player::Initialize(const std::vector<Model*>&models) {
 	// 左腕
 	worldTransformLeftArm_.Initialize();
 	worldTransformLeftArm_.translation_ = {-2.0f, 3.0f, 0.0f};
+	//武器
+	worldTransformWeapon_.Initialize();
+
 
 	// 親子関係を結ぶ
 	worldTransformBody_.parent_ = &worldTransformBase_;
 	worldTransformHead_.parent_ = &worldTransformBody_;
 	worldTransformLeftArm_.parent_ = &worldTransformBody_;
 	worldTransformRightArm_.parent_ = &worldTransformBody_;
-
+	//worldTransformWeapon_.parent_ = &worldTransformBody_;
 
 	// シングルトンインスタンスを取得する
 	input_ = Input::GetInstance();
@@ -50,7 +55,40 @@ void Player::Update() {
 	BaseCharacter::Update();
 
 	//--------------------------------
-	//移動
+	// 通常行動の更新
+	//--------------------------------
+
+	BehaviorRootUpdate();
+
+	//--------------------------------
+	// 攻撃行動の更新
+	//--------------------------------
+
+	BehaviorAttackUpdate();
+
+	//--------------------------------
+	//ワールド行列の転送
+	//--------------------------------
+	worldTransformBase_.UpdateMatrix();
+	worldTransformBody_.UpdateMatrix();
+	worldTransformHead_.UpdateMatrix();
+	worldTransformRightArm_.UpdateMatrix();
+	worldTransformLeftArm_.UpdateMatrix();
+	worldTransformWeapon_.UpdateMatrix();
+}
+
+void Player::Draw(const ViewProjection& viewProjection) { 
+	models_[0]->Draw(worldTransformBody_, viewProjection);
+	models_[1]->Draw(worldTransformHead_, viewProjection);
+	models_[2]->Draw(worldTransformRightArm_, viewProjection);
+	models_[3]->Draw(worldTransformLeftArm_, viewProjection);
+	models_[4]->Draw(worldTransformWeapon_, viewProjection);
+}
+
+void Player::BehaviorRootUpdate() {
+	
+	//--------------------------------
+	// 移動
 	//--------------------------------
 
 	Movement();
@@ -61,21 +99,15 @@ void Player::Update() {
 
 	UpdateFloatingGimmick();
 
-	//--------------------------------
-	//ワールド行列の転送
-	//--------------------------------
-	worldTransformBase_.UpdateMatrix();
-	worldTransformBody_.UpdateMatrix();
-	worldTransformHead_.UpdateMatrix();
-	worldTransformRightArm_.UpdateMatrix();
-	worldTransformLeftArm_.UpdateMatrix();
 }
 
-void Player::Draw(const ViewProjection& viewProjection) { 
-	models_[0]->Draw(worldTransformBody_, viewProjection);
-	models_[1]->Draw(worldTransformHead_, viewProjection);
-	models_[2]->Draw(worldTransformRightArm_, viewProjection);
-	models_[3]->Draw(worldTransformLeftArm_, viewProjection);
+void Player::BehaviorAttackUpdate() { 
+
+	worldTransformWeapon_.rotation_.x += 0.1f;
+
+	if (worldTransformWeapon_.rotation_.x >= .0f) {
+		worldTransformWeapon_.rotation_.x = 0.0f;
+	}
 }
 
 void Player::Movement() {
@@ -162,6 +194,8 @@ void Player::UpdateFloatingGimmick() {
 		floatingCycle_ = static_cast<uint16_t>(tempFloat_);
 	}
 	ImGui::SliderFloat("amplitude", &amplitude_,-10.0f, 10.0f);
+
+	ImGui::SliderFloat3("Weapon.rotate", &worldTransformWeapon_.rotation_.x, -10.0f, 10.f);
 	ImGui::End();
 
 }

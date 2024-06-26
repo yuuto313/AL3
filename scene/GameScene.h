@@ -71,6 +71,7 @@ private:
 	std::unique_ptr<Model> modelFighterHead_ = nullptr;
 	std::unique_ptr<Model> modelFighterLightArm_ = nullptr;
 	std::unique_ptr<Model> modelFighterRightArm_ = nullptr;
+	std::unique_ptr<Model> modelFighterWeapon_ = nullptr;
 
 	//敵
 	std::unique_ptr<Model> modelEnemy_ = nullptr;

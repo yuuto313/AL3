@@ -31,19 +31,17 @@ public:
 	/// </summary>
 	void Draw(const ViewProjection& viewProjection) override;
 	/// <summary>
+	/// 通常行動更新
+	/// </summary>
+	void BehaviorRootUpdate();
+	/// <summary>
+	/// 攻撃行動更新
+	/// </summary>
+	void BehaviorAttackUpdate();
+	/// <summary>
 	/// 移動処理
 	/// </summary>
 	void Movement();
-	/// <summary>
-	/// 自キャラのWorldTransformを取得する
-	/// </summary>
-	/// <returns></returns>
-	const WorldTransform& GetWorldTransform() { return worldTransformBase_; }
-	/// <summary>
-	/// 自キャラのWorldTransformを取得する
-	/// </summary>
-	/// <returns></returns>
-	const ViewProjection* GetViewProjection() { return cameraViewProjection_; }
 	/// <summary>
 	/// カメラのビュープロジェクションのみ参照するセッター
 	/// </summary>
@@ -57,6 +55,17 @@ public:
 	/// 浮遊ギミック更新
 	/// </summary>
 	void UpdateFloatingGimmick();
+	
+	/// <summary>
+	/// 自キャラのWorldTransformを取得する
+	/// </summary>
+	/// <returns></returns>
+	const WorldTransform& GetWorldTransform() { return worldTransformBase_; }
+	/// <summary>
+	/// 自キャラのWorldTransformを取得する
+	/// </summary>
+	/// <returns></returns>
+	const ViewProjection* GetViewProjection() { return cameraViewProjection_; }
 
 private:
 	//ワールド変換データ
@@ -65,6 +74,7 @@ private:
 	WorldTransform worldTransformHead_;
 	WorldTransform worldTransformLeftArm_;
 	WorldTransform worldTransformRightArm_;
+	WorldTransform worldTransformWeapon_;
 
 	//モデル
 	/*Model* modelFighterBody_ = nullptr;

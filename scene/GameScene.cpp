@@ -29,6 +29,7 @@ void GameScene::Initialize() {
 	modelFighterHead_.reset(Model::CreateFromOBJ("Head", true));
 	modelFighterRightArm_.reset(Model::CreateFromOBJ("RightArm", true));
 	modelFighterLightArm_.reset(Model::CreateFromOBJ("LeftArm", true));
+	modelFighterWeapon_.reset(Model::CreateFromOBJ("Hammer", true));
 
 	//敵
 	modelEnemy_.reset(Model::CreateFromOBJ("Enemy", true));
@@ -62,7 +63,7 @@ void GameScene::Initialize() {
 	// モデルデータをモデルデータ配列に格納
 	//--------------------------------
 	//自キャラモデル
-	std::vector<Model*> playerModels = {modelFighterBody_.get(), modelFighterHead_.get(),modelFighterRightArm_.get(),modelFighterLightArm_.get()};
+	std::vector<Model*> playerModels = {modelFighterBody_.get(), modelFighterHead_.get(), modelFighterRightArm_.get(), modelFighterLightArm_.get(), modelFighterWeapon_.get()};
 
 	//敵キャラのモデル
 	std::vector<Model*> enemyMoldels = {modelEnemy_.get(),modelEnemyWeapon_.get()};
