@@ -15,5 +15,6 @@ public:
 	void Movement();
 
 private:
-	WorldTransform worldTransform_;
+	WorldTransform worldTransformBase_;
+	WorldTransform worldTransformWeapon_;
 };

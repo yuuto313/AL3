@@ -108,7 +108,6 @@ void Player::Movement() {
 		//移動
 		worldTransformBase_.translation_ += move;
 		
-
 		//--------------------------------
 		// 移動方向に見た目を合わせる
 		//--------------------------------
@@ -164,12 +163,6 @@ void Player::UpdateFloatingGimmick() {
 	}
 	ImGui::SliderFloat("amplitude", &amplitude_,-10.0f, 10.0f);
 	ImGui::End();
-
-	worldTransformBase_.UpdateMatrix();
-	worldTransformBody_.UpdateMatrix();
-	worldTransformHead_.UpdateMatrix();
-	worldTransformRightArm_.UpdateMatrix();
-	worldTransformLeftArm_.UpdateMatrix();
 
 }
 
