@@ -28,7 +28,7 @@ void Player::Initialize(Model* modelFighterBody, Model* modelFighterHead, Model*
 	worldTransformBase_.Initialize();
 	//体
 	worldTransformBody_.Initialize();
-	worldTransformBody_.translation_ = {0.0f, 5.0f, 0.0f};
+	worldTransformBody_.translation_ = {0.0f, 10.0f, 0.0f};
 	//頭
 	worldTransformHead_.Initialize();
 	worldTransformHead_.translation_ = {0.0f, 0.0f, 0.0f};
@@ -40,6 +40,7 @@ void Player::Initialize(Model* modelFighterBody, Model* modelFighterHead, Model*
 	worldTransformLeftArm_.translation_ = {-2.0f, 3.0f, 0.0f};
 
 	//親子関係を結ぶ
+	worldTransformBody_.parent_ = &worldTransformBase_;
 	worldTransformHead_.parent_ = &worldTransformBody_;
 	worldTransformLeftArm_.parent_ = &worldTransformBody_;
 	worldTransformRightArm_.parent_ = &worldTransformBody_;
@@ -113,10 +114,7 @@ void Player::Move() {
 		
 		//移動
 		worldTransformBase_.translation_ += move;
-		worldTransformBody_.translation_ += move;
-		worldTransformHead_.translation_ += move;
-		worldTransformRightArm_.translation_ += move;
-		worldTransformLeftArm_.translation_ += move;
+		
 
 		//--------------------------------
 		// 移動方向に見た目を合わせる
@@ -124,10 +122,8 @@ void Player::Move() {
 
 		//Y軸周りの角度
 		worldTransformBase_.rotation_.y = std::atan2(move.x, move.z);
-		worldTransformBody_.rotation_.y = std::atan2(move.x, move.z);
-		worldTransformHead_.rotation_.y = std::atan2(move.x, move.z);
-		worldTransformLeftArm_.rotation_.y = std::atan2(move.x, move.z);
-		worldTransformRightArm_.rotation_.y = std::atan2(move.x, move.z);
+
+
 	}
 }
 
@@ -160,13 +156,9 @@ void Player::UpdateFloatingGimmick() {
 
 	//浮遊を座標に反映
 	worldTransformBody_.translation_.y = std::sin(floatingParameter_) * amplitude_;
-
-	//worldTransformHead_.translation_.y = std::sin(floatingParameter_) * amplitude_;
-
-	//worldTransformRightArm_.translation_.y = std::sin(floatingParameter_) * amplitude_;
+	
+	//手をぶらぶらさせる
 	worldTransformRightArm_.rotation_.x = std::sin(floatingParameter_) * amplitude_;
-
-	//worldTransformLeftArm_.translation_.y = std::sin(floatingParameter_) * amplitude_;
 	worldTransformLeftArm_.rotation_.x = std::sin(floatingParameter_) * amplitude_;
 
 
