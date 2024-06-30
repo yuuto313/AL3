@@ -6,7 +6,7 @@ Player::Player() {}
 
 Player::~Player() {}
 
-//武器をの攻撃モーションを付ける
+//スライドの18~
 
 void Player::Initialize(const std::vector<Model*>&models) { 
 	//基底クラスの初期化
@@ -36,7 +36,7 @@ void Player::Initialize(const std::vector<Model*>&models) {
 	worldTransformHead_.parent_ = &worldTransformBody_;
 	worldTransformLeftArm_.parent_ = &worldTransformBody_;
 	worldTransformRightArm_.parent_ = &worldTransformBody_;
-	//worldTransformWeapon_.parent_ = &worldTransformBody_;
+	worldTransformWeapon_.parent_ = &worldTransformBody_;
 
 	// シングルトンインスタンスを取得する
 	input_ = Input::GetInstance();
@@ -85,6 +85,15 @@ void Player::Draw(const ViewProjection& viewProjection) {
 	models_[4]->Draw(worldTransformWeapon_, viewProjection);
 }
 
+void Player::BehaviorRootInitialize() { 
+	InitializeFloatingGimmick();
+}
+
+void Player::BehaviorAttackInitialize() { 
+	//ギミックのアニメーション用数値のリセット
+	currentRotationAngleX = 0.0f;
+}
+
 void Player::BehaviorRootUpdate() {
 	
 	//--------------------------------
@@ -102,11 +111,49 @@ void Player::BehaviorRootUpdate() {
 }
 
 void Player::BehaviorAttackUpdate() { 
+	if (currentRotationAngleX < targetRotationAngleX) {
+		currentRotationAngleX += rotationSpeed;
+		if (currentRotationAngleX > targetRotationAngleX) {
+			currentRotationAngleX = targetRotationAngleX;
+		}
+	}	
+	worldTransformWeapon_.rotation_.x = currentRotationAngleX;
+}
 
-	worldTransformWeapon_.rotation_.x += 0.1f;
+void Player::ChangeBehavior() {
+	//std::nullopt以外の値がはいってるときtrueになる
+	if (behaviorRequest_) {
+		//振る舞いを変更する
+		behavior_ = behaviorRequest_.value();
+		//各振る舞いごとの初期化を実行
+		switch (behavior_) {
+		case Behavior::kRoot:
+		default:
 
-	if (worldTransformWeapon_.rotation_.x >= .0f) {
-		worldTransformWeapon_.rotation_.x = 0.0f;
+
+			BehaviorRootInitialize();
+
+			//--------------------------------
+			// 通常行動の更新
+			//--------------------------------
+
+			BehaviorRootUpdate();
+			break;
+
+		case Behavior::kAttack:
+
+
+			BehaviorAttackInitialize();
+
+			//--------------------------------
+			// 攻撃行動の更新
+			//--------------------------------
+
+			BehaviorAttackUpdate();
+			break;
+		}
+		//振る舞いリクエストをリセット
+		behaviorRequest_ = std::nullopt;
 	}
 }
 

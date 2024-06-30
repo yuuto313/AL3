@@ -3,10 +3,17 @@
 #include "cassert"
 #include "DebugCamera.h"
 #include "MyMath.h"
+#include <optional>
 
 #include "BaseCharacter.h"
 
 #pragma once
+
+enum class Behavior {
+	kRoot,   // 通常状態
+	kAttack, // 攻撃中
+};
+
 /// <summary>
 /// 自キャラ
 /// </summary>
@@ -31,6 +38,14 @@ public:
 	/// </summary>
 	void Draw(const ViewProjection& viewProjection) override;
 	/// <summary>
+	/// 通常行動初期化
+	/// </summary>
+	void BehaviorRootInitialize();
+	/// <summary>
+	/// 攻撃行動初期化
+	/// </summary>
+	void BehaviorAttackInitialize();
+	/// <summary>
 	/// 通常行動更新
 	/// </summary>
 	void BehaviorRootUpdate();
@@ -38,6 +53,10 @@ public:
 	/// 攻撃行動更新
 	/// </summary>
 	void BehaviorAttackUpdate();
+	/// <summary>
+	///	Behavior遷移の実装
+	/// </summary>
+	void ChangeBehavior();
 	/// <summary>
 	/// 移動処理
 	/// </summary>
@@ -55,7 +74,6 @@ public:
 	/// 浮遊ギミック更新
 	/// </summary>
 	void UpdateFloatingGimmick();
-	
 	/// <summary>
 	/// 自キャラのWorldTransformを取得する
 	/// </summary>
@@ -76,12 +94,6 @@ private:
 	WorldTransform worldTransformRightArm_;
 	WorldTransform worldTransformWeapon_;
 
-	//モデル
-	/*Model* modelFighterBody_ = nullptr;
-	Model* modelFighterHead_ = nullptr;
-	Model* modelFighterLeftArm_ = nullptr;
-	Model* modelFighterRightArm_ = nullptr;*/
-
 	//カメラのビュープロジェクション
 	const ViewProjection* cameraViewProjection_ = nullptr;
 
@@ -96,6 +108,18 @@ private:
 
 	float amplitude_ = 0.5f;
 
+	float currentRotationAngleX = 0.0f;
+	const float rotationSpeed = (float)M_PI / 45.0f;
+	const float targetRotationAngleX = (float)M_PI / 2.0f;
+
+	//振る舞い
+	Behavior behavior_ = Behavior::kRoot;
+	//振る舞いのリクエスト
+	//std::nulloptはそのstd::optionalが無効状態であることを表す値
+	//std::nulloptではなくBehavior型の値を入れたときは有効状態となる
+	std::optional<Behavior> behaviorRequest_ = behavior_;
+
 	// キーボード入力
 	Input* input_ = nullptr;
+
 };
