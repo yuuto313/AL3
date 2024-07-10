@@ -6,8 +6,6 @@ Player::Player() {}
 
 Player::~Player() {}
 
-//スライドの18~
-
 void Player::Initialize(const std::vector<Model*>&models) { 
 	//基底クラスの初期化
 	BaseCharacter::Initialize(models);
@@ -55,16 +53,10 @@ void Player::Update() {
 	BaseCharacter::Update();
 
 	//--------------------------------
-	// 通常行動の更新
-	//--------------------------------
-
-	BehaviorRootUpdate();
-
-	//--------------------------------
 	// 攻撃行動の更新
 	//--------------------------------
 
-	BehaviorAttackUpdate();
+	ChangeBehavior();
 
 	//--------------------------------
 	//ワールド行列の転送
@@ -87,6 +79,9 @@ void Player::Draw(const ViewProjection& viewProjection) {
 
 void Player::BehaviorRootInitialize() { 
 	InitializeFloatingGimmick();
+	worldTransformWeapon_.rotation_ = {};
+	worldTransformLeftArm_.rotation_ = {};
+	worldTransformRightArm_.rotation_ = {};
 }
 
 void Player::BehaviorAttackInitialize() { 
@@ -116,46 +111,60 @@ void Player::BehaviorAttackUpdate() {
 		if (currentRotationAngleX > targetRotationAngleX) {
 			currentRotationAngleX = targetRotationAngleX;
 		}
-	}	
+	} else {
+		behaviorRequest_ = Behavior::kRoot;	
+	}
+
+	//worldTransformLeftArm_.rotation_.x = currentRotationAngleX;
+	//worldTransformRightArm_.rotation_.x = currentRotationAngleX;
 	worldTransformWeapon_.rotation_.x = currentRotationAngleX;
 }
 
 void Player::ChangeBehavior() {
-	//std::nullopt以外の値がはいってるときtrueになる
+	// std::nullopt以外の値がはいってるときtrueになる
 	if (behaviorRequest_) {
-		//振る舞いを変更する
+		// 振る舞いを変更する
 		behavior_ = behaviorRequest_.value();
-		//各振る舞いごとの初期化を実行
+		// 各振る舞いごとの初期化を実行
 		switch (behavior_) {
 		case Behavior::kRoot:
 		default:
 
-
 			BehaviorRootInitialize();
 
-			//--------------------------------
-			// 通常行動の更新
-			//--------------------------------
-
-			BehaviorRootUpdate();
 			break;
 
 		case Behavior::kAttack:
 
-
 			BehaviorAttackInitialize();
 
-			//--------------------------------
-			// 攻撃行動の更新
-			//--------------------------------
-
-			BehaviorAttackUpdate();
 			break;
 		}
-		//振る舞いリクエストをリセット
+		// 振る舞いリクエストをリセット
 		behaviorRequest_ = std::nullopt;
 	}
+
+	switch (behavior_) {
+	case Behavior::kRoot:
+	default:
+		//--------------------------------
+		// 通常行動の更新
+		//--------------------------------
+
+		BehaviorRootUpdate();
+
+		break;
+	case Behavior::kAttack:
+		//--------------------------------
+		// 攻撃行動の更新
+		//--------------------------------
+
+		BehaviorAttackUpdate();
+
+		break;
+	}
 }
+
 
 void Player::Movement() {
 	//--------------------------------
@@ -243,6 +252,12 @@ void Player::UpdateFloatingGimmick() {
 	ImGui::SliderFloat("amplitude", &amplitude_,-10.0f, 10.0f);
 
 	ImGui::SliderFloat3("Weapon.rotate", &worldTransformWeapon_.rotation_.x, -10.0f, 10.f);
+
+	bool attack = false;
+	ImGui::Checkbox("Attack", &attack);
+	if (attack) {
+		behaviorRequest_ = Behavior::kAttack;
+	}
 	ImGui::End();
 
 }

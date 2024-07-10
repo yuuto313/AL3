@@ -117,7 +117,7 @@ private:
 	//振る舞いのリクエスト
 	//std::nulloptはそのstd::optionalが無効状態であることを表す値
 	//std::nulloptではなくBehavior型の値を入れたときは有効状態となる
-	std::optional<Behavior> behaviorRequest_ = behavior_;
+	std::optional<Behavior> behaviorRequest_ = std::nullopt;
 
 	// キーボード入力
 	Input* input_ = nullptr;
