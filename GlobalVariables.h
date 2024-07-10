@@ -1,7 +1,11 @@
 #include <variant>
 #include <map>
 #include <string>
+#include <fstream>
 #include <Vector3.h>
+#include <json.hpp>
+
+using json =nlohmann::json;
 #pragma once
 
 /// <summary>
@@ -19,6 +23,12 @@ public:
 	/// 更新関数
 	/// </summary>
 	void Update();
+
+	/// <summary>
+	/// ファイルに書き出し
+	/// </summary>
+	/// <param name="groupName"></param>
+	void SaveFile(const std::string& groupName);
 
 	static GlobalVariables* GetInstance();
 
@@ -53,4 +63,7 @@ private:
 
 	//全データ
 	std::map<std::string, Group> datas_;
+
+	//グローバル変数の保存先ファイルパス
+	const std::string kDirectoqryPath = "Resources/GlobalVariables/";
 };

@@ -74,6 +74,11 @@ void Player::Update() {
 	worldTransformRightArm_.UpdateMatrix();
 	worldTransformLeftArm_.UpdateMatrix();
 	worldTransformWeapon_.UpdateMatrix();
+
+	if (input_->TriggerKey(DIK_RETURN)) {
+		GlobalVariables::GetInstance()->SaveFile("Player");
+	}
+
 }
 
 void Player::Draw(const ViewProjection& viewProjection) { 
