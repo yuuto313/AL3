@@ -10,9 +10,16 @@ void Player::Initialize(const std::vector<Model*>&models) {
 	//基底クラスの初期化
 	BaseCharacter::Initialize(models);
 
+	GlobalVariables* globalVariables = GlobalVariables::GetInstance();
+	const char* groupName = "Player";
+	//グループを追加
+	GlobalVariables::GetInstance()->CreateGroup(groupName);
+	globalVariables->SetValue(groupName, "Test", 90);
+
+
 	//textureHandle_ = textureHandle;
 	//  ワールド変換初期化
-	worldTransformBase_.Initialize();
+		worldTransformBase_.Initialize();
 	// 体
 	worldTransformBody_.Initialize();
 	worldTransformBody_.translation_ = {0.0f, 10.0f, 0.0f};

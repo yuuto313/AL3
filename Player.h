@@ -6,6 +6,7 @@
 #include <optional>
 
 #include "BaseCharacter.h"
+#include "GlobalVariables.h"
 
 #pragma once
 
