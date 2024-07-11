@@ -128,6 +128,33 @@ void GlobalVariables::SaveFile(const std::string& groupName) {
 	ofs.close();
 }
 
+void GlobalVariables::LoadFiles() {
+	// 保存先ディレクトリのパスをローカル変数で宣言
+	std::filesystem::path dir(kDirectoqryPath);
+	// ディレクトリがなければスキップする
+	if (!std::filesystem::exists(dir)) {
+		return;
+	}
+
+	//各ファイルの処理
+	std::filesystem::directory_iterator dir_it(dir);
+	for (const std::filesystem::directory_entry& entry : dir_it) {
+		//ファイルパスを取得
+		const std::filesystem::path& filePath = entry.path();
+		//ファイル拡張子を取得
+		std::string extension = filePath.extension().string();
+		//.jsonファイル以外はスキップ
+		if (extension.compare(".json") != 0) {
+			continue;
+		}
+		//ファイル読み込み
+		LoadFile(filePath.stem().string());
+
+		//スライド14から
+
+	}
+}
+
 GlobalVariables* GlobalVariables::GetInstance() { 
 	static GlobalVariables instance;
 	return &instance;

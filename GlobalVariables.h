@@ -30,6 +30,13 @@ public:
 	/// <param name="groupName"></param>
 	void SaveFile(const std::string& groupName);
 
+	/// <summary>
+	/// ディレクトリの全ファイル読み込み
+	/// </summary>
+	void LoadFiles();
+
+	void LoadFile(const std::string& groupName);
+
 	static GlobalVariables* GetInstance();
 
 	//値のセット(int)
