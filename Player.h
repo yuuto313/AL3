@@ -39,6 +39,10 @@ public:
 	/// </summary>
 	void Draw(const ViewProjection& viewProjection) override;
 	/// <summary>
+	/// 調整項目の適用
+	/// </summary>
+	void ApplyGlobalVariables();
+	/// <summary>
 	/// 通常行動初期化
 	/// </summary>
 	void BehaviorRootInitialize();
@@ -102,7 +106,7 @@ private:
 	//浮遊ギミックの媒介変数
 	float floatingParameter_ = 0.0f;
 	
-	uint16_t floatingCycle_ = 60;
+	int32_t floatingCycle_ = 60;
 	float tempFloat_ = 0.0f;
 
 	float step_ = 0.0f;

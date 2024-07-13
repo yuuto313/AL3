@@ -10,13 +10,6 @@ void Player::Initialize(const std::vector<Model*>&models) {
 	//基底クラスの初期化
 	BaseCharacter::Initialize(models);
 
-	GlobalVariables* globalVariables = GlobalVariables::GetInstance();
-	const char* groupName = "Player";
-	//グループを追加
-	GlobalVariables::GetInstance()->CreateGroup(groupName);
-	globalVariables->SetValue(groupName, "Test", 90);
-
-
 	//textureHandle_ = textureHandle;
 	//  ワールド変換初期化
 		worldTransformBase_.Initialize();
@@ -43,6 +36,19 @@ void Player::Initialize(const std::vector<Model*>&models) {
 	worldTransformRightArm_.parent_ = &worldTransformBody_;
 	worldTransformWeapon_.parent_ = &worldTransformBody_;
 
+	GlobalVariables* globalVariables = GlobalVariables::GetInstance();
+	const char* groupName = "Player";
+	// グループを追加
+	GlobalVariables::GetInstance()->CreateGroup(groupName);
+
+	globalVariables->AddItem(groupName, "HeadTranslation", worldTransformHead_.translation_);
+	globalVariables->AddItem(groupName, "ArmLTranslation", worldTransformLeftArm_.translation_);
+	globalVariables->AddItem(groupName, "ArmRTranslation", worldTransformRightArm_.translation_);
+	globalVariables->AddItem(groupName, "floatingCycle", floatingCycle_);
+	globalVariables->AddItem(groupName, "floatingAmplitude",amplitude_);
+
+
+
 	// シングルトンインスタンスを取得する
 	input_ = Input::GetInstance();
 
@@ -66,6 +72,12 @@ void Player::Update() {
 	ChangeBehavior();
 
 	//--------------------------------
+	// 調整項目の適用
+	//--------------------------------
+
+	//ApplyGlobalVariables();
+
+	//--------------------------------
 	//ワールド行列の転送
 	//--------------------------------
 	worldTransformBase_.UpdateMatrix();
@@ -87,6 +99,16 @@ void Player::Draw(const ViewProjection& viewProjection) {
 	models_[2]->Draw(worldTransformRightArm_, viewProjection);
 	models_[3]->Draw(worldTransformLeftArm_, viewProjection);
 	models_[4]->Draw(worldTransformWeapon_, viewProjection);
+}
+
+void Player::ApplyGlobalVariables() { 
+	GlobalVariables* globalVariables = GlobalVariables::GetInstance();
+	const char* groupname = "Player";
+	worldTransformHead_.translation_ = globalVariables->GetVector3Value(groupname, "HeadTranslation");
+	worldTransformLeftArm_.translation_ = globalVariables->GetVector3Value(groupname, "ArmLTranslation");
+	worldTransformRightArm_.translation_ = globalVariables->GetVector3Value(groupname, "ArmRTranslation");
+	floatingCycle_ = globalVariables->GetIntValue(groupname, "floatingCycle");
+	amplitude_ = globalVariables->GetFloatValue(groupname, "floatingAmplitude");
 }
 
 void Player::BehaviorRootInitialize() { 
@@ -255,13 +277,14 @@ void Player::UpdateFloatingGimmick() {
 
 
 	ImGui::Begin("Player");
-	ImGui::SliderFloat3("Head_Translation",&worldTransformHead_.translation_.x,-10.0f,10.0f);
-	ImGui::SliderFloat3("LArm_Translation",&worldTransformLeftArm_.translation_.x,-10.0f,10.0f);
-	ImGui::SliderFloat3("RArm_Translation",&worldTransformRightArm_.translation_.x,-10.0f,10.0f);
+	ImGui::SliderFloat3("HeadTranslation",&worldTransformHead_.translation_.x,-10.0f,10.0f);
+	ImGui::SliderFloat3("ArmLTranslation",&worldTransformLeftArm_.translation_.x,-10.0f,10.0f);
+	ImGui::SliderFloat3("ArmRTranslation",&worldTransformRightArm_.translation_.x,-10.0f,10.0f);
 	if (ImGui::SliderFloat("step", &tempFloat_, 1.0f, 120.0f)) {
 		floatingCycle_ = static_cast<uint16_t>(tempFloat_);
 	}
-	ImGui::SliderFloat("amplitude", &amplitude_,-10.0f, 10.0f);
+	ImGui::SliderInt("floatingCycle", &floatingCycle_, -10, 10);
+	ImGui::SliderFloat("floatingAmplitude", &amplitude_,-10.0f, 10.0f);
 
 	ImGui::SliderFloat3("Weapon.rotate", &worldTransformWeapon_.rotation_.x, -10.0f, 10.f);
 

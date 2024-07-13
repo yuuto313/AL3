@@ -48,6 +48,19 @@ public:
 	//値のセット(Vector3)
 	void SetValue(const std::string& groupName, const std::string& key, const Vector3 value);
 
+	//項目の追加(int)
+	void AddItem(const std::string& groupName, const std::string& key, int32_t value);
+
+	//項目の追加(float)
+	void AddItem(const std::string& groupName, const std::string& key, float value);
+
+	//項目の追加(Vector3)
+	void AddItem(const std::string& groupName, const std::string& key, const Vector3& value);
+
+	//値の取得
+	int32_t GetIntValue(const std::string& groupName, const std::string& key) const;
+	float GetFloatValue(const std::string& groupName, const std::string& key) const;
+	Vector3 GetVector3Value(const std::string& groupName, const std::string& key) const;
 
 private:
 	GlobalVariables() = default;
@@ -72,5 +85,5 @@ private:
 	std::map<std::string, Group> datas_;
 
 	//グローバル変数の保存先ファイルパス
-	const std::string kDirectoqryPath = "Resources/GlobalVariables/";
+	const std::string kDirectoryPath = "Resources/GlobalVariables/";
 };

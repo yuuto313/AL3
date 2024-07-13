@@ -103,12 +103,12 @@ void GlobalVariables::SaveFile(const std::string& groupName) {
 	}
 
 	//ディレクトリがなければ作成する
-	std::filesystem::path dir(kDirectoqryPath);
+	std::filesystem::path dir(kDirectoryPath);
 	if (!std::filesystem::exists(dir)) {
 		std::filesystem::create_directory(dir);
 	}
 	//書き込むJSONファイルのフルパスを合成する
-	std::string filePath = kDirectoqryPath + groupName + ".json";
+	std::string filePath = kDirectoryPath + groupName + ".json";
 	//書き込み用ファイルストリーム
 	std::ofstream ofs;
 	//ファイルを書き込みように開く
@@ -130,7 +130,7 @@ void GlobalVariables::SaveFile(const std::string& groupName) {
 
 void GlobalVariables::LoadFiles() {
 	// 保存先ディレクトリのパスをローカル変数で宣言
-	std::filesystem::path dir(kDirectoqryPath);
+	std::filesystem::path dir(kDirectoryPath);
 	// ディレクトリがなければスキップする
 	if (!std::filesystem::exists(dir)) {
 		return;
@@ -149,9 +149,59 @@ void GlobalVariables::LoadFiles() {
 		}
 		//ファイル読み込み
 		LoadFile(filePath.stem().string());
+	}
+}
 
-		//スライド14から
+void GlobalVariables::LoadFile(const std::string& groupName) {
+	// 読み込むJSONファイルのフルパスを合成する
+	std::string filePath = kDirectoryPath + groupName + ".json";
+	//読み込み用ファイルストリーム
+	std::ifstream ifs;
+	//ファイル読み込み用に開く
+	ifs.open(filePath);
+	//ファイルオープン失敗？
+	if (ifs.fail()) {
+		std::string message = "Failed open data file for write.";
+		MessageBoxA(nullptr, message.c_str(), "GlobalVariables", 0);
+		assert(0);
+		return;
+	}
+	
+	json root;
+	//json文字列からjsonのデータ構造に展開
+	ifs >> root;
+	//ファイルを閉じる
+	ifs.close();
 
+	//グループを検索
+	json::iterator itGroup = root.find(groupName);
+
+	//未登録チェック
+	assert(itGroup!=root.end());
+
+	//各アイテムについて
+	for (json::iterator itItem = itGroup->begin(); itItem != itGroup->end(); ++itItem) {
+		// アイテム名を取得
+		const std::string& itemName = itItem.key();
+
+		//int32_t型の値を保持していれば
+		if (itItem->is_number_integer()) {
+			//int型の値を登録
+			int32_t value = itItem->get<int32_t>();
+			SetValue(groupName, itemName, value);
+		}
+		//float型の値を保持していれば
+		else if (itItem->is_number_float()) {
+			//float型の値を登録
+			double value = itItem->get<double>();
+			SetValue(groupName, itemName, static_cast<float>(value));
+		}
+		//要素数3の配列であれば
+		else if (itItem->is_array() && itItem->size() == 3) {
+			//float型のjson配列登録
+			Vector3 value = {itItem->at(0), itItem->at(1), itItem->at(2)};
+			SetValue(groupName, itemName, value);
+		}
 	}
 }
 
@@ -188,4 +238,176 @@ void GlobalVariables::SetValue(const std::string& groupName, const std::string& 
 	newItem.value = value;
 	// 設定した項目をstd::mapに追加
 	group.items[key] = newItem;
+}
+
+void GlobalVariables::AddItem(const std::string& groupName, const std::string& key, int32_t value) {
+	// 読み込むJSONファイルのフルパスを合成する
+	std::string filePath = kDirectoryPath + groupName + ".json";
+	// 読み込み用ファイルストリーム
+	std::ifstream ifs;
+	// ファイル読み込み用に開く
+	ifs.open(filePath);
+	// ファイルオープン失敗？
+	if (ifs.fail()) {
+		std::string message = "Failed open data file for write.";
+		MessageBoxA(nullptr, message.c_str(), "GlobalVariables", 0);
+		assert(0);
+		return;
+	}
+
+	json root;
+	// json文字列からjsonのデータ構造に展開
+	ifs >> root;
+	// ファイルを閉じる
+	ifs.close();
+
+	// グループを検索
+	json::iterator itGroup = root.find(groupName);
+
+	// 未登録チェック
+	assert(itGroup != root.end());
+
+	// 各アイテムについて
+	for (json::iterator itItem = itGroup->begin(); itItem != itGroup->end(); ++itItem) {
+		
+		// 項目が未登録なら
+		if (!itItem->is_number_integer()) {
+			SetValue(groupName, key, value);
+		}
+	}
+}
+
+void GlobalVariables::AddItem(const std::string& groupName, const std::string& key, float value) {
+	// 読み込むJSONファイルのフルパスを合成する
+	std::string filePath = kDirectoryPath + groupName + ".json";
+	// 読み込み用ファイルストリーム
+	std::ifstream ifs;
+	// ファイル読み込み用に開く
+	ifs.open(filePath);
+	// ファイルオープン失敗？
+	if (ifs.fail()) {
+		std::string message = "Failed open data file for write.";
+		MessageBoxA(nullptr, message.c_str(), "GlobalVariables", 0);
+		assert(0);
+		return;
+	}
+
+	json root;
+	// json文字列からjsonのデータ構造に展開
+	ifs >> root;
+	// ファイルを閉じる
+	ifs.close();
+
+	// グループを検索
+	json::iterator itGroup = root.find(groupName);
+
+	// 未登録チェック
+	assert(itGroup != root.end());
+
+	// 各アイテムについて
+	for (json::iterator itItem = itGroup->begin(); itItem != itGroup->end(); ++itItem) {
+
+		// 項目が未登録なら
+		if (!itItem->is_number_float()) {
+			SetValue(groupName, key, value);
+		}
+	}
+}
+
+void GlobalVariables::AddItem(const std::string& groupName, const std::string& key, const Vector3& value) {
+	// 読み込むJSONファイルのフルパスを合成する
+	std::string filePath = kDirectoryPath + groupName + ".json";
+	// 読み込み用ファイルストリーム
+	std::ifstream ifs;
+	// ファイル読み込み用に開く
+	ifs.open(filePath);
+	// ファイルオープン失敗？
+	if (ifs.fail()) {
+		std::string message = "Failed open data file for write.";
+		MessageBoxA(nullptr, message.c_str(), "GlobalVariables", 0);
+		assert(0);
+		return;
+	}
+
+	json root;
+	// json文字列からjsonのデータ構造に展開
+	ifs >> root;
+	// ファイルを閉じる
+	ifs.close();
+
+	// グループを検索
+	json::iterator itGroup = root.find(groupName);
+
+	// 未登録チェック
+	assert(itGroup != root.end());
+
+	// 各アイテムについて
+	for (json::iterator itItem = itGroup->begin(); itItem != itGroup->end(); ++itItem) {
+
+		// 項目が未登録なら
+		if (!itItem->is_array() && itItem->size() == 3) {
+			SetValue(groupName, key, value);
+		}
+	}
+}
+
+int32_t GlobalVariables::GetIntValue(const std::string& groupName, const std::string& key) const { 
+	// グループ検索
+	std::map<std::string, Group>::const_iterator itGroup = datas_.find(groupName);
+
+	// 未登録チェック
+	assert(itGroup != datas_.end());
+
+	//グループの参照を取得
+	const Group& group = itGroup->second;
+
+	//キーを検索
+	std::map<std::string, Item>::const_iterator itItem = group.items.find(key);
+
+	//指定グループに指定キーが存在する
+	assert(itItem != group.items.end());
+
+	const Item& item = itItem->second;
+
+	return std::get<int32_t>(item.value);
+
+}
+
+float GlobalVariables::GetFloatValue(const std::string& groupName, const std::string& key) const {
+	// グループ検索
+	std::map<std::string, Group>::const_iterator itGroup = datas_.find(groupName);	
+
+	// 未登録チェック
+	assert(itGroup != datas_.end());
+
+	// グループの参照を取得
+	const Group& group = itGroup->second;
+
+	// キーを検索
+	std::map<std::string, Item>::const_iterator itItem = group.items.find(key);
+
+	// 指定グループに指定キーが存在する
+	assert(itItem != group.items.end());
+
+	const Item& item = itItem->second;
+
+	return std::get<float>(item.value);
+}
+
+Vector3 GlobalVariables::GetVector3Value(const std::string& groupName, const std::string& key) const { 
+	// グループを検索
+	std::map<std::string, Group>::const_iterator itGroup = datas_.find(groupName);
+	assert(itGroup != datas_.end());
+
+	// グループの参照
+	const Group& group = itGroup->second;
+
+	// キーを検索
+	std::map<std::string, Item>::const_iterator itItem = group.items.find(key);
+
+	assert(itItem != group.items.end());
+
+	const Item& item = itItem->second;
+
+	return std::get<Vector3>(item.value);
 }
