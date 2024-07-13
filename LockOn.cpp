@@ -2,7 +2,7 @@
 
 void LockOn::Initalize() {
 	//スプライトの生成
-lockOnMark_=std::make_unique<
+	lockOnMark_.reset(Sprite::Create(textureHandle_, {}, {1.0f,1.0f,1.0f,1.0f},))
 }
 
 void LockOn::Update() {}

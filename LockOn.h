@@ -21,6 +21,7 @@ public:
 	void Draw();
 
 private:
+	uint32_t textureHandle_ = 0u;
 	// ロックオンマーク用スプライト
 	std::unique_ptr<Sprite> lockOnMark_;
 
