@@ -59,6 +59,9 @@ void GameScene::Initialize() {
 	//追従カメラの生成
 	followCamera_ = std::make_unique<FollowCamera>();
 
+	//ロックオンの生成
+	lockOn_ = std::make_unique<LockOn>();
+
 	//--------------------------------
 	// モデルデータをモデルデータ配列に格納
 	//--------------------------------
@@ -90,6 +93,9 @@ void GameScene::Initialize() {
 	followCamera_->Initialize();
 	followCamera_->SetTarget(&player_->GetWorldTransform());
 
+	//ロックオンの初期化
+	lockOn_->Initalize();
+
 	//自キャラに追従カメラのビュープロジェクションをアドレス渡しする
 	player_->SetViewProjection(&followCamera_->GetViewProjection());
 
@@ -118,6 +124,9 @@ void GameScene::Update() {
 
 	//地面の更新
 	ground_->Update();
+
+	//ロックオンの更新
+	//lockOn_->Update();
 
 	//追従カメラの更新
 	//followCamera_->Update();
@@ -209,6 +218,9 @@ void GameScene::Draw() {
 
 	//スプライトの描画
 	//sprite_->Draw();
+
+	//ロックオンの描画
+	lockOn_->Draw();
 
 	// スプライト描画後処理
 	Sprite::PostDraw();

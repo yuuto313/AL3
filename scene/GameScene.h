@@ -11,6 +11,7 @@
 #include "Skydome.h"
 #include "Ground.h"
 #include "FollowCamera.h"
+#include "LockOn.h"
 
 #include <memory>
 
@@ -54,7 +55,7 @@ private:
 	std::unique_ptr<Player> player_ = nullptr;
 	
 	//敵
-	std::unique_ptr<Enemy> enemy_ = nullptr;
+	std::list<std::unique_ptr<Enemy>> enemies_;
 
 	//スカイドーム（天球）
 	std::unique_ptr<Skydome> skydome_ = nullptr;
@@ -88,6 +89,9 @@ private:
 
 	//追従カメラ
 	std::unique_ptr<FollowCamera> followCamera_ = nullptr;
+
+	//ロックオン
+	std::unique_ptr<LockOn> lockOn_;
 
 	//テクスチャハンドル
 	//uint32_t textureHandle_ = 0;
