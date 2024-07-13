@@ -126,7 +126,7 @@ void GameScene::Update() {
 	ground_->Update();
 
 	//ロックオンの更新
-	//lockOn_->Update();
+	lockOn_->Update(enemies_,viewProjection_);
 
 	//追従カメラの更新
 	//followCamera_->Update();
@@ -225,5 +225,5 @@ void GameScene::Draw() {
 	// スプライト描画後処理
 	Sprite::PostDraw();
 
-#pragma endregion
+#pragma endreg	ion
 }

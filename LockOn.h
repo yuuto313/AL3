@@ -15,7 +15,9 @@ public:
 	/// <summary>
 	/// 更新
 	/// </summary>
-	void Update();
+	/// <param name="enemies"></param>
+	/// <param name="viewProjection"></param>
+	void Update(const std::list<std::unique_ptr<Enemy>>& enemies,const ViewProjection& viewProjection);
 	/// <summary>
 	/// 描画
 	/// </summary>
