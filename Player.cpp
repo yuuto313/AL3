@@ -157,9 +157,13 @@ void Player::BehaviorRootUpdate() {
 		behaviorRequest_ = Behavior::kJump;
 	}
 
+	//--------------------------------
+	// ImGui
+	//--------------------------------
+
 	ImGui::Begin("Player");
-	ImGui::SliderFloat3("HeadTranslation", &worldTransform_.translation_.x, -10.0f, 10.0f);
-	ImGui::SliderFloat3("HeadTranslation", &worldTransformBody_.translation_.x, -10.0f, 10.0f);
+	ImGui::Text("C:Camera\nSPACE:Jump");
+
 	ImGui::SliderFloat3("HeadTranslation", &worldTransformHead_.translation_.x, -10.0f, 10.0f);
 	ImGui::SliderFloat3("ArmLTranslation", &worldTransformLeftArm_.translation_.x, -10.0f, 10.0f);
 	ImGui::SliderFloat3("ArmRTranslation", &worldTransformRightArm_.translation_.x, -10.0f, 10.0f);
