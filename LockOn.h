@@ -1,5 +1,6 @@
 #pragma once
 #include "Sprite.h"
+#include "Enemy.h"
 #include <memory>
 
 /// <summary>
@@ -25,4 +26,6 @@ private:
 	// ロックオンマーク用スプライト
 	std::unique_ptr<Sprite> lockOnMark_;
 
+	//ロックオン対象
+	const Enemy* target_ = nullptr;
 };
