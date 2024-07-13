@@ -13,6 +13,7 @@
 enum class Behavior {
 	kRoot,   // 通常状態
 	kAttack, // 攻撃中
+	kJump,//ジャンプ中
 };
 
 /// <summary>
@@ -51,6 +52,10 @@ public:
 	/// </summary>
 	void BehaviorAttackInitialize();
 	/// <summary>
+	/// ジャンプ行動初期化
+	/// </summary>
+	void BehaviorJumpInitialize();
+	/// <summary>
 	/// 通常行動更新
 	/// </summary>
 	void BehaviorRootUpdate();
@@ -58,6 +63,10 @@ public:
 	/// 攻撃行動更新
 	/// </summary>
 	void BehaviorAttackUpdate();
+	/// <summary>
+	/// ジャンプ行動更新
+	/// </summary>
+	void BehaviorjumpUpdate();
 	/// <summary>
 	///	Behavior遷移の実装
 	/// </summary>
@@ -116,6 +125,9 @@ private:
 	float currentRotationAngleX = 0.0f;
 	const float rotationSpeed = (float)M_PI / 45.0f;
 	const float targetRotationAngleX = (float)M_PI / 2.0f;
+
+	//速度
+	Vector3 velocity_ = {};
 
 	//振る舞い
 	Behavior behavior_ = Behavior::kRoot;

@@ -12,10 +12,10 @@ void Player::Initialize(const std::vector<Model*>&models) {
 
 	//textureHandle_ = textureHandle;
 	//  ワールド変換初期化
-		worldTransformBase_.Initialize();
+	worldTransformBase_.Initialize();
 	// 体
 	worldTransformBody_.Initialize();
-	worldTransformBody_.translation_ = {0.0f, 10.0f, 0.0f};
+	worldTransformBody_.translation_ = {0.0f, 0.0f, 0.0f};
 	// 頭
 	worldTransformHead_.Initialize();
 	worldTransformHead_.translation_ = {0.0f, 0.0f, 0.0f};
@@ -46,8 +46,6 @@ void Player::Initialize(const std::vector<Model*>&models) {
 	globalVariables->AddItem(groupName, "ArmRTranslation", worldTransformRightArm_.translation_);
 	globalVariables->AddItem(groupName, "floatingCycle", floatingCycle_);
 	globalVariables->AddItem(groupName, "floatingAmplitude",amplitude_);
-
-
 
 	// シングルトンインスタンスを取得する
 	input_ = Input::GetInstance();
@@ -80,6 +78,7 @@ void Player::Update() {
 	//--------------------------------
 	//ワールド行列の転送
 	//--------------------------------
+	worldTransform_.UpdateMatrix();
 	worldTransformBase_.UpdateMatrix();
 	worldTransformBody_.UpdateMatrix();
 	worldTransformHead_.UpdateMatrix();
@@ -123,6 +122,18 @@ void Player::BehaviorAttackInitialize() {
 	currentRotationAngleX = 0.0f;
 }
 
+void Player::BehaviorJumpInitialize() {
+	//階層アニメーション出のパーツの回転などをリセットする
+	worldTransformBody_.translation_.y = 0;
+	worldTransformLeftArm_.rotation_.x = 0;
+	worldTransformRightArm_.rotation_.x = 0;
+
+	//ジャンプ初速
+	const float kJumpFirstSpeed = 1.0f;
+	//ジャンプ初速を与える
+	velocity_.y = kJumpFirstSpeed;
+}
+
 void Player::BehaviorRootUpdate() {
 	
 	//--------------------------------
@@ -137,6 +148,35 @@ void Player::BehaviorRootUpdate() {
 
 	UpdateFloatingGimmick();
 
+	//--------------------------------
+	// ジャンプ発動
+	//--------------------------------
+
+	if (input_->TriggerKey(DIK_SPACE)) {
+		// ジャンプリクエスト
+		behaviorRequest_ = Behavior::kJump;
+	}
+
+	ImGui::Begin("Player");
+	ImGui::SliderFloat3("HeadTranslation", &worldTransform_.translation_.x, -10.0f, 10.0f);
+	ImGui::SliderFloat3("HeadTranslation", &worldTransformBody_.translation_.x, -10.0f, 10.0f);
+	ImGui::SliderFloat3("HeadTranslation", &worldTransformHead_.translation_.x, -10.0f, 10.0f);
+	ImGui::SliderFloat3("ArmLTranslation", &worldTransformLeftArm_.translation_.x, -10.0f, 10.0f);
+	ImGui::SliderFloat3("ArmRTranslation", &worldTransformRightArm_.translation_.x, -10.0f, 10.0f);
+	if (ImGui::SliderFloat("step", &tempFloat_, 1.0f, 120.0f)) {
+		floatingCycle_ = static_cast<uint16_t>(tempFloat_);
+	}
+	ImGui::SliderInt("floatingCycle", &floatingCycle_, -10, 10);
+	ImGui::SliderFloat("floatingAmplitude", &amplitude_, -10.0f, 10.0f);
+
+	ImGui::SliderFloat3("Weapon.rotate", &worldTransformWeapon_.rotation_.x, -10.0f, 10.f);
+
+	bool attack = false;
+	ImGui::Checkbox("Attack", &attack);
+	if (attack) {
+		behaviorRequest_ = Behavior::kAttack;
+	}
+	ImGui::End();
 }
 
 void Player::BehaviorAttackUpdate() { 
@@ -149,9 +189,25 @@ void Player::BehaviorAttackUpdate() {
 		behaviorRequest_ = Behavior::kRoot;	
 	}
 
-	//worldTransformLeftArm_.rotation_.x = currentRotationAngleX;
-	//worldTransformRightArm_.rotation_.x = currentRotationAngleX;
 	worldTransformWeapon_.rotation_.x = currentRotationAngleX;
+}
+
+void Player::BehaviorjumpUpdate() {
+	//移動
+	worldTransformBase_.translation_ += velocity_;
+	//重力加速度
+	const float kGravityAcceleration = 0.05f;
+	//加速度ベクトル
+	Vector3 accelaretionVector = {0.0f, -kGravityAcceleration, 0.0f};
+	//加速する
+	velocity_ += accelaretionVector;
+
+	//着地
+	if (worldTransformBase_.translation_.y <= 0.0f) {
+		worldTransformBase_.translation_.y = 0.0f;
+		//ジャンプ終了
+		behaviorRequest_ = Behavior::kRoot;
+	}
 }
 
 void Player::ChangeBehavior() {
@@ -173,6 +229,12 @@ void Player::ChangeBehavior() {
 			BehaviorAttackInitialize();
 
 			break;
+
+		case Behavior::kJump:
+			BehaviorJumpInitialize();
+
+			break;
+		
 		}
 		// 振る舞いリクエストをリセット
 		behaviorRequest_ = std::nullopt;
@@ -188,12 +250,22 @@ void Player::ChangeBehavior() {
 		BehaviorRootUpdate();
 
 		break;
+
 	case Behavior::kAttack:
 		//--------------------------------
 		// 攻撃行動の更新
 		//--------------------------------
 
 		BehaviorAttackUpdate();
+	
+		break;
+
+	case Behavior::kJump:
+		//--------------------------------
+		// ジャンプ更新
+		//--------------------------------
+
+		BehaviorjumpUpdate();
 
 		break;
 	}
@@ -211,9 +283,9 @@ void Player::Movement() {
 	if (Input::GetInstance()->GetJoystickState(0, joyState)) {
 		
 		//移動量
-		Vector3 move = {(float)joyState.Gamepad.sThumbLX / SHRT_MAX, 0.0f, (float)joyState.Gamepad.sThumbLY / SHRT_MAX};
+		velocity_ = {(float)joyState.Gamepad.sThumbLX / SHRT_MAX, 0.0f, (float)joyState.Gamepad.sThumbLY / SHRT_MAX};
 		//移動量に速さを反映
-		move = move * speed;
+		velocity_ = velocity_ * speed;
 
 		// カメラの回転角度を取得
 		Vector3 rotationAngle = {GetViewProjection()->rotation_.x, GetViewProjection()->rotation_.y, GetViewProjection()->rotation_.z};
@@ -225,17 +297,17 @@ void Player::Movement() {
 		Matrix4x4 rotateXYZMatrix = Multiply(rotateXMatrix, Multiply(rotateYMatrix, rotateZMatrix));
 
 		//移動ベクトルをカメラの座標だけ回転する
-		move = TransformNormal(move, rotateXYZMatrix);
+		velocity_ = TransformNormal(velocity_, rotateXYZMatrix);
 		
 		//移動
-		worldTransformBase_.translation_ += move;
+		worldTransformBase_.translation_ += velocity_;
 		
 		//--------------------------------
 		// 移動方向に見た目を合わせる
 		//--------------------------------
 
 		//Y軸周りの角度
-		worldTransformBase_.rotation_.y = std::atan2(move.x, move.z);
+		worldTransformBase_.rotation_.y = std::atan2(velocity_.x, velocity_.z);
 		
 	}
 }
@@ -274,26 +346,6 @@ void Player::UpdateFloatingGimmick() {
 	//手をぶらぶらさせる
 	worldTransformRightArm_.rotation_.x = std::sin(floatingParameter_) * amplitude_;
 	worldTransformLeftArm_.rotation_.x = std::sin(floatingParameter_) * amplitude_;
-
-
-	ImGui::Begin("Player");
-	ImGui::SliderFloat3("HeadTranslation",&worldTransformHead_.translation_.x,-10.0f,10.0f);
-	ImGui::SliderFloat3("ArmLTranslation",&worldTransformLeftArm_.translation_.x,-10.0f,10.0f);
-	ImGui::SliderFloat3("ArmRTranslation",&worldTransformRightArm_.translation_.x,-10.0f,10.0f);
-	if (ImGui::SliderFloat("step", &tempFloat_, 1.0f, 120.0f)) {
-		floatingCycle_ = static_cast<uint16_t>(tempFloat_);
-	}
-	ImGui::SliderInt("floatingCycle", &floatingCycle_, -10, 10);
-	ImGui::SliderFloat("floatingAmplitude", &amplitude_,-10.0f, 10.0f);
-
-	ImGui::SliderFloat3("Weapon.rotate", &worldTransformWeapon_.rotation_.x, -10.0f, 10.f);
-
-	bool attack = false;
-	ImGui::Checkbox("Attack", &attack);
-	if (attack) {
-		behaviorRequest_ = Behavior::kAttack;
-	}
-	ImGui::End();
 
 }
 
