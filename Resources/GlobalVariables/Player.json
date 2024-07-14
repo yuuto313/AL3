@@ -1,5 +1,20 @@
 {
     "Player": {
+        "ArmLTranslation": [
+            -2.0,
+            3.0,
+            0.0
+        ],
+        "ArmRTranslation": [
+            2.0,
+            3.0,
+            0.0
+        ],
+        "HeadTranslation": [
+            0.0,
+            0.0,
+            0.0
+        ],
         "Test": 76,
         "floatingAmplitude": 0.5,
         "floatingCycle": 60

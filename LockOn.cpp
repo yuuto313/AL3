@@ -2,6 +2,9 @@
 #include "TextureManager.h"
 #include "WinApp.h"
 
+//WorldToScreenとOutsideSelectionRange関数の見直し
+//68行目当たりの見直し
+
 void LockOn::Initalize() {
 	textureHandle_ = TextureManager::Load("lockOn.png");
 	//スプライトの生成
@@ -16,14 +19,14 @@ void LockOn::Update(const std::list<std::unique_ptr<Enemy>>& enemies, const View
 	if (target_) {
 		//ロックオン解除処理
 		if (input_->TriggerKey(DIK_R)) {
-			//ローカルを外す
+			//ロックオンを外す
 			target_ = nullptr;
 		}
 		//選択外判定
-		else if (OutsideSelectionRange(enemies, viewProjection)) {
-			//ロックオンを外す
-			target_=nullptr;
-		}
+		//else if (OutsideSelectionRange(enemies, viewProjection)) {
+		//	//ロックオンを外す
+		//	target_=nullptr;
+		//}
 	} else {
 		// ロックオン対象の検索
 		// ロックオンボタンをトリガーしたら
@@ -102,28 +105,28 @@ Vector3 LockOn::WorldToScreen(Vector3& worldPosition,const ViewProjection& viewp
 	return screenPosition;
 }
 
-bool LockOn::OutsideSelectionRange(const std::list<std::unique_ptr<Enemy>>& enemies, const ViewProjection& viewProjection) {
-	std::list<std::pair<float, const Enemy*>> targets;
-
-	// すべての敵に対して順にロックオン判定
-	for (const std::unique_ptr<Enemy>& enemy : enemies) {
-		// 敵のロックオン座標を取得
-		Vector3 positionWorld = enemy->GetCenterPosition();
-		// ワールド->ビュー座標変換
-		Vector3 positionView = Transform(positionWorld, viewProjection.matView);
-		// 距離条件のチェック
-		if (minDistance_ <= positionView.z && positionView.z <= maxDistance_) {
-			// カメラ前方との角度を計算
-			float arcTangent = std::atan2(std::sqrt(positionView.x * positionView.x + positionView.y * positionView.y), positionView.z);
-			// 角度条件チェック(コーンにおさまってるか)
-			if (std::abs(arcTangent) <= angleRange_) {
-				//範囲外ではない
-				return false;
-			}
-		}
-		//範囲外である
-		return true;
-	}
-	return true;
-}
+//bool LockOn::OutsideSelectionRange(const std::list<std::unique_ptr<Enemy>>& enemies, const ViewProjection& viewProjection) {
+//	std::list<std::pair<float, const Enemy*>> targets;
+//
+//	// すべての敵に対して順にロックオン判定
+//	for (const std::unique_ptr<Enemy>& enemy : enemies) {
+//		// 敵のロックオン座標を取得
+//		Vector3 positionWorld = enemy->GetCenterPosition();
+//		// ワールド->ビュー座標変換
+//		Vector3 positionView = Transform(positionWorld, viewProjection.matView);
+//		// 距離条件のチェック
+//		if (minDistance_ <= positionView.z && positionView.z <= maxDistance_) {
+//			// カメラ前方との角度を計算
+//			float arcTangent = std::atan2(std::sqrt(positionView.x * positionView.x + positionView.y * positionView.y), positionView.z);
+//			// 角度条件チェック(コーンにおさまってるか)
+//			if (std::abs(arcTangent) <= angleRange_) {
+//				//範囲外ではない
+//				return false;
+//			}
+//		}
+//		//範囲外である
+//		return true;
+//	}
+//	return true;
+//}
 
