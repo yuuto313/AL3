@@ -1,5 +1,6 @@
 #include "LockOn.h"
 #include "TextureManager.h"
+#include "WinApp.h"
 
 void LockOn::Initalize() {
 	textureHandle_ = TextureManager::Load("lockOn.png");
@@ -75,4 +76,14 @@ void LockOn::Search(const std::list<std::unique_ptr<Enemy>>& enemies, const View
 		Vector3 positionScreen=
 
 	}
+}
+
+Vector3 LockOn::WorldToScreen(Vector3& worldPosition,const ViewProjection& viewprojection) {
+	//ビューポート行列
+	Matrix4x4 matViewport = MakeViewportMatrix(0, 0, WinApp::kWindowWidth, WinApp::kWindowHeight, 0, 1);
+	//ビュー行列とプロジェクション行列、ビューポート行列を合成する
+	Matrix4x4 matViewProjectionViewport = viewprojection.matView * viewprojection.matProjection * matViewport;
+	//ワールド->スクリーン変換
+	Vector3 screenPosition = Transform(worldPosition, matViewProjectionViewport);
+	return screenPosition;
 }

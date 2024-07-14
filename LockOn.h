@@ -31,6 +31,12 @@ public:
 	/// </summary>
 	void Search(const std::list<std::unique_ptr<Enemy>>& enemies, const ViewProjection& viewProjection);
 
+	/// <summary>
+	/// ワールドからスクリーンに座標変換
+	/// </summary>
+	Vector3 WorldToScreen(Vector3& worldPosition,const ViewProjection& viewprojection);
+
+
 private:
 	uint32_t textureHandle_ = 0u;
 	// ロックオンマーク用スプライト
