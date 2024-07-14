@@ -45,7 +45,7 @@ void GameScene::Initialize() {
 	player_ = std::make_unique<Player>();
 
 	//敵の生成
-	enemy_ = std::make_unique<Enemy>();
+	enemies_.emplace_back(std::make_unique<Enemy>());
 
 	//天球を生成
 	skydome_ = std::make_unique<Skydome>();
@@ -81,7 +81,10 @@ void GameScene::Initialize() {
 	player_->Initialize(playerModels);
 
 	//敵の初期化
-	enemy_->Initialize(enemyMoldels);
+	for (std::list<std::unique_ptr<Enemy>>::iterator enemy = enemies_.begin(); enemy != enemies_.end(); ++enemy) {
+		(*enemy)->Initialize(enemyMoldels);
+	}
+	
 
 	//天球を初期化
 	skydome_->Initialize(modelSkydome_.get(),&viewProjection_);
@@ -117,7 +120,9 @@ void GameScene::Update() {
 	player_->Update();
 
 	//敵キャラの更新
-	enemy_->Update();
+	for (std::list<std::unique_ptr<Enemy>>::iterator enemy = enemies_.begin(); enemy != enemies_.end(); ++enemy) {
+		(*enemy)->Update();
+	}
 
 	//天球の更新
 	skydome_->Update();
@@ -197,7 +202,9 @@ void GameScene::Draw() {
 
 	player_->Draw(viewProjection_);
 
-	enemy_->Draw(viewProjection_);
+	for (std::list<std::unique_ptr<Enemy>>::iterator enemy = enemies_.begin(); enemy != enemies_.end(); ++enemy) {
+		(*enemy)->Draw(viewProjection_);
+	}
 
 	skydome_->Draw();
 
@@ -225,5 +232,5 @@ void GameScene::Draw() {
 	// スプライト描画後処理
 	Sprite::PostDraw();
 
-#pragma endreg	ion
+#pragma endregion
 }

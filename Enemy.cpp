@@ -62,3 +62,11 @@ void Enemy::Movement() {
 	worldTransformBase_.translation_.x = radius * cos(worldTransformBase_.rotation_.y);
 	worldTransformBase_.translation_.z = radius * sin(worldTransformBase_.rotation_.y);
 }
+
+Vector3 Enemy::GetCenterPosition() {
+	//見た目上の中心点オフセット
+	const Vector3 offset = {0.0f, 1.0f, 0.0f};
+	//ワールド座標に変換
+	Vector3 worldPos = Transform(offset, worldTransform_.matWorld_);
+	return worldPos;	
+}

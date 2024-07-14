@@ -14,6 +14,8 @@ public:
 
 	void Movement();
 
+	Vector3 GetCenterPosition();
+
 private:
 	WorldTransform worldTransformBase_;
 	WorldTransform worldTransformWeapon_;

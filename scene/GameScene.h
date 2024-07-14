@@ -54,7 +54,7 @@ private:
 	//自キャラ
 	std::unique_ptr<Player> player_ = nullptr;
 	
-	//敵
+	// 敵
 	std::list<std::unique_ptr<Enemy>> enemies_;
 
 	//スカイドーム（天球）
