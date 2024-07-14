@@ -35,6 +35,12 @@ public:
 	/// ワールドからスクリーンに座標変換
 	/// </summary>
 	Vector3 WorldToScreen(Vector3& worldPosition,const ViewProjection& viewprojection);
+	/// <summary>
+	/// 範囲外選択判定
+	/// </summary>
+	/// <param name="viewprojection"></param>
+	/// <returns></returns>
+	bool OutsideSelectionRange(const std::list<std::unique_ptr<Enemy>>& enemies, const ViewProjection& viewProjection);
 
 
 private:
