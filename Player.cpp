@@ -55,7 +55,6 @@ void Player::Initialize(const std::vector<Model*>&models) {
 	//浮遊ギミック初期化
 	InitializeFloatingGimmick();
 
-
 }
 
 void Player::Update() { 
