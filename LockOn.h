@@ -40,8 +40,9 @@ public:
 	/// </summary>
 	/// <param name="viewprojection"></param>
 	/// <returns></returns>
-	bool OutsideSelectionRange(const std::list<std::unique_ptr<Enemy>>& enemies, const ViewProjection& viewProjection);
+	bool OutsideSelectionRange(const ViewProjection& viewProjection);
 
+	Vector3 GetCenterPosition();
 
 private:
 	uint32_t textureHandle_ = 0u;

@@ -14,7 +14,7 @@ public:
 
 	void Movement();
 
-	Vector3 GetCenterPosition();
+	Vector3 GetCenterPosition()const;
 
 private:
 	WorldTransform worldTransformBase_;

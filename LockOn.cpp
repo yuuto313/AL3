@@ -15,40 +15,39 @@ void LockOn::Initalize() {
 }
 
 void LockOn::Update(const std::list<std::unique_ptr<Enemy>>& enemies, const ViewProjection& viewProjection) {
-	//ロックオン状態なら
+	// ロックオン状態なら
 	if (target_) {
-		//ロックオン解除処理
+		// ロックオン解除処理
 		if (input_->TriggerKey(DIK_R)) {
-			//ロックオンを外す
+			// ロックオンを外す
 			target_ = nullptr;
 		}
-		//選択外判定
-		//else if (OutsideSelectionRange(enemies, viewProjection)) {
-		//	//ロックオンを外す
-		//	target_=nullptr;
-		//}
+		// 選択外判定
+		 else if (OutsideSelectionRange(viewProjection)) {
+			//ロックオンを外す
+			target_=nullptr;
+		 }
 	} else {
 		// ロックオン対象の検索
 		// ロックオンボタンをトリガーしたら
 		if (input_->TriggerKey(DIK_R)) {
-			//ロックオン対象の検索
+			// ロックオン対象の検索
 			Search(enemies, viewProjection);
 		}
-	}	
+	}
 
 	// ロックオン継続
 	if (target_) {
-		for (const std::unique_ptr<Enemy>& enemy : enemies) {
-			// 敵のロックオン座標取得
-			Vector3 positionWorld = enemy->GetCenterPosition();
-			// ワールド座標からスクリーン座標に変更
-			Vector3 positionScreen = WorldToScreen(positionWorld, viewProjection);
-			// Vector2に格納
-			Vector2 positionScreenV2(positionScreen.x, positionScreen.y);
-			// スプライトの座標を設定
-			lockOnMark_->SetPosition(positionScreenV2);
-		}
+		// 敵のロックオン座標取得
+		Vector3 positionWorld = GetCenterPosition();
+		// ワールド->スクリーン変換
+		Vector3 positionScreen = WorldToScreen(positionWorld, viewProjection);
+		// Vector2に格納
+		Vector2 positionScreenV2(positionScreen.x, positionScreen.y);
+		// スプライトの座標を設定
+		lockOnMark_->SetPosition(positionScreenV2);
 	}
+
 }
 
 void LockOn::Draw() { 
@@ -105,28 +104,31 @@ Vector3 LockOn::WorldToScreen(Vector3& worldPosition,const ViewProjection& viewp
 	return screenPosition;
 }
 
-//bool LockOn::OutsideSelectionRange(const std::list<std::unique_ptr<Enemy>>& enemies, const ViewProjection& viewProjection) {
-//	std::list<std::pair<float, const Enemy*>> targets;
-//
-//	// すべての敵に対して順にロックオン判定
-//	for (const std::unique_ptr<Enemy>& enemy : enemies) {
-//		// 敵のロックオン座標を取得
-//		Vector3 positionWorld = enemy->GetCenterPosition();
-//		// ワールド->ビュー座標変換
-//		Vector3 positionView = Transform(positionWorld, viewProjection.matView);
-//		// 距離条件のチェック
-//		if (minDistance_ <= positionView.z && positionView.z <= maxDistance_) {
-//			// カメラ前方との角度を計算
-//			float arcTangent = std::atan2(std::sqrt(positionView.x * positionView.x + positionView.y * positionView.y), positionView.z);
-//			// 角度条件チェック(コーンにおさまってるか)
-//			if (std::abs(arcTangent) <= angleRange_) {
-//				//範囲外ではない
-//				return false;
-//			}
-//		}
-//		//範囲外である
-//		return true;
-//	}
-//	return true;
-//}
+bool LockOn::OutsideSelectionRange(const ViewProjection& viewProjection) {
+	std::list<std::pair<float, const Enemy*>> targets;
 
+	// すべての敵に対して順にロックオン判定
+	// 敵のロックオン座標を取得
+	Vector3 positionWorld = GetCenterPosition();
+	// ワールド->ビュー座標変換
+	Vector3 positionView = Transform(positionWorld, viewProjection.matView);
+	// 距離条件のチェック
+	if (minDistance_ <= positionView.z && positionView.z <= maxDistance_) {
+		// カメラ前方との角度を計算
+		float arcTangent = std::atan2(std::sqrt(positionView.x * positionView.x + positionView.y * positionView.y), positionView.z);
+		// 角度条件チェック(コーンにおさまってるか)
+		if (std::abs(arcTangent) <= angleRange_) {
+			// 範囲外ではない
+			return false;
+		}
+	}
+	// 範囲外である
+	return true;
+}
+
+Vector3 LockOn::GetCenterPosition() {
+	if (target_) {
+		return target_->GetCenterPosition();
+	}
+	return Vector3{};
+}
