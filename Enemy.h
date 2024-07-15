@@ -14,6 +14,12 @@ public:
 
 	void Movement();
 
+	/// <summary>
+	/// 敵のWorldTransformを取得する
+	/// </summary>
+	/// <returns></returns>
+	const WorldTransform& GetWorldTransform(){ return worldTransformBase_; }
+
 	Vector3 GetCenterPosition()const;
 
 private:

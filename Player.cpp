@@ -1,6 +1,7 @@
 #include "Player.h"
 #include "iostream"
 #include "ImGuiManager.h"
+#include "LockOn.h"
 
 Player::Player() {}
 
@@ -12,7 +13,7 @@ void Player::Initialize(const std::vector<Model*>&models) {
 
 	//textureHandle_ = textureHandle;
 	//  ワールド変換初期化
-	worldTransformBase_.Initialize();
+	worldTransform_.Initialize();
 	// 体
 	worldTransformBody_.Initialize();
 	worldTransformBody_.translation_ = {0.0f, 0.0f, 0.0f};
@@ -30,7 +31,7 @@ void Player::Initialize(const std::vector<Model*>&models) {
 
 
 	// 親子関係を結ぶ
-	worldTransformBody_.parent_ = &worldTransformBase_;
+	worldTransformBody_.parent_ = &worldTransform_;
 	worldTransformHead_.parent_ = &worldTransformBody_;
 	worldTransformLeftArm_.parent_ = &worldTransformBody_;
 	worldTransformRightArm_.parent_ = &worldTransformBody_;
@@ -73,13 +74,12 @@ void Player::Update() {
 	// 調整項目の適用
 	//--------------------------------
 
-	//ApplyGlobalVariables();
+	ApplyGlobalVariables();
 
 	//--------------------------------
 	//ワールド行列の転送
 	//--------------------------------
 	worldTransform_.UpdateMatrix();
-	worldTransformBase_.UpdateMatrix();
 	worldTransformBody_.UpdateMatrix();
 	worldTransformHead_.UpdateMatrix();
 	worldTransformRightArm_.UpdateMatrix();
@@ -184,6 +184,28 @@ void Player::BehaviorRootUpdate() {
 }
 
 void Player::BehaviorAttackUpdate() { 
+	//ロックオン中
+	if (lockOn_ && lockOn_->ExistTarget()) {
+		// ロックオン座標
+		Vector3 lockOnPosition = lockOn_->GetTargetPosition();
+		// 追従対象からロックオン対象へのベクトル
+		Vector3 sub = lockOnPosition - worldTransform_.translation_;
+
+		//距離
+		float distance = Length(sub);
+		//距離しきい値
+		const float threshold = 0.2f;
+
+		//しきい値より離れているときのみ
+		if (distance > threshold) {
+			//Y軸周り角度
+			worldTransform_.rotation_.y = std::atan2(sub.x, sub.z);
+			//追い越し防止処理未実装
+		}
+	}
+
+	
+
 	if (currentRotationAngleX < targetRotationAngleX) {
 		currentRotationAngleX += rotationSpeed;
 		if (currentRotationAngleX > targetRotationAngleX) {
@@ -198,7 +220,7 @@ void Player::BehaviorAttackUpdate() {
 
 void Player::BehaviorjumpUpdate() {
 	//移動
-	worldTransformBase_.translation_ += velocity_;
+	worldTransform_.translation_ += velocity_;
 	//重力加速度
 	const float kGravityAcceleration = 0.05f;
 	//加速度ベクトル
@@ -207,8 +229,8 @@ void Player::BehaviorjumpUpdate() {
 	velocity_ += accelaretionVector;
 
 	//着地
-	if (worldTransformBase_.translation_.y <= 0.0f) {
-		worldTransformBase_.translation_.y = 0.0f;
+	if (worldTransform_.translation_.y <= 0.0f) {
+		worldTransform_.translation_.y = 0.0f;
 		//ジャンプ終了
 		behaviorRequest_ = Behavior::kRoot;
 	}
@@ -284,7 +306,9 @@ void Player::Movement() {
 	const float speed = 0.3f;
 	XINPUT_STATE joyState;
 
-	if (Input::GetInstance()->GetJoystickState(0, joyState)) {
+	Input::GetInstance()->GetJoystickState(0, joyState);
+
+	if ((float)joyState.Gamepad.sThumbLX !=0 || (float)joyState.Gamepad.sThumbLY != 0) {
 		
 		//移動量
 		velocity_ = {(float)joyState.Gamepad.sThumbLX / SHRT_MAX, 0.0f, (float)joyState.Gamepad.sThumbLY / SHRT_MAX};
@@ -304,15 +328,23 @@ void Player::Movement() {
 		velocity_ = TransformNormal(velocity_, rotateXYZMatrix);
 		
 		//移動
-		worldTransformBase_.translation_ += velocity_;
+		worldTransform_.translation_ += velocity_;
 		
 		//--------------------------------
 		// 移動方向に見た目を合わせる
 		//--------------------------------
 
 		//Y軸周りの角度
-		worldTransformBase_.rotation_.y = std::atan2(velocity_.x, velocity_.z);
+		worldTransform_.rotation_.y = std::atan2(velocity_.x, velocity_.z);
 		
+	} else if (lockOn_ && lockOn_->ExistTarget()) {
+		//ロックオン座標
+		Vector3 lockOnPosition = lockOn_->GetTargetPosition();
+		//追従対象からロックオン対象へのベクトル
+		Vector3 sub = lockOnPosition - worldTransform_.translation_;
+
+		//Y軸周り角度
+		worldTransform_.rotation_.y = std::atan2(sub.x, sub.z);
 	}
 }
 

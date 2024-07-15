@@ -10,6 +10,8 @@
 
 #pragma once
 
+class LockOn;
+
 enum class Behavior {
 	kRoot,   // 通常状態
 	kAttack, // 攻撃中
@@ -92,16 +94,20 @@ public:
 	/// 自キャラのWorldTransformを取得する
 	/// </summary>
 	/// <returns></returns>
-	const WorldTransform& GetWorldTransform() { return worldTransformBase_; }
+	const WorldTransform& GetWorldTransform() { return worldTransform_; }
 	/// <summary>
 	/// 自キャラのWorldTransformを取得する
 	/// </summary>
 	/// <returns></returns>
 	const ViewProjection* GetViewProjection() { return cameraViewProjection_; }
+	/// <summary>
+	/// ロックオンセッター
+	/// </summary>
+	/// <param name="lockOn"></param>
+	void SetLockOn(LockOn* lockOn) { lockOn_ = lockOn; }
 
 private:
 	//ワールド変換データ
-	WorldTransform worldTransformBase_;
 	WorldTransform worldTransformBody_;
 	WorldTransform worldTransformHead_;
 	WorldTransform worldTransformLeftArm_;
@@ -135,6 +141,9 @@ private:
 	//std::nulloptはそのstd::optionalが無効状態であることを表す値
 	//std::nulloptではなくBehavior型の値を入れたときは有効状態となる
 	std::optional<Behavior> behaviorRequest_ = std::nullopt;
+
+	//ロックオン
+	const LockOn* lockOn_ = nullptr;
 
 	// キーボード入力
 	Input* input_ = nullptr;

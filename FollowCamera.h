@@ -3,7 +3,9 @@
 #include "WorldTransform.h"
 #include "Input.h"
 #include "MyMath.h"
+#include "Enemy.h"
 
+class LockOn;
 
 /// <summary>
 /// 追従カメラ
@@ -38,10 +40,17 @@ public:
 	/// <returns></returns>
 	const ViewProjection& GetViewProjection() { return viewProjection_; }
 
-	private:
+	/// <summary>
+	/// ロックオンセッター
+	/// </summary>
+	void SetLockOn(LockOn* lockOn) { lockOn_ = lockOn; }
+
+private:
 	ViewProjection viewProjection_;
 
-	
 	//追従対象
 	const WorldTransform* target_ = nullptr;
+
+	//ロックオン
+	const LockOn* lockOn_ = nullptr;
 };

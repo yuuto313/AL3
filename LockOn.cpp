@@ -36,7 +36,7 @@ void LockOn::Update(const std::list<std::unique_ptr<Enemy>>& enemies, const View
 	// ロックオン継続
 	if (target_) {
 		// 敵のロックオン座標取得
-		Vector3 positionWorld = GetCenterPosition();
+		Vector3 positionWorld = target_->GetCenterPosition();
 		// ワールド->スクリーン変換
 		Vector3 positionScreen = WorldToScreen(positionWorld, viewProjection);
 		// Vector2に格納
@@ -106,7 +106,7 @@ bool LockOn::OutsideSelectionRange(const ViewProjection& viewProjection) {
 
 	// すべての敵に対して順にロックオン判定
 	// 敵のロックオン座標を取得
-	Vector3 positionWorld = GetCenterPosition();
+	Vector3 positionWorld = target_->GetCenterPosition();
 	// ワールド->ビュー座標変換
 	Vector3 positionView = Transform(positionWorld, viewProjection.matView);
 	// 距離条件のチェック
@@ -123,7 +123,7 @@ bool LockOn::OutsideSelectionRange(const ViewProjection& viewProjection) {
 	return true;
 }
 
-Vector3 LockOn::GetCenterPosition() {
+Vector3 LockOn::GetTargetPosition() const {
 	if (target_) {
 		return target_->GetCenterPosition();
 	}

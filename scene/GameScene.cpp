@@ -102,6 +102,9 @@ void GameScene::Initialize() {
 	//自キャラに追従カメラのビュープロジェクションをアドレス渡しする
 	player_->SetViewProjection(&followCamera_->GetViewProjection());
 
+	// それぞれのロックオンを設定
+	followCamera_->SetLockOn(lockOn_.get());
+	player_->SetLockOn(lockOn_.get());
 	//--------------------------------
 	// 軸方向表示の使用
 	//--------------------------------

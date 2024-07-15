@@ -42,7 +42,16 @@ public:
 	/// <returns></returns>
 	bool OutsideSelectionRange(const ViewProjection& viewProjection);
 
-	Vector3 GetCenterPosition();
+	/// <summary>
+	/// 中心座標取得
+	/// </summary>
+	/// <returns></returns>
+	Vector3 GetTargetPosition()const;
+	/// <summary>
+	/// ロックオン中かどうか確認
+	/// </summary>
+	/// <returns></returns>
+	bool ExistTarget() const { return target_ ? true : false; }
 
 private:
 	uint32_t textureHandle_ = 0u;
@@ -55,9 +64,9 @@ private:
 	//最小距離
 	float minDistance_ = 10.0f;
 	//最大距離
-	float maxDistance_ = 30.0f;
+	float maxDistance_ = 100.0f;
 	//角度範囲
-	float angleRange_ = 20.0f * (90.0f * (float(M_PI) / 180.0f));
+	float angleRange_ = 20.0f * (float(M_PI) / 180.0f);
 
 	Input* input_ = nullptr;
 

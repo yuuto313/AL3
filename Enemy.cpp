@@ -6,7 +6,7 @@ void Enemy::Initialize(const std::vector<Model*>& models) {
 
 	//ワールド行列の初期化
 	worldTransformBase_.Initialize();
-	worldTransformBase_.translation_ = {0.0f, 0.0f, 10.0f};
+	worldTransformBase_.translation_ = {0.0f, 0.0f, 0.0f};
 
 	worldTransformWeapon_.Initialize();
 
@@ -46,7 +46,7 @@ void Enemy::Movement() {
 	//  回転処理
 	//--------------------------------
 	//回転速度
-	Vector3 rotationSpeed = {0.0f, 0.1f, 0.0f};
+	Vector3 rotationSpeed = {0.0f, 0.03f, 0.0f};
 	
 	//速度ベクトルを自機の向きに合わせて回転させる
 	rotationSpeed = TransformNormal(rotationSpeed, worldTransformBase_.matWorld_);
@@ -57,7 +57,7 @@ void Enemy::Movement() {
 	// 回転角度から位置を決める
 	//--------------------------------
 	//円の半径
-	const float radius = 10.0f;
+	const float radius = 15.0f;
 
 	worldTransformBase_.translation_.x = radius * cos(worldTransformBase_.rotation_.y);
 	worldTransformBase_.translation_.z = radius * sin(worldTransformBase_.rotation_.y);
