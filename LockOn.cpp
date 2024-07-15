@@ -2,9 +2,6 @@
 #include "TextureManager.h"
 #include "WinApp.h"
 
-//WorldToScreenとOutsideSelectionRange関数の見直し
-//68行目当たりの見直し
-
 void LockOn::Initalize() {
 	textureHandle_ = TextureManager::Load("lockOn.png");
 	//スプライトの生成
