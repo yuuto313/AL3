@@ -3,11 +3,11 @@
 #include "ViewProjection.h"
 #include "Model.h"
 #include "vector"
-
+#include "Collider.h"
 /// <summary>
 /// キャラクター基底クラス
 /// </summary>
-class BaseCharacter {
+class BaseCharacter : public Collider{
 public:
 	/// <summary>
 	/// 初期化
@@ -28,6 +28,11 @@ public:
 	/// </summary>
 	/// <returns></returns>
 	const WorldTransform& GetWorldTransform() { return worldTransform_; }
+	/// <summary>
+	/// 中心座標取得
+	/// </summary>
+	/// <returns></returns>
+	virtual Vector3 GetCeterPosition() const override;
 
 protected:
 	//モデルデータ配列

@@ -12,8 +12,12 @@
 #include "Ground.h"
 #include "FollowCamera.h"
 #include "LockOn.h"
+#include "CollisionManager.h"
 
 #include <memory>
+
+//カメラの挙動修正
+//コントローラーとキーボードの操作
 
 /// <summary>
 /// ゲームシーン
@@ -45,6 +49,11 @@ public: // メンバ関数
 	/// 描画
 	/// </summary>
 	void Draw();
+
+	/// <summary>
+	/// 衝突判定と応答
+	/// </summary>
+	void CheckAllCollsions();
 
 private:
 	// メンバ変数
@@ -92,6 +101,9 @@ private:
 
 	//ロックオン
 	std::unique_ptr<LockOn> lockOn_;
+
+	//衝突マネージャ
+	std::unique_ptr<CollisionManager> collisionManager_;
 
 	//テクスチャハンドル
 	//uint32_t textureHandle_ = 0;

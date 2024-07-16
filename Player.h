@@ -105,6 +105,15 @@ public:
 	/// </summary>
 	/// <param name="lockOn"></param>
 	void SetLockOn(LockOn* lockOn) { lockOn_ = lockOn; }
+	/// <summary>
+	/// 中心座標取得
+	/// </summary>
+	/// <returns></returns>
+	Vector3 GetCeterPosition() const override;
+	/// <summary>
+	/// 衝突を検出したら呼び出されるコールバック関数
+	/// </summary>
+	void OnCollison() override;
 
 private:
 	//ワールド変換データ

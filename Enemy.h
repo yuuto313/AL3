@@ -18,11 +18,10 @@ public:
 	/// 敵のWorldTransformを取得する
 	/// </summary>
 	/// <returns></returns>
-	const WorldTransform& GetWorldTransform(){ return worldTransformBase_; }
+	const WorldTransform& GetWorldTransform(){ return worldTransform_; }
 
 	Vector3 GetCenterPosition()const;
 
 private:
-	WorldTransform worldTransformBase_;
 	WorldTransform worldTransformWeapon_;
 };

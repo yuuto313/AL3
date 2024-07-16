@@ -5,13 +5,11 @@ void Enemy::Initialize(const std::vector<Model*>& models) {
 	BaseCharacter::Initialize(models);
 
 	//ワールド行列の初期化
-	worldTransformBase_.Initialize();
-	worldTransformBase_.translation_ = {0.0f, 0.0f, 0.0f};
-
+	worldTransform_.Initialize();
 	worldTransformWeapon_.Initialize();
 
 	//本体と親子関係を結ぶ
-	worldTransformWeapon_.parent_ = &worldTransformBase_;
+	worldTransformWeapon_.parent_ = &worldTransform_;
 
 }
 
@@ -32,12 +30,12 @@ void Enemy::Update() {
 	// ワールド行列の更新
 	//--------------------------------
 
-	worldTransformBase_.UpdateMatrix();
+	worldTransform_.UpdateMatrix();
 	worldTransformWeapon_.UpdateMatrix();
 }
 
 void Enemy::Draw(const ViewProjection& viewProjection) { 
-	models_[0]->Draw(worldTransformBase_, viewProjection);
+	models_[0]->Draw(worldTransform_, viewProjection);
 	models_[1]->Draw(worldTransformWeapon_, viewProjection);
 }
 
@@ -49,9 +47,9 @@ void Enemy::Movement() {
 	Vector3 rotationSpeed = {0.0f, 0.03f, 0.0f};
 	
 	//速度ベクトルを自機の向きに合わせて回転させる
-	rotationSpeed = TransformNormal(rotationSpeed, worldTransformBase_.matWorld_);
+	rotationSpeed = TransformNormal(rotationSpeed, worldTransform_.matWorld_);
 
-	worldTransformBase_.rotation_ += rotationSpeed;
+	worldTransform_.rotation_ += rotationSpeed;
 
 	//--------------------------------
 	// 回転角度から位置を決める
@@ -59,14 +57,14 @@ void Enemy::Movement() {
 	//円の半径
 	const float radius = 15.0f;
 
-	worldTransformBase_.translation_.x = radius * cos(worldTransformBase_.rotation_.y);
-	worldTransformBase_.translation_.z = radius * sin(worldTransformBase_.rotation_.y);
+	worldTransform_.translation_.x = radius * cos(worldTransform_.rotation_.y);
+	worldTransform_.translation_.z = radius * sin(worldTransform_.rotation_.y);
 }
 
 Vector3 Enemy::GetCenterPosition()const {
 	//見た目上の中心点オフセット
 	const Vector3 offset = {0.0f, 1.0f, 0.0f};
 	//ワールド座標に変換
-	Vector3 worldPos = Transform(offset, worldTransformBase_.matWorld_);
+	Vector3 worldPos = Transform(offset, worldTransform_.matWorld_);
 	return worldPos;	
 }

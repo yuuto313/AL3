@@ -62,6 +62,9 @@ void GameScene::Initialize() {
 	//ロックオンの生成
 	lockOn_ = std::make_unique<LockOn>();
 
+	//衝突マネージャの生成
+	collisionManager_ = std::make_unique<CollisionManager>();
+
 	//--------------------------------
 	// モデルデータをモデルデータ配列に格納
 	//--------------------------------
@@ -136,8 +139,8 @@ void GameScene::Update() {
 	//ロックオンの更新
 	lockOn_->Update(enemies_,viewProjection_);
 
-	//追従カメラの更新
-	//followCamera_->Update();
+	//衝突判定と応答
+	CheckAllCollsions();
 
 	//--------------------------------
 	// デバッグカメラ
@@ -236,4 +239,19 @@ void GameScene::Draw() {
 	Sprite::PostDraw();
 
 #pragma endregion
+}
+
+void GameScene::CheckAllCollsions() {
+	//衝突マネージャのリセット
+	collisionManager_->Reset();
+
+	//コライダーをリストに登録
+	collisionManager_->AddCollider(player_.get());
+	//敵すべてに対して
+	for (const std::unique_ptr<Enemy>& enemy : enemies_) {
+		collisionManager_->AddCollider(enemy.get());
+	}
+
+	//衝突判定と応答
+	collisionManager_->CheckAllCollisons();
 }
