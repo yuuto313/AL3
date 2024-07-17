@@ -12,37 +12,43 @@ void LockOn::Initalize() {
 }
 
 void LockOn::Update(const std::list<std::unique_ptr<Enemy>>& enemies, const ViewProjection& viewProjection) {
+	XINPUT_STATE joyState;
+	Input::GetInstance()->GetJoystickState(0, joyState);
+	DWORD dwResult = XInputGetState(0, &joyState);
+
 	// ロックオン状態なら
 	if (target_) {
 		// ロックオン解除処理
-		if (input_->TriggerKey(DIK_R)) {
-			// ロックオンを外す
-			target_ = nullptr;
-		}
-		// 選択外判定
-		 else if (OutsideSelectionRange(viewProjection)) {
-			//ロックオンを外す
-			target_=nullptr;
-		 }
-	} else {
-		// ロックオン対象の検索
-		// ロックオンボタンをトリガーしたら
-		if (input_->TriggerKey(DIK_R)) {
+		if (dwResult == ERROR_SUCCESS) {
+			if (joyState.Gamepad.wButtons && XINPUT_GAMEPAD_A) {
+				// ロックオンを外す
+				target_ = nullptr;
+			}
+			// 選択外判定
+			else if (OutsideSelectionRange(viewProjection)) {
+				// ロックオンを外す
+				target_ = nullptr;
+			}
+		} else {
 			// ロックオン対象の検索
-			Search(enemies, viewProjection);
+			// ロックオンボタンをトリガーしたら
+			if (joyState.Gamepad.wButtons && XINPUT_GAMEPAD_A) {
+				// ロックオン対象の検索
+				Search(enemies, viewProjection);
+			}
 		}
-	}
 
-	// ロックオン継続
-	if (target_) {
-		// 敵のロックオン座標取得
-		Vector3 positionWorld = target_->GetCenterPosition();
-		// ワールド->スクリーン変換
-		Vector3 positionScreen = WorldToScreen(positionWorld, viewProjection);
-		// Vector2に格納
-		Vector2 positionScreenV2(positionScreen.x, positionScreen.y);
-		// スプライトの座標を設定
-		lockOnMark_->SetPosition(positionScreenV2);
+		// ロックオン継続
+		if (target_) {
+			// 敵のロックオン座標取得
+			Vector3 positionWorld = target_->GetCenterPosition();
+			// ワールド->スクリーン変換
+			Vector3 positionScreen = WorldToScreen(positionWorld, viewProjection);
+			// Vector2に格納
+			Vector2 positionScreenV2(positionScreen.x, positionScreen.y);
+			// スプライトの座標を設定
+			lockOnMark_->SetPosition(positionScreenV2);
+		}
 	}
 
 }

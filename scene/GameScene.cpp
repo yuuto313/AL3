@@ -79,6 +79,7 @@ void GameScene::Initialize() {
 	//--------------------------------
 	//ビュープロジェクションの初期化
 	viewProjection_.Initialize();
+	viewProjection_.translation_ = {0.0f, 3.0f, -70.0f};
 
 	//自キャラの初期化
 	player_->Initialize(playerModels);

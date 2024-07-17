@@ -14,40 +14,13 @@ void FollowCamera::Update() {
 	FollowTarget();
 
 	//--------------------------------
-	// カメラ旋回処理
-	//--------------------------------
-
-	RotateCamera();
-
-	//--------------------------------
 	//ビュー行列の更新と転送
 	//--------------------------------
 	viewProjection_.UpdateMatrix();
 
-	ImGui::Begin("Camera");
-	ImGui::DragFloat3("debugCamera.translation", &viewProjection_.translation_.x, 0.03f);
-	ImGui::DragFloat3("debugCamera.rotate", &viewProjection_.rotation_.x, 0.03f);
-	ImGui::End();
-
 }
 
 void FollowCamera::FollowTarget() {
-	//ロックオン中
-	if (lockOn_) {
-		//ロックオン座標
-		Vector3 lockOnPosition = lockOn_->GetTargetPosition();
-		//対風対象からロックオン対象へのベクトル
-		Vector3 sub = lockOnPosition - target_->translation_;
-		//Y軸周り角度
-		viewProjection_.rotation_.y = std::atan2(sub.x, sub.z);
-	} else {
-		//--------------------------------
-		// カメラ旋回処理
-		//--------------------------------
-
-		RotateCamera();
-
-	}
 
 	if (target_) {
 
@@ -69,6 +42,24 @@ void FollowCamera::FollowTarget() {
 		// 座標をコピーしてオフセット分ずらす
 		viewProjection_.translation_ = target_->translation_ + offset;
 	}
+
+
+	// ロックオン中
+	if (lockOn_) {
+		// ロックオン座標
+		Vector3 lockOnPosition = lockOn_->GetTargetPosition();
+		// 対風対象からロックオン対象へのベクトル
+		Vector3 sub = lockOnPosition - target_->translation_;
+		// Y軸周り角度
+		viewProjection_.rotation_.y = std::atan2(sub.x, sub.z);
+	} else {
+		//--------------------------------
+		// カメラ旋回処理
+		//--------------------------------
+
+		RotateCamera();
+	}
+
 }
 
 void FollowCamera::RotateCamera() {

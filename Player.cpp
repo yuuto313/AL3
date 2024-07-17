@@ -14,6 +14,7 @@ void Player::Initialize(const std::vector<Model*>&models) {
 	//textureHandle_ = textureHandle;
 	//  ワールド変換初期化
 	worldTransform_.Initialize();
+	worldTransform_.translation_ = {0.0f, 0.0f, -30.0f};
 	// 体
 	worldTransformBody_.Initialize();
 	worldTransformBody_.translation_ = {0.0f, 0.0f, 0.0f};
@@ -184,25 +185,25 @@ void Player::BehaviorRootUpdate() {
 }
 
 void Player::BehaviorAttackUpdate() { 
-	//ロックオン中
-	if (lockOn_ && lockOn_->ExistTarget()) {
-		// ロックオン座標
-		Vector3 lockOnPosition = lockOn_->GetTargetPosition();
-		// 追従対象からロックオン対象へのベクトル
-		Vector3 sub = lockOnPosition - worldTransform_.translation_;
+	////ロックオン中
+	//if (lockOn_ && lockOn_->ExistTarget()) {
+	//	// ロックオン座標
+	//	Vector3 lockOnPosition = lockOn_->GetTargetPosition();
+	//	// 追従対象からロックオン対象へのベクトル
+	//	Vector3 sub = lockOnPosition - worldTransform_.translation_;
 
-		//距離
-		float distance = Length(sub);
-		//距離しきい値
-		const float threshold = 0.2f;
+	//	//距離
+	//	float distance = Length(sub);
+	//	//距離しきい値
+	//	const float threshold = 0.2f;
 
-		//しきい値より離れているときのみ
-		if (distance > threshold) {
-			//Y軸周り角度
-			worldTransform_.rotation_.y = std::atan2(sub.x, sub.z);
-			//追い越し防止処理未実装
-		}
-	}
+	//	//しきい値より離れているときのみ
+	//	if (distance > threshold) {
+	//		//Y軸周り角度
+	//		worldTransform_.rotation_.y = std::atan2(sub.x, sub.z);
+	//		//追い越し防止処理未実装
+	//	}
+	//}
 
 	
 
