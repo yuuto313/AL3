@@ -159,15 +159,6 @@ void GameScene::Update() {
 #endif // _DEBUG
 
 	if (isDebugCameraActive_) {
-		//追従カメラの更新
-		followCamera_->Update();
-		viewProjection_.matView = followCamera_->GetViewProjection().matView;
-
-		viewProjection_.matProjection = followCamera_->GetViewProjection().matProjection;
-
-		// ビュープロジェクション行列の転送
-		viewProjection_.TransferMatrix();
-	} else {
 		// デバッグカメラの更新
 		debugCamera_->Update();
 		viewProjection_.matView = debugCamera_->GetViewProjection().matView;
@@ -176,6 +167,16 @@ void GameScene::Update() {
 
 		// ビュープロジェクション行列の更新と転送
 		viewProjection_.UpdateMatrix();
+	} else {
+
+		// 追従カメラの更新
+		followCamera_->Update();
+		viewProjection_.matView = followCamera_->GetViewProjection().matView;
+
+		viewProjection_.matProjection = followCamera_->GetViewProjection().matProjection;
+
+		// ビュープロジェクション行列の転送
+		viewProjection_.TransferMatrix();
 	}
 }
 	

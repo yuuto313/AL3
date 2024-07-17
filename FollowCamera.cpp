@@ -45,7 +45,7 @@ void FollowCamera::FollowTarget() {
 
 
 	// ロックオン中
-	if (lockOn_) {
+	if (lockOn_ && lockOn_->ExistTarget()) {
 		// ロックオン座標
 		Vector3 lockOnPosition = lockOn_->GetTargetPosition();
 		// 対風対象からロックオン対象へのベクトル
@@ -64,9 +64,17 @@ void FollowCamera::FollowTarget() {
 
 void FollowCamera::RotateCamera() {
 	XINPUT_STATE joyState;
-
+	const float rotate = 0.03f;
 	if (Input::GetInstance()->GetJoystickState(0, joyState)) {
-		const float rotate = 0.03f;
 		viewProjection_.rotation_.y += (float)joyState.Gamepad.sThumbRX / SHRT_MAX * rotate;
 	}
+
+	if (Input::GetInstance()->PushKey(DIK_LEFTARROW)) {
+		viewProjection_.rotation_.y -= rotate;
+	}
+	if (Input::GetInstance()->PushKey(DIK_RIGHTARROW)) {
+		viewProjection_.rotation_.y += rotate;
+	}
+
+	
 }
