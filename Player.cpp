@@ -344,12 +344,16 @@ void Player::Movement() {
 		Vector3 acceleration = {};
 		if (Input::GetInstance()->PushKey(DIK_W)) {
 
-			acceleration.x += kAcceleration;
+			acceleration.z += speed;
 
 		} else if (Input::GetInstance()->PushKey(DIK_S)) {
 
-			acceleration.x -= kAcceleration;
+			acceleration.z -= speed;
 		}
+		velocity_ = acceleration;
+	}
+
+
 
 	if (input_->PushKey(DIK_W)) {
 		velocity_.z = speed;
@@ -366,20 +370,6 @@ void Player::Movement() {
 	if (input_->PushKey(DIK_D)) {
 		velocity_.x = speed;
 	}
-
-	// カメラの回転角度を取得
-	Vector3 rotationAngle = {GetViewProjection()->rotation_.x, GetViewProjection()->rotation_.y, GetViewProjection()->rotation_.z};
-
-	////カメラの角度から回転行列を計算する
-	Matrix4x4 rotateXMatrix = MakeRotateXMatrix(rotationAngle.x);
-	Matrix4x4 rotateYMatrix = MakeRotateYMatrix(rotationAngle.y);
-	Matrix4x4 rotateZMatrix = MakeRotateZMatrix(rotationAngle.z);
-	Matrix4x4 rotateXYZMatrix = Multiply(rotateXMatrix, Multiply(rotateYMatrix, rotateZMatrix));
-
-	// 移動ベクトルをカメラの座標だけ回転する
-	velocity_ = TransformNormal(velocity_, rotateXYZMatrix);
-	// 移動
-	worldTransform_.translation_ += velocity_;
 
 	//--------------------------------
 	// 移動方向に見た目を合わせる
