@@ -338,6 +338,19 @@ void Player::Movement() {
 	// キーボードで移動操作
 	//--------------------------------
 
+	// 左右移動操作
+	if (Input::GetInstance()->PushKey(DIK_W) || Input::GetInstance()->PushKey(DIK_S)) {
+		// 左右加速
+		Vector3 acceleration = {};
+		if (Input::GetInstance()->PushKey(DIK_W)) {
+
+			acceleration.x += kAcceleration;
+
+		} else if (Input::GetInstance()->PushKey(DIK_S)) {
+
+			acceleration.x -= kAcceleration;
+		}
+
 	if (input_->PushKey(DIK_W)) {
 		velocity_.z = speed;
 	}
