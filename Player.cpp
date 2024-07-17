@@ -149,14 +149,6 @@ void Player::BehaviorRootUpdate() {
 
 	UpdateFloatingGimmick();
 
-	//--------------------------------
-	// ジャンプ発動
-	//--------------------------------
-
-	if (input_->TriggerKey(DIK_SPACE)) {
-		// ジャンプリクエスト
-		behaviorRequest_ = Behavior::kJump;
-	}
 
 	//--------------------------------
 	// ImGui
@@ -175,12 +167,6 @@ void Player::BehaviorRootUpdate() {
 	ImGui::SliderFloat("floatingAmplitude", &amplitude_, -10.0f, 10.0f);
 
 	ImGui::SliderFloat3("Weapon.rotate", &worldTransformWeapon_.rotation_.x, -10.0f, 10.f);
-
-	bool attack = false;
-	ImGui::Checkbox("Attack", &attack);
-	if (attack) {
-		behaviorRequest_ = Behavior::kAttack;
-	}
 	ImGui::End();
 }
 
@@ -301,19 +287,19 @@ void Player::ChangeBehavior() {
 
 void Player::Movement() {
 	//--------------------------------
-	//コントローラーで移動処理
+	// コントローラーで移動処理
 	//--------------------------------
-	//速さ 
+	// 速さ
 	const float speed = 0.3f;
 	XINPUT_STATE joyState;
 
 	Input::GetInstance()->GetJoystickState(0, joyState);
 
-	if ((float)joyState.Gamepad.sThumbLX !=0 || (float)joyState.Gamepad.sThumbLY != 0) {
-		
-		//移動量
+	if ((float)joyState.Gamepad.sThumbLX != 0 || (float)joyState.Gamepad.sThumbLY != 0) {
+
+		// 移動量
 		velocity_ = {(float)joyState.Gamepad.sThumbLX / SHRT_MAX, 0.0f, (float)joyState.Gamepad.sThumbLY / SHRT_MAX};
-		//移動量に速さを反映
+		// 移動量に速さを反映
 		velocity_ = velocity_ * speed;
 
 		// カメラの回転角度を取得
@@ -325,27 +311,87 @@ void Player::Movement() {
 		Matrix4x4 rotateZMatrix = MakeRotateZMatrix(rotationAngle.z);
 		Matrix4x4 rotateXYZMatrix = Multiply(rotateXMatrix, Multiply(rotateYMatrix, rotateZMatrix));
 
-		//移動ベクトルをカメラの座標だけ回転する
+		// 移動ベクトルをカメラの座標だけ回転する
 		velocity_ = TransformNormal(velocity_, rotateXYZMatrix);
-		
-		//移動
+
+		// 移動
 		worldTransform_.translation_ += velocity_;
-		
+
 		//--------------------------------
 		// 移動方向に見た目を合わせる
 		//--------------------------------
 
-		//Y軸周りの角度
+		// Y軸周りの角度
 		worldTransform_.rotation_.y = std::atan2(velocity_.x, velocity_.z);
-		
+
 	} else if (lockOn_ && lockOn_->ExistTarget()) {
-		//ロックオン座標
+		// ロックオン座標
 		Vector3 lockOnPosition = lockOn_->GetTargetPosition();
-		//追従対象からロックオン対象へのベクトル
+		// 追従対象からロックオン対象へのベクトル
 		Vector3 sub = lockOnPosition - worldTransform_.translation_;
 
-		//Y軸周り角度
+		// Y軸周り角度
 		worldTransform_.rotation_.y = std::atan2(sub.x, sub.z);
+	}
+
+	//--------------------------------
+	// キーボードで移動操作
+	//--------------------------------
+
+	if (input_->PushKey(DIK_W)) {
+		velocity_.z = speed;
+	}
+
+	if (input_->PushKey(DIK_S)) {
+		velocity_.z = -speed;
+	}
+
+	if (input_->PushKey(DIK_A)) {
+		velocity_.x = -speed;
+	}
+
+	if (input_->PushKey(DIK_D)) {
+		velocity_.x = speed;
+	}
+
+	// カメラの回転角度を取得
+	Vector3 rotationAngle = {GetViewProjection()->rotation_.x, GetViewProjection()->rotation_.y, GetViewProjection()->rotation_.z};
+
+	////カメラの角度から回転行列を計算する
+	Matrix4x4 rotateXMatrix = MakeRotateXMatrix(rotationAngle.x);
+	Matrix4x4 rotateYMatrix = MakeRotateYMatrix(rotationAngle.y);
+	Matrix4x4 rotateZMatrix = MakeRotateZMatrix(rotationAngle.z);
+	Matrix4x4 rotateXYZMatrix = Multiply(rotateXMatrix, Multiply(rotateYMatrix, rotateZMatrix));
+
+	// 移動ベクトルをカメラの座標だけ回転する
+	velocity_ = TransformNormal(velocity_, rotateXYZMatrix);
+	// 移動
+	worldTransform_.translation_ += velocity_;
+
+	//--------------------------------
+	// 移動方向に見た目を合わせる
+	//--------------------------------
+
+	// Y軸周りの角度
+	worldTransform_.rotation_.y = std::atan2(velocity_.x, velocity_.z);
+
+
+	// 移動
+	//--------------------------------
+	// ジャンプ発動
+	//--------------------------------
+
+	if (input_->TriggerKey(DIK_SPACE) || joyState.Gamepad.wButtons & XINPUT_GAMEPAD_A) {
+		// ジャンプリクエスト
+		behaviorRequest_ = Behavior::kJump;
+	}
+
+	//--------------------------------
+	// 攻撃発動
+	//--------------------------------
+	
+	if (input_->TriggerKey(DIK_J) || joyState.Gamepad.wButtons & XINPUT_GAMEPAD_B) {
+		behaviorRequest_ = Behavior::kAttack;
 	}
 }
 

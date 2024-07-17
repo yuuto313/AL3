@@ -14,12 +14,16 @@ void LockOn::Initalize() {
 void LockOn::Update(const std::list<std::unique_ptr<Enemy>>& enemies, const ViewProjection& viewProjection) {
 	XINPUT_STATE joyState;
 	Input::GetInstance()->GetJoystickState(0, joyState);
+	static bool isALocked = false;
 	// ロックオン状態なら
 	if (target_) {
 		// ロックオン解除処理
-		if (joyState.Gamepad.wButtons & XINPUT_GAMEPAD_RIGHT_THUMB) {
+		if (joyState.Gamepad.wButtons & XINPUT_GAMEPAD_RIGHT_SHOULDER && !isALocked) {
 			// ロックオンを外す
 			target_ = nullptr;
+			isALocked = true;
+		} else if (!(joyState.Gamepad.wButtons & XINPUT_GAMEPAD_RIGHT_SHOULDER)) {
+			isALocked = false;
 		}
 		// 選択外判定
 		else if (OutsideSelectionRange(viewProjection)) {
@@ -29,9 +33,12 @@ void LockOn::Update(const std::list<std::unique_ptr<Enemy>>& enemies, const View
 	} else {
 		// ロックオン対象の検索
 		// ロックオンボタンをトリガーしたら
-		if (joyState.Gamepad.wButtons & XINPUT_GAMEPAD_RIGHT_THUMB) {
+		if (joyState.Gamepad.wButtons & XINPUT_GAMEPAD_RIGHT_SHOULDER && !isALocked) {
 			// ロックオン対象の検索
 			Search(enemies, viewProjection);
+			isALocked = true;
+		} else if (!(joyState.Gamepad.wButtons & XINPUT_GAMEPAD_RIGHT_SHOULDER)) {
+			isALocked = false;
 		}
 	}
 
