@@ -6,7 +6,6 @@
 
 #include <memory>
 
-
 /// <summary>
 /// ロックオン
 /// </summary>
