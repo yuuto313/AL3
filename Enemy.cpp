@@ -6,7 +6,7 @@ void Enemy::Initialize(const std::vector<Model*>& models) {
 
 	//ワールド行列の初期化
 	worldTransform_.Initialize();
-	worldTransform_.translation_ = {5.0f, 0.0f, 3.0f};
+	worldTransform_.translation_ = {0.0f, 0.0f, 3.0f};
 	worldTransformWeapon_.Initialize();
 
 	//本体と親子関係を結ぶ
