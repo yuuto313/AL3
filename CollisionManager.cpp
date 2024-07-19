@@ -1,5 +1,6 @@
 #include "CollisionManager.h"
 #include "MyMath.h"
+
 void CollisionManager::Reset() {
 	//リストを空っぽにする
 	colliders_.clear();
