@@ -87,9 +87,6 @@ void Player::Update() {
 	worldTransformLeftArm_.UpdateMatrix();
 	worldTransformWeapon_.UpdateMatrix();
 
-	if (input_->TriggerKey(DIK_RETURN)) {
-		GlobalVariables::GetInstance()->SaveFile("Player");
-	}
 
 }
 

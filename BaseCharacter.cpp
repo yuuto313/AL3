@@ -1,6 +1,7 @@
 #include "BaseCharacter.h"
 
 void BaseCharacter::Initialize(const std::vector<Model*>& models) {
+	Collider::Initialize();
 	models_ = models;
 	worldTransform_.Initialize();
 }

@@ -1,5 +1,44 @@
 #include "CollisionManager.h"
 #include "MyMath.h"
+void CollisionManager::Initialize() { 
+	model_.reset(Model::CreateFromOBJ("ICO", true));
+
+	GlobalVariables* globalVariables = GlobalVariables::GetInstance();
+	const char* groupName = "Collision";
+	// グループを追加
+	GlobalVariables::GetInstance()->CreateGroup(groupName);
+
+	globalVariables->AddItem(groupName, "Visible", &drawCollider_);
+
+}
+void CollisionManager::UpdateWorldTransform() {
+
+	GlobalVariables* globalVariables = GlobalVariables::GetInstance();
+	const char* groupname = "Collision";
+	drawCollider_ = globalVariables->GetBoolValue(groupname, "Visible");
+
+	// 非表示なら抜ける
+	if (!drawCollider_) {
+		return;
+	}
+
+	//すべてのコライダーについて
+	for (Collider* collider : colliders_) {
+		collider->UpdateWorldTransform();
+	}
+
+}
+void CollisionManager::Draw(const ViewProjection& viewProjection) {
+	// 非表示なら抜ける
+	if (!drawCollider_) {
+		return;
+	}
+
+	//すべてのコライダーについて
+	for (Collider* collider : colliders_) {
+		collider->Draw(model_.get(), viewProjection);
+	}
+}
 void CollisionManager::Reset() {
 	//リストを空っぽにする
 	colliders_.clear();

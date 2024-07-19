@@ -103,6 +103,9 @@ void GameScene::Initialize() {
 	//ロックオンの初期化
 	lockOn_->Initalize();
 
+	//衝突マネージャ初期化
+	collisionManager_->Initialize();
+
 	//自キャラに追従カメラのビュープロジェクションをアドレス渡しする
 	player_->SetViewProjection(&followCamera_->GetViewProjection());
 
@@ -139,6 +142,9 @@ void GameScene::Update() {
 
 	//ロックオンの更新
 	lockOn_->Update(enemies_,viewProjection_);
+
+	//衝突マネージャ更新
+	collisionManager_->UpdateWorldTransform();
 
 	//衝突判定と応答
 	CheckAllCollsions();
@@ -217,6 +223,9 @@ void GameScene::Draw() {
 	skydome_->Draw();
 
 	ground_->Draw();
+
+	//衝突マネージャ描画
+	collisionManager_->Draw(viewProjection_);
 
 	// 3Dオブジェクト描画後処理
 	Model::PostDraw();
