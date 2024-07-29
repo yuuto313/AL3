@@ -30,7 +30,10 @@ GameScene::~GameScene() {
 
 	delete cameraController_;
 
-	delete enemy_;
+	for (Enemy* enemy : enemies_) {
+		delete enemy;
+	}
+	enemies_.clear();
 
 }
 
@@ -84,15 +87,19 @@ void GameScene::Initialize() {
 	//移動範囲の指定
 	cameraController_->SetMovableArea({20.f, 50.f, 0.f, 100.f});
 
-	enemy_ = new Enemy();
-	Vector3 enemyPosition = mapChipField_->GetMapChipPositionByIndex(8, 18);
-	enemy_->Initialize(playerModel_,&viewProjection_,enemyPosition);
+	Vector3 positions[] = {mapChipField_->GetMapChipPositionByIndex(8, 18), mapChipField_->GetMapChipPositionByIndex(10, 20), mapChipField_->GetMapChipPositionByIndex(12, 22)};
+
+	for (int32_t i = 0; i < 3; ++i) {
+		Enemy* newEnemy = new Enemy();
+	Vector3 enemyPosition = positions[i];
+		newEnemy->Initialize(playerModel_,&viewProjection_,enemyPosition);
+		enemies_.push_back(newEnemy);
+	}
+
 
 }
 
 void GameScene::Update() {
-
-	// 02_01
 
 	// 自キャラの更新
 	player_->Update();
@@ -102,8 +109,9 @@ void GameScene::Update() {
 
 	cameraController_->Update();
 
-	enemy_->Update();
-	// 02_02
+	for (Enemy* enemy : enemies_) {
+		enemy->Update();
+	}
 
 	// ブロックの更新
 	for (std::vector<WorldTransform*>& worldTransformBlockLine : worldTransformBlocks_) {
@@ -177,7 +185,9 @@ void GameScene::Draw() {
 
 	player_->Draw();
 	
-	enemy_->Draw();
+	for (Enemy* enemy : enemies_) {
+		enemy->Draw();
+	}
 
 	for (std::vector<WorldTransform*>& worldTransformBlockLine : worldTransformBlocks_) {
 		for (WorldTransform* worldTransformBlock : worldTransformBlockLine) {
