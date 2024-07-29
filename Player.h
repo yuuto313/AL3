@@ -2,8 +2,9 @@
 #include "WorldTransform.h"
 #include "cassert"
 #include "DebugCamera.h"
-//#include "MapChipField.h"
+
 class MapChipField;
+class Enemy;
 
 #pragma once
 /// <summary>
@@ -14,21 +15,25 @@ public:
 
 	Player();
 	~Player();
+
 	/// <summary>
 	/// 初期化
 	/// </summary>
 	/// <param name="model">モデル</param>
 	/// <param name="textureHandle">テクスチャハンドル</param>
 	/// <param name="viewProjection">ビュープロジェクション</param>
-	void Init(Model* model,ViewProjection* viewProjection,const Vector3& position);
+	void Initialize(Model* model,ViewProjection* viewProjection,const Vector3& position);
+
 	/// <summary>
 	/// 更新
 	/// </summary>
 	void Update();
+
 	/// <summary>
 	/// 描画
 	/// </summary>
 	void Draw();
+
 	/// <summary>
 	/// 移動入力
 	/// </summary>
@@ -122,21 +127,37 @@ public:
 	/// </summary>
 	/// <returns></returns>
 	const WorldTransform& GetWorldTransform() { return worldTransform_; }
+
+	/// <summary>
+	/// ワールド座標を取得する
+	/// </summary>
+	/// <returns></returns>
+	Vector3 GetWorldPosition();
+
+	/// <summary>
+	/// AABBを取得する
+	/// </summary>
+	/// <returns></returns>
+	AABB GetAABB();
+
 	/// <summary>
 	/// 自キャラの速度を取得するためのゲッター
 	/// </summary>
 	/// <returns></returns>
 	const Vector3& GetVelocity() const { return velocity_; }
+
 	/// <summary>
 	/// マップチップのセッター
 	/// </summary>
 	/// <param name="mapChipField"></param>
 	void SetMapChipField(MapChipField* mapChipField) { mapChipField_ = mapChipField; }
+
 	/// <summary>
 	/// マップ衝突判定
 	/// </summary>
 	/// <param name="info"></param>
 	void IsCollision(CollisionMapInfo& info);
+
 	/// <summary>
 	/// 指定した角の座標計算
 	/// </summary>
@@ -144,46 +165,60 @@ public:
 	/// <param name="corner"></param>
 	/// <returns></returns>
 	Vector3 CornerPosition(const Vector3& center, Corner corner);
+
 	/// <summary>
 	/// 上方向の当たり判定
 	/// </summary>
 	/// <param name="info"></param>
 	/// <returns></returns>
 	void IsCollisionUp(CollisionMapInfo& info);
+
 	/// <summary>
 	/// 下方向の当たり判定
 	/// </summary>
 	/// <param name="info"></param>
 	void IsCollisionDown(CollisionMapInfo& info);
+
 	/// <summary>
 	/// 右方向の当たり判定
 	/// </summary>
 	/// <param name="info"></param>
 	void IsCollisionRight(CollisionMapInfo& info);
+
 	/// <summary>
 	/// 左方向の当たり判定
 	/// </summary>
 	/// <param name="info"></param>
 	void IsCollisionLeft(CollisionMapInfo& info);
+
 	/// <summary>
 	/// 設置状態の切り替え処理
 	/// </summary>
 	/// <param name="info"></param>
 	void HitsTheLanding(const CollisionMapInfo& info);
+
 	/// <summary>
 	/// 判定結果を反映して移動させる
 	/// </summary>
 	/// <param name="info"></param>
 	void Reflection(const CollisionMapInfo& info);
+
 	/// <summary>
 	/// 天井に当たってる場合の処理
 	/// </summary>
 	/// <param name="info"></param>
 	void HitsTheCeiling(const CollisionMapInfo& info);
+
 	/// <summary>
 	/// 壁に接触してる場合の処理
 	/// </summary>
 	/// <param name="info"></param>
 	void HitsTheWall(const CollisionMapInfo& info);
+
+	/// <summary>
+	/// 衝突応答
+	/// </summary>
+	/// <param name="enemy"></param>
+	void OnCollision(const Enemy* enemy);
 
 };

@@ -2,6 +2,9 @@
 #include "ViewProjection.h"
 #include "WorldTransform.h"
 #include "Model.h"
+
+class Player;
+
 class Enemy {
 public:
 	Enemy();
@@ -38,4 +41,25 @@ private:
 	//経過時間
 	float walkTimer_ = 0.0f;
 
+	// キャラクターの当たり判定サイズ
+	static inline const float kWidth = 0.8f;
+	static inline const float kHeight = 0.8f;
+
+public:
+	/// <summary>
+	/// ワールド座標を取得する
+	/// </summary>
+	/// <returns></returns>
+	Vector3 GetWorldPosition();
+
+	/// <summary>
+	/// AABBを取得する
+	/// </summary>
+	/// <returns></returns>
+	AABB GetAABB();
+
+	/// <summary>
+	/// 衝突応答
+	/// </summary>
+	void OnCollision(const Player* player);
 };

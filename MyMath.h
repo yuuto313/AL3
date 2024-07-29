@@ -4,6 +4,13 @@
 #include <Matrix4x4.h>
 #include <corecrt_math_defines.h>
 
+// 直方体
+// Axis Aligned Bounding Box（軸平行境界箱）
+struct AABB {
+	Vector3 min; // 最小点
+	Vector3 max; // 最大点
+};
+
 float Radians(float radian);
 
 // 線形補間
@@ -31,3 +38,5 @@ Matrix4x4 MakeOrthographicMatrix(float left, float top, float right, float botto
 // ビューポート変換行列
 Matrix4x4 MakeViewportMatrix(float left, float top, float width, float height, float minDepth, float maxDepth);
 
+// AABBとAABBの衝突判定
+bool IsCollisionAABB(const AABB& aabb1, const AABB& aabb2);

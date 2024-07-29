@@ -63,7 +63,7 @@ void GameScene::Initialize() {
 	//座標をマップチップ番号で指定
 	Vector3 playerPosition = mapChipField_->GetMapChipPositionByIndex(3, 18);
 	//自キャラの初期化
-	player_->Init(playerModel_,&viewProjection_,playerPosition);
+	player_->Initialize(playerModel_, &viewProjection_, playerPosition);
 	player_->SetMapChipField(mapChipField_);
 
 	dataModel_ = Model::Create();
@@ -87,7 +87,7 @@ void GameScene::Initialize() {
 	//移動範囲の指定
 	cameraController_->SetMovableArea({20.f, 50.f, 0.f, 100.f});
 
-	Vector3 positions[] = {mapChipField_->GetMapChipPositionByIndex(8, 18), mapChipField_->GetMapChipPositionByIndex(10, 20), mapChipField_->GetMapChipPositionByIndex(12, 22)};
+	Vector3 positions[] = {mapChipField_->GetMapChipPositionByIndex(20, 18), mapChipField_->GetMapChipPositionByIndex(30, 18), mapChipField_->GetMapChipPositionByIndex(35, 18)};
 
 	for (int32_t i = 0; i < 3; ++i) {
 		Enemy* newEnemy = new Enemy();
@@ -108,6 +108,9 @@ void GameScene::Update() {
 	skydome_->Update();
 
 	cameraController_->Update();
+
+	//当たり判定を行う
+	CheckAllCollisions();
 
 	for (Enemy* enemy : enemies_) {
 		enemy->Update();
@@ -246,4 +249,30 @@ void GameScene::GenerateBlocks() {
 			}
 		}
 	}
+}
+
+void GameScene::CheckAllCollisions() {
+	#pragma region 自キャラと敵キャラの当たり判定　
+
+	//判定対象1と2の座標
+	AABB aabb1, aabb2;
+
+	//自キャラの座標
+	aabb1 = player_->GetAABB();
+
+	//敵キャラすべての当たり判定
+	for (Enemy* enemy : enemies_) {
+		//敵キャラの当たり判定
+		aabb2 = enemy->GetAABB();
+
+		//AABB同士の交差判定
+		if (IsCollisionAABB(aabb1, aabb2)) {
+			//自キャラの衝突判定コールバックを呼び出す
+			player_->OnCollision(enemy);
+			enemy->OnCollision(player_);
+		}
+	}
+
+
+	#pragma endregion
 }

@@ -12,7 +12,7 @@ Player::Player() {}
 
 Player::~Player() {}
 
-void Player::Init(Model* model, ViewProjection* viewProjection,const Vector3& position) { 
+void Player::Initialize(Model* model, ViewProjection* viewProjection, const Vector3& position) { 
 	//NULLポインタチェック
 	assert(model);
 	//引数として受け取ったデータをメンバ変数に記録する
@@ -196,6 +196,26 @@ void Player::IsCollision(CollisionMapInfo& info) {
 	IsCollisionDown(info);
 	IsCollisionRight(info);
 	IsCollisionLeft(info);
+}
+
+Vector3 Player::GetWorldPosition() {
+	// ワールド座標を入れる変数
+	Vector3 worldPos;
+	worldPos.x = worldTransform_.matWorld_.m[3][0];
+	worldPos.y = worldTransform_.matWorld_.m[3][1];
+	worldPos.z = worldTransform_.matWorld_.m[3][2];
+
+	return worldPos;
+}
+
+AABB Player::GetAABB() {
+	Vector3 worldPos = GetWorldPosition();
+
+	AABB aabb;
+	aabb.min = {worldPos.x - kWidth / 2.0f, worldPos.y - kHeight / 2, worldPos.z - kWidth / 2};
+	aabb.max = {worldPos.x + kWidth / 2.0f, worldPos.y + kHeight / 2, worldPos.z + kWidth / 2};
+
+	return aabb;
 }
 
 Vector3 Player::CornerPosition(const Vector3& center, Corner corner) {
@@ -451,6 +471,15 @@ void Player::HitsTheWall(const CollisionMapInfo& info) {
 	if (info.hitWall) {
 		velocity_.x *= (1.0f - kAttenuationWall);
 	}
+}
+
+void Player::OnCollision(const Enemy* enemy) { 
+	(void)enemy;
+
+	const float speed = 1.0f;
+
+	//ジャンプ（仮実装)
+	velocity_ += Vector3(0.0f, speed, 0.0f);
 }
 
 
