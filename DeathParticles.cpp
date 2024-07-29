@@ -1,5 +1,6 @@
 #include "DeathParticles.h"
 #include <cassert>
+#include <algorithm>
 void DeathParticles::Initialize(Model* model, ViewProjection* viewProjection,const Vector3& position) {
 	//メンバ変数初期化
 	assert(model);
@@ -11,6 +12,9 @@ void DeathParticles::Initialize(Model* model, ViewProjection* viewProjection,con
 		worldTransform.Initialize();
 		worldTransform.translation_ = position;
 	}
+
+	objectColor_.Initialize();
+	color_ = {1.0f, 1.0f, 1.0f, 1.0};
 }
 
 void DeathParticles::Update() {
@@ -44,6 +48,12 @@ void DeathParticles::Update() {
 		isFinished_ = true;
 	}
 
+	color_.w = std::clamp((kDuration - counter_) / kDuration, 0.0f, 1.0f);
+	//色変更オブジェクトに色の数値を設定をする
+	objectColor_.SetColor(color_);
+	//色変更オブジェクトをVRAMに転送
+	objectColor_.TransferMatrix();
+
 	//ワールド変換の更新
 	for (auto& worldTransform : worldTransforms_) {
 		worldTransform.UpdateMatrix();
@@ -57,6 +67,6 @@ void DeathParticles::Draw() {
 	}
 	//モデルの描画
 	for (auto& worldTransform : worldTransforms_) {
-		model_->Draw(worldTransform, *viewProjevtion_);
+		model_->Draw(worldTransform, *viewProjevtion_,&objectColor_);
 	}
 }
