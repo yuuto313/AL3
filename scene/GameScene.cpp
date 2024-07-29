@@ -252,7 +252,7 @@ void GameScene::GenerateBlocks() {
 }
 
 void GameScene::CheckAllCollisions() {
-	#pragma region 自キャラと敵キャラの当たり判定　
+
 
 	//判定対象1と2の座標
 	AABB aabb1, aabb2;
@@ -274,5 +274,5 @@ void GameScene::CheckAllCollisions() {
 	}
 
 
-	#pragma endregion
+
 }
