@@ -7,12 +7,8 @@ GameScene::GameScene() {}
 GameScene::~GameScene() {
 	//解放
 
-	//02_01
-
 	delete playerModel_;
 	delete player_;
-
-	//02_02
 
 	delete dataModel_;
 	for (std::vector<WorldTransform*>& worldTransformBlockLine : worldTransformBlocks_) {
@@ -41,10 +37,6 @@ void GameScene::Initialize() {
 
 	dxCommon_ = DirectXCommon::GetInstance();
 	input_ = Input::GetInstance();
-
-
-	//ファイル名を指定してテクスチャを読み込む
-	//textureHandle_ = TextureManager::Load("vector.png");
 
 	//プレイヤー3Dモデルデータの生成
 	playerModel_ = Model::CreateFromOBJ("player", true);
@@ -91,10 +83,17 @@ void GameScene::Initialize() {
 
 	for (int32_t i = 0; i < 3; ++i) {
 		Enemy* newEnemy = new Enemy();
-	Vector3 enemyPosition = positions[i];
+		Vector3 enemyPosition = positions[i];
 		newEnemy->Initialize(playerModel_,&viewProjection_,enemyPosition);
 		enemies_.push_back(newEnemy);
 	}
+
+	//デスパーティクルのモデル
+	deathParticleModel_ = Model::CreateFromOBJ("deathParticle", true);
+
+	//仮の生成処理
+	deathParticles_ = new DeathParticles;
+	deathParticles_->Initialize(deathParticleModel_, &viewProjection_, playerPosition);
 
 
 }
@@ -103,8 +102,12 @@ void GameScene::Update() {
 
 	// 自キャラの更新
 	player_->Update();
+
+	if (deathParticles_) {
+		deathParticles_->Update();
+	}
 	
-	//02_03
+	//天球
 	skydome_->Update();
 
 	cameraController_->Update();
@@ -187,6 +190,10 @@ void GameScene::Draw() {
 	/// </summary>
 
 	player_->Draw();
+
+	if (deathParticles_) {
+		deathParticles_->Draw();
+	}
 	
 	for (Enemy* enemy : enemies_) {
 		enemy->Draw();

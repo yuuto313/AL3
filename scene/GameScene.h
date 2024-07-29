@@ -6,6 +6,7 @@
 #include "MyMath.h"
 #include "CameraController.h"
 #include "Enemy.h"
+#include "DeathParticles.h"
 
 #include "DirectXCommon.h"
 #include "Input.h"
@@ -60,8 +61,7 @@ private: // メンバ変数
 	DirectXCommon* dxCommon_ = nullptr;
 	Input* input_ = nullptr;
 
-	//02_01
-	
+		
 	//自キャラ
 	Player* player_ = nullptr;
 	//プレイヤー3Dモデル
@@ -70,8 +70,6 @@ private: // メンバ変数
 	uint32_t textureHandle_ = 0;
 	//ビュープロジェクション
 	ViewProjection viewProjection_;
-
-	//02_02
 
 	//3Dモデルデータ
 	Model* dataModel_ = nullptr;
@@ -87,7 +85,6 @@ private: // メンバ変数
 	//デバッグカメラ
 	DebugCamera* debugCamera_ = nullptr;
 
-	//02_03	
 	Skydome* skydome_ = nullptr;
 
 	//3Dモデル描画
@@ -100,6 +97,11 @@ private: // メンバ変数
 
 	//敵
 	std::list<Enemy*> enemies_;
+
+	//デスパーティクル
+	Model* deathParticleModel_ = nullptr;
+	DeathParticles* deathParticles_ = nullptr;
+
 
 	/// <summary>
 	/// ゲームシーン用
