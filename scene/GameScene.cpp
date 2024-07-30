@@ -91,45 +91,67 @@ void GameScene::Initialize() {
 	//デスパーティクルのモデル
 	deathParticleModel_ = Model::CreateFromOBJ("deathParticle", true);
 
-	//仮の生成処理
-	deathParticles_ = new DeathParticles;
-	deathParticles_->Initialize(deathParticleModel_, &viewProjection_, playerPosition);
-
-
+	//ゲームプレイフェーズから開始
+	phase_ = Phase::kPlay;
 }
 
 void GameScene::Update() {
 
-	// 自キャラの更新
-	player_->Update();
+	switch (phase_) {
+	case GameScene::Phase::kPlay:
 
-	if (deathParticles_) {
-		deathParticles_->Update();
-	}
-	
-	//天球
-	skydome_->Update();
+		// 自キャラの更新
+		player_->Update();
 
-	cameraController_->Update();
+		// 天球
+		skydome_->Update();
 
-	//当たり判定を行う
-	CheckAllCollisions();
+		//カメラコントローラの更新
+		cameraController_->Update();
 
-	for (Enemy* enemy : enemies_) {
-		enemy->Update();
-	}
+		// 当たり判定を行う
+		CheckAllCollisions();
 
-	// ブロックの更新
-	for (std::vector<WorldTransform*>& worldTransformBlockLine : worldTransformBlocks_) {
-		for (WorldTransform* worldTransformBlock : worldTransformBlockLine) {
-			if (!worldTransformBlock)
-				continue;
-			worldTransformBlock->matWorld_ = MakeAffineMatrix(worldTransformBlock->scale_, worldTransformBlock->rotation_, worldTransformBlock->translation_);
-
-			// 定数バッファに転送する
-			worldTransformBlock->TransferMatrix();
+		//敵の更新
+		for (Enemy* enemy : enemies_) {
+			enemy->Update();
 		}
+		
+		// ブロックの更新
+		UpdateBlocks();
+
+		break;
+	case GameScene::Phase::kDeath:
+
+		//デスパーティクルの更新
+		if (deathParticles_) {
+			deathParticles_->Update();
+		}
+
+		// 天球
+		skydome_->Update();
+
+		// カメラコントローラの更新
+		cameraController_->Update();
+
+		// 当たり判定を行う
+		CheckAllCollisions();
+
+		// 敵の更新
+		for (Enemy* enemy : enemies_) {
+			enemy->Update();
+		}
+
+		//ブロックの更新
+		UpdateBlocks();
+
+		break;
+	default:
+		break;
 	}
+
+	//	フェーズの切り替え
+	ChangePhase();
 
 #ifdef _DEBUG
 
@@ -258,6 +280,20 @@ void GameScene::GenerateBlocks() {
 	}
 }
 
+void GameScene::UpdateBlocks() {
+	// ブロックの更新
+	for (std::vector<WorldTransform*>& worldTransformBlockLine : worldTransformBlocks_) {
+		for (WorldTransform* worldTransformBlock : worldTransformBlockLine) {
+			if (!worldTransformBlock)
+				continue;
+			worldTransformBlock->matWorld_ = MakeAffineMatrix(worldTransformBlock->scale_, worldTransformBlock->rotation_, worldTransformBlock->translation_);
+
+			// 定数バッファに転送する
+			worldTransformBlock->TransferMatrix();
+		}
+	}
+}
+
 void GameScene::CheckAllCollisions() {
 
 
@@ -282,4 +318,32 @@ void GameScene::CheckAllCollisions() {
 
 
 
+}
+
+void GameScene::ChangePhase() {
+	switch (phase_) {
+	case GameScene::Phase::kPlay:
+
+		if (player_->IsDead()) {
+			//死亡演出フェーズに切り替え
+			phase_ = Phase::kDeath;
+			//自キャラの座標を取得
+			const Vector3& deathParticlesPosition = player_->GetWorldPosition();
+
+			//自キャラの座標に	デスパーティクルを発生、初期化
+			deathParticles_ = new DeathParticles;
+			deathParticles_->Initialize(deathParticleModel_, &viewProjection_, deathParticlesPosition);
+		}
+
+		break;
+	case GameScene::Phase::kDeath:
+
+		if (deathParticles_ && deathParticles_->IsFinished()) {
+			finished_ = true;
+		}
+
+		break;
+	default:
+		break;
+	}
 }

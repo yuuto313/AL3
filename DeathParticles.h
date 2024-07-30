@@ -29,6 +29,12 @@ public:
 	/// </summary>
 	void Draw();
 
+	/// <summary>
+	/// デスパーティクル終了のゲッター
+	/// </summary>
+	/// <returns></returns>
+	bool IsFinished() const { return isFinished_; }
+
 private:
 
 	Model* model_ = nullptr;

@@ -476,10 +476,11 @@ void Player::HitsTheWall(const CollisionMapInfo& info) {
 void Player::OnCollision(const Enemy* enemy) { 
 	(void)enemy;
 
-	const float speed = 1.0f;
+	//const float speed = 1.0f;
 
-	//ジャンプ（仮実装)
-	velocity_ += Vector3(0.0f, speed, 0.0f);
+	////ジャンプ（仮実装)
+	//velocity_ += Vector3(0.0f, speed, 0.0f);
+	isDead_ = true;
 }
 
 

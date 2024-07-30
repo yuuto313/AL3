@@ -120,6 +120,9 @@ private:
 	//着地時の速度減衰率
 	static inline const float kAttenuationWall = 0.5f;
 
+	//デスフラグ
+	bool isDead_ = false;
+
 public:
 
 	/// <summary>
@@ -221,4 +224,9 @@ public:
 	/// <param name="enemy"></param>
 	void OnCollision(const Enemy* enemy);
 
+	/// <summary>
+	/// デスフラグのゲッター
+	/// </summary>
+	/// <returns></returns>
+	bool IsDead() const { return isDead_; }
 };

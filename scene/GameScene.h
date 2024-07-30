@@ -16,8 +16,6 @@
 #include "vector"
 #include "DebugCamera.h"
 
-
-
 /// <summary>
 /// ゲームシーン
 /// </summary>
@@ -54,10 +52,27 @@ public: // メンバ関数
 	/// </summary>
 	void GenerateBlocks();
 
+	/// <summary>
+	/// ブロックの更新
+	/// </summary>
+	void UpdateBlocks();
+
 	//すべての当たり判定を行う
 	void CheckAllCollisions();
 
-private: // メンバ変数
+	/// <summary>
+	/// フェーズの切り替え
+	/// </summary>
+	void ChangePhase();
+
+	/// <summary>
+	/// 終了フラグのゲッター
+	/// </summary>
+	/// <returns></returns>
+	bool IsFinished() const { return finished_; }
+
+private: 
+	// メンバ変数
 	DirectXCommon* dxCommon_ = nullptr;
 	Input* input_ = nullptr;
 
@@ -103,7 +118,16 @@ private: // メンバ変数
 	DeathParticles* deathParticles_ = nullptr;
 
 
-	/// <summary>
-	/// ゲームシーン用
-	/// </summary>
+	// ゲームのフェーズ(型）
+	enum class Phase {
+		// ゲームプレイ
+		kPlay,
+		// デス演出
+		kDeath
+	};
+
+	//現在のフェーズ
+	Phase phase_;
+
+	bool finished_ = false;
 };
