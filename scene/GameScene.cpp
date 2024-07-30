@@ -322,25 +322,36 @@ void GameScene::CheckAllCollisions() {
 
 void GameScene::ChangePhase() {
 	switch (phase_) {
-	case GameScene::Phase::kPlay:
+	case GameScene::Phase::kFadeIn:
 
-		if (player_->IsDead()) {
-			//死亡演出フェーズに切り替え
-			phase_ = Phase::kDeath;
-			//自キャラの座標を取得
-			const Vector3& deathParticlesPosition = player_->GetWorldPosition();
 
-			//自キャラの座標に	デスパーティクルを発生、初期化
-			deathParticles_ = new DeathParticles;
-			deathParticles_->Initialize(deathParticleModel_, &viewProjection_, deathParticlesPosition);
-		}
 
 		break;
+
+		case GameScene::Phase::kPlay :
+
+		    if (player_->IsDead()) {
+			    // 死亡演出フェーズに切り替え
+			    phase_ = Phase::kDeath;
+			    // 自キャラの座標を取得
+			    const Vector3& deathParticlesPosition = player_->GetWorldPosition();
+
+			    // 自キャラの座標に	デスパーティクルを発生、初期化
+			    deathParticles_ = new DeathParticles;
+			    deathParticles_->Initialize(deathParticleModel_, &viewProjection_, deathParticlesPosition);
+		    }
+
+		break;
+
 	case GameScene::Phase::kDeath:
 
 		if (deathParticles_ && deathParticles_->IsFinished()) {
 			finished_ = true;
 		}
+
+		break;
+
+	case GameScene::Phase::kFadeOut:
 
 		break;
 	default:

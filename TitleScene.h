@@ -2,8 +2,9 @@
 #include "Model.h"
 #include "WorldTransform.h"
 #include "ViewProjection.h"
-
 #include "DirectXCommon.h"
+
+#include "Fade.h"
 
 /// <summary>
 /// タイトルシーン
@@ -33,6 +34,12 @@ public:
 	/// <returns></returns>
 	bool IsFinished() const { return finished_; }
 
+	/// <summary>
+	/// フェーズの切り替え
+	/// </summary>
+	void ChangePhase();
+
+
 private:
 	DirectXCommon* dxCommon_ = nullptr;
 
@@ -42,4 +49,20 @@ private:
 
 	//終了フラグ
 	bool finished_ = false;
+
+	//フェード
+	Fade* fade_ = nullptr;
+
+	//シーンのフェーズ
+	enum class Phase {
+		//フェードイン
+		kFadeIn,
+		//メイン部
+		kMain,
+		//フェードアウト
+		kFadeOut,
+	};
+
+	//現在のフェーズ
+	Phase phase_ = Phase::kFadeIn;
 };

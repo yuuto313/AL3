@@ -16,6 +16,8 @@
 #include "vector"
 #include "DebugCamera.h"
 
+//スライド27～
+
 /// <summary>
 /// ゲームシーン
 /// </summary>
@@ -120,10 +122,14 @@ private:
 
 	// ゲームのフェーズ(型）
 	enum class Phase {
+		//フェードイン
+		kFadeIn,
 		// ゲームプレイ
 		kPlay,
 		// デス演出
-		kDeath
+		kDeath,
+		//フェードアウト
+		kFadeOut
 	};
 
 	//現在のフェーズ
