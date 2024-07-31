@@ -13,7 +13,7 @@ void TitleScene::Initialize() {
 	model_ = Model::CreateFromOBJ("title", true);
 	assert(model_);
 	worldTransform_.Initialize();
-	worldTransform_.rotation_ = {90.f, 0.0f, 0.0f};
+	worldTransform_.rotation_ = {0.f, 0.0f, 0.0f};
 	viewProjection_.Initialize();
 
 }
