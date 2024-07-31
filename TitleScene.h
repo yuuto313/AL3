@@ -36,8 +36,10 @@ public:
 private:
 	DirectXCommon* dxCommon_ = nullptr;
 
-	Model* model_ = nullptr;
-	WorldTransform worldTransform_;
+	Model* titleModel_ = nullptr;
+	Model* UIModel_ = nullptr;
+	WorldTransform titleWorldTransform_;
+	WorldTransform UIWorldTransform_;
 	ViewProjection viewProjection_;
 
 	//終了フラグ

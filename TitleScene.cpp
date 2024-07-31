@@ -2,7 +2,8 @@
 #include <cassert>
 #include "Input.h"
 TitleScene::~TitleScene() { 
-	delete model_; 
+	delete titleModel_; 
+	delete UIModel_;
 }
 
 void TitleScene::Initialize() {
@@ -10,10 +11,20 @@ void TitleScene::Initialize() {
 	dxCommon_ = DirectXCommon::GetInstance();
 
 	//各種初期化
-	model_ = Model::CreateFromOBJ("title", true);
-	assert(model_);
-	worldTransform_.Initialize();
-	worldTransform_.rotation_ = {0.f, 0.0f, 0.0f};
+	titleModel_ = Model::CreateFromOBJ("title", true);
+	UIModel_ = Model::CreateFromOBJ("titleUI", true);
+
+	assert(titleModel_);
+	assert(UIModel_);
+
+	titleWorldTransform_.Initialize();
+	UIWorldTransform_.Initialize();
+
+	titleWorldTransform_.translation_ = {0.f, 10.0f, 0.0f};
+	titleWorldTransform_.rotation_ = {0.3f, 0.0f, 0.0f};
+
+	UIWorldTransform_.translation_ = {0.0f, -9.0f, 0.0f};
+
 	viewProjection_.Initialize();
 
 }
@@ -23,7 +34,8 @@ void TitleScene::Update() {
 		finished_ = true;
 	}
 
-	worldTransform_.UpdateMatrix();
+	titleWorldTransform_.UpdateMatrix();
+	UIWorldTransform_.UpdateMatrix();
 }
 
 void TitleScene::Draw() {
@@ -38,7 +50,8 @@ void TitleScene::Draw() {
 	/// </summary>
 	
 	//モデル描画
-	model_->Draw(worldTransform_, viewProjection_);
+	titleModel_->Draw(titleWorldTransform_, viewProjection_);
+	UIModel_->Draw(UIWorldTransform_, viewProjection_);
 
 	// 3Dオブジェクト描画後処理
 	Model::PostDraw();
