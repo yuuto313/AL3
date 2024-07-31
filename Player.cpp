@@ -193,14 +193,14 @@ void Player::MovementInput() {
 
 void Player::IsCollision(CollisionMapInfo& info) { 
 	IsCollisionUp(info);
-	//IsCollisionDown(info);
-	//IsCollisionRight(info);
-	//IsCollisionLeft(info);
+	IsCollisionDown(info);
+	IsCollisionRight(info);
+	IsCollisionLeft(info);
 }
 
 Vector3 Player::CornerPosition(const Vector3& center, Corner corner) {
 	Vector3 offsetTable[kNumCorner] = {
-	    {+kWidth / 2.0f, -kHeight / 2.0f, 0.0f}, //  kRightBottom
+		{+kWidth / 2.0f, -kHeight / 2.0f, 0.0f}, //  kRightBottom
 	    {-kWidth / 2.0f, -kHeight / 2.0f, 0.0f}, //  kLeftBottom
 	    {+kWidth / 2.0f, +kHeight / 2.0f, 0.0f}, //  kRightTop
 	    {-kWidth / 2.0f, +kHeight / 2.0f, 0.0f}  //  kLeftTop
@@ -248,7 +248,7 @@ void Player::IsCollisionUp(CollisionMapInfo& info) {
 		//めり込み先ブロックの範囲矩形
 		Rect rect = mapChipField_->GetRectByIndex(indexSet.xIndex, indexSet.yIndex);
 
-		info.amountOfMovement.y = std::max(0.0f, (rect.bottom - worldTransform_.translation_.y) - ((kHeight / 2) + kBlank));
+		info.amountOfMovement.y = std::min(0.0f, (rect.bottom - worldTransform_.translation_.y) - ((kHeight / 2) + kBlank));
 
 		//天井に当たったことを記録する
 		info.isCeiling = true;
@@ -288,11 +288,11 @@ void Player::IsCollisionDown(CollisionMapInfo& info) {
 	// ブロックにヒット？
 	if (hit) {
 		// めり込みを排除する方向に移動量を設定する
-		indexSet = mapChipField_->GetMapChipIndexSetByPosition({worldTransform_.translation_.x, worldTransform_.translation_.y + kHeight / 2, worldTransform_.translation_.z});
+		indexSet = mapChipField_->GetMapChipIndexSetByPosition({worldTransform_.translation_.x, worldTransform_.translation_.y - info.amountOfMovement.y, worldTransform_.translation_.z});
 		// めり込み先ブロックの範囲矩形
 		Rect rect = mapChipField_->GetRectByIndex(indexSet.xIndex, indexSet.yIndex);
 		
-		info.amountOfMovement.y = std::min(0.0f, (rect.top - worldTransform_.translation_.y) + ((kHeight / 2) + kBlank));
+		info.amountOfMovement.y = std::min(0.0f, (rect.top - worldTransform_.translation_.y) - ((kHeight / 2) + kBlank));
 
 		// 地面に当たったことを記録する
 		info.isLanding = true;
@@ -332,7 +332,7 @@ void Player::IsCollisionRight(CollisionMapInfo& info) {
 	// ブロックにヒット？
 	if (hit) {
 		// めり込みを排除する方向に移動量を設定する
-		indexSet = mapChipField_->GetMapChipIndexSetByPosition({worldTransform_.translation_.x + kWidth / 2, worldTransform_.translation_.y, worldTransform_.translation_.z});
+		indexSet = mapChipField_->GetMapChipIndexSetByPosition({worldTransform_.translation_.x + info.amountOfMovement.x, worldTransform_.translation_.y, worldTransform_.translation_.z});
 		// めり込み先ブロックの範囲矩形
 		Rect rect = mapChipField_->GetRectByIndex(indexSet.xIndex, indexSet.yIndex);
 
@@ -376,7 +376,7 @@ void Player::IsCollisionLeft(CollisionMapInfo& info) {
 	// ブロックにヒット？
 	if (hit) {
 		// めり込みを排除する方向に移動量を設定する
-		indexSet = mapChipField_->GetMapChipIndexSetByPosition({worldTransform_.translation_.x - kWidth / 2, worldTransform_.translation_.y, worldTransform_.translation_.z});
+		indexSet = mapChipField_->GetMapChipIndexSetByPosition({worldTransform_.translation_.x - info.amountOfMovement.x, worldTransform_.translation_.y, worldTransform_.translation_.z});
 		// めり込み先ブロックの範囲矩形
 		Rect rect = mapChipField_->GetRectByIndex(indexSet.xIndex, indexSet.yIndex);
 
@@ -440,7 +440,8 @@ void Player::HitsTheLanding(const CollisionMapInfo& info) {
 }
 
 void Player::Reflection(const CollisionMapInfo& info) { 
-	worldTransform_.translation_ += info.amountOfMovement; }
+	worldTransform_.translation_ += info.amountOfMovement;
+}
 
 void Player::HitsTheCeiling(const CollisionMapInfo& info) {
 	if (info.isCeiling) {

@@ -5,6 +5,9 @@
 //#include "MapChipField.h"
 class MapChipField;
 
+//判定があって勝手に動く
+//ブロックサイズの調整
+
 #pragma once
 /// <summary>
 /// 自キャラ
@@ -73,7 +76,7 @@ private:
 	bool onGround_ = true;
 
 	//重力加速度（下方向）
-	static inline const float kGravityAcceleration = 0.02f;
+	static inline const float kGravityAcceleration = 0.025f;
 	//最大重力加速度（下方向）
 	static inline const float kLimitFallSpeed = 3.0f;
 	//ジャンプ初速（上方向）
@@ -83,8 +86,8 @@ private:
 	MapChipField* mapChipField_ = nullptr;
 
 	//キャラクターの当たり判定サイズ
-	static inline const float kWidth = 0.8f;
-	static inline const float kHeight = 0.8f;
+	static inline const float kWidth = 1.f;
+	static inline const float kHeight = 1.f;
 
 	//マップとの当たり判定情報
 	struct CollisionMapInfo {
@@ -108,16 +111,16 @@ private:
 	};
 
 	//余白
-	static inline const float kBlank = 0.5f;	
+	static inline const float kBlank = 0.25f;	
 
 	//着地時の速度減衰率
-	static inline const float kAttenuationLanding = 0.35f;
+	static inline const float kAttenuationLanding = 0.125f;
 
 	//微妙に下にずらす
-	static inline const float kAdjustmentSpace = 0.25f;
+	static inline const float kAdjustmentSpace = 0.02f;
 
 	//着地時の速度減衰率
-	static inline const float kAttenuationWall = 0.5f;
+	static inline const float kAttenuationWall = 0.25f;
 
 public:
 
