@@ -11,7 +11,7 @@ struct Vector3 final {
 
   
 	// - 演算子のオーバーロード
-	Vector3 operator-(float other) const { return Vector3(other - x, other - y, other - z); }
+	Vector3 operator-(float other) const { return Vector3(x - other, y - other, z - other); }
 
 	// * 演算子のオーバーロード
 	Vector3 operator*(float other) const { return Vector3(x + other, y + other, z + other);}
@@ -29,4 +29,5 @@ struct Vector3 final {
 		z += other.z;
 		return *this;
 	};
+
 };

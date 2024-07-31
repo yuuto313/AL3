@@ -46,7 +46,7 @@ private:
 	Vector3 velocity_ = {};
 	
 	//加速度
-	static inline const float kAcceleration = 0.15f;
+	static inline const float kAcceleration = 0.07f;
 	//速度減衰率
 	static inline const float kAttenuation = 0.3f;
 	//速度制限
@@ -108,7 +108,7 @@ private:
 	};
 
 	//余白
-	static inline const float kBlank = 0.35f;
+	static inline const float kBlank = 0.5f;	
 
 	//着地時の速度減衰率
 	static inline const float kAttenuationLanding = 0.35f;

@@ -95,7 +95,7 @@ void Player::MovementInput() {
 	// 降下中？
 	if (velocity_.y < 0) {
 		// Y座標が地面以下になったら着地
-		if (worldTransform_.translation_.y <= 1.0f) {
+		if (worldTransform_.translation_.y <= 3.0f) {
 			landing = true;
 		}
 	}
@@ -193,9 +193,9 @@ void Player::MovementInput() {
 
 void Player::IsCollision(CollisionMapInfo& info) { 
 	IsCollisionUp(info);
-	IsCollisionDown(info);
-	IsCollisionRight(info);
-	IsCollisionLeft(info);
+	//IsCollisionDown(info);
+	//IsCollisionRight(info);
+	//IsCollisionLeft(info);
 }
 
 Vector3 Player::CornerPosition(const Vector3& center, Corner corner) {
@@ -239,11 +239,12 @@ void Player::IsCollisionUp(CollisionMapInfo& info) {
 	if (mapChipType == MapChipType::kBlock) {
 		hit = true;
 	}
-
+	
 	//ブロックにヒット
 	if (hit) {
 	    //めり込みを排除する方向に移動量を設定する
-		indexSet = mapChipField_->GetMapChipIndexSetByPosition({worldTransform_.translation_.x, worldTransform_.translation_.y - kHeight / 2.0f, worldTransform_.translation_.z});
+		indexSet = mapChipField_->GetMapChipIndexSetByPosition({worldTransform_.translation_.x, worldTransform_.translation_.y + info.amountOfMovement.y, worldTransform_.translation_.z});
+	
 		//めり込み先ブロックの範囲矩形
 		Rect rect = mapChipField_->GetRectByIndex(indexSet.xIndex, indexSet.yIndex);
 
@@ -388,7 +389,7 @@ void Player::IsCollisionLeft(CollisionMapInfo& info) {
 
 void Player::HitsTheLanding(const CollisionMapInfo& info) {
 	if (onGround_) {
-	//設置状態の処理
+	//接地状態の処理
 		//ジャンプ開始
 		if (velocity_.y > 0.0f) {
 		onGround_ = false;
@@ -443,6 +444,7 @@ void Player::Reflection(const CollisionMapInfo& info) {
 
 void Player::HitsTheCeiling(const CollisionMapInfo& info) {
 	if (info.isCeiling) {
+		DebugText::GetInstance()->ConsolePrintf("Hit\n");
 		velocity_.y = 0;
 	}
 }
