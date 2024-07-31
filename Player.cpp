@@ -29,7 +29,7 @@ void Player::Init(Model* model, ViewProjection* viewProjection,const Vector3& po
 }
 
 void Player::Update() {
-	// ワールド行列の転送
+
 	worldTransform_.TransferMatrix();
 
 	// 1.移動入力
@@ -224,6 +224,7 @@ void Player::IsCollisionUp(CollisionMapInfo& info) {
 	MapChipType mapChipType;
 	//真上の当たり判定を行う
 	bool hit = false;
+
 	//左上点の当たり判定
 	MapChipField::IndexSet indexSet;
 	indexSet = mapChipField_->GetMapChipIndexSetByPosition(positionNew[kLeftTop]);
@@ -249,7 +250,7 @@ void Player::IsCollisionUp(CollisionMapInfo& info) {
 		info.amountOfMovement.y = std::max(0.0f, (rect.bottom - worldTransform_.translation_.y) - ((kHeight / 2) + kBlank));
 
 		//天井に当たったことを記録する
-		info.ceilingCollision = true;
+		info.isCeiling = true;
 	}
 }
 
@@ -293,7 +294,7 @@ void Player::IsCollisionDown(CollisionMapInfo& info) {
 		info.amountOfMovement.y = std::min(0.0f, (rect.top - worldTransform_.translation_.y) + ((kHeight / 2) + kBlank));
 
 		// 地面に当たったことを記録する
-		info.landing = true;
+		info.isLanding = true;
 	}
 }
 
@@ -337,7 +338,7 @@ void Player::IsCollisionRight(CollisionMapInfo& info) {
 		info.amountOfMovement.x = std::min(0.0f, (rect.right - worldTransform_.translation_.x) - ((kWidth) + kBlank));
 
 		// 壁に当たったことを記録する
-		info.hitWall = true;
+		info.isWall = true;
 	}
 }
 
@@ -381,7 +382,7 @@ void Player::IsCollisionLeft(CollisionMapInfo& info) {
 		info.amountOfMovement.x = std::max(0.0f, (rect.left - worldTransform_.translation_.x) + ((kWidth) + kBlank));
 
 		// 壁に当たったことを記録する
-		info.hitWall = true;
+		info.isWall = true;
 	}
 }
 
@@ -426,7 +427,7 @@ void Player::HitsTheLanding(const CollisionMapInfo& info) {
 
 	} else {
 	//空中状態の処理
-		if (info.landing) {
+		if (info.isLanding) {
 		//着地状態に切り替える（落下を止める）
 			onGround_ = true;
 			//着地時にX速度を減衰
@@ -441,14 +442,14 @@ void Player::Reflection(const CollisionMapInfo& info) {
 	worldTransform_.translation_ += info.amountOfMovement; }
 
 void Player::HitsTheCeiling(const CollisionMapInfo& info) {
-	if (info.ceilingCollision) {
+	if (info.isCeiling) {
 		velocity_.y = 0;
 	}
 }
 
 void Player::HitsTheWall(const CollisionMapInfo& info) {
 	//壁接触による減速
-	if (info.hitWall) {
+	if (info.isWall) {
 		velocity_.x *= (1.0f - kAttenuationWall);
 	}
 }

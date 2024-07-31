@@ -73,25 +73,29 @@ private:
 	bool onGround_ = true;
 
 	//重力加速度（下方向）
-	static inline const float kGravityAcceleration = 0.2f;
+	static inline const float kGravityAcceleration = 0.02f;
 	//最大重力加速度（下方向）
 	static inline const float kLimitFallSpeed = 3.0f;
 	//ジャンプ初速（上方向）
-	static inline const float kJumpAcceleration = 2.0f;
+	static inline const float kJumpAcceleration = 0.7f;
 
 	//マップチップによるフィールド
 	MapChipField* mapChipField_ = nullptr;
 
 	//キャラクターの当たり判定サイズ
-	static inline const float kWidth = 1.0f;
-	static inline const float kHeight = 1.0f;
+	static inline const float kWidth = 0.8f;
+	static inline const float kHeight = 0.8f;
 
 	//マップとの当たり判定情報
 	struct CollisionMapInfo {
-		bool ceilingCollision = false;//天井衝突フラグ
-		bool landing = false;//着地フラグ
-		bool hitWall = false;//壁接触フラグ
-		Vector3 amountOfMovement = {}; // 移動量
+		// 天井衝突フラグ
+		bool isCeiling= false;
+		// 着地フラグ
+		bool isLanding = false;
+		// 壁接触フラグ
+		bool isWall = false;
+		// 移動量
+		Vector3 amountOfMovement = {};
 	};
 
 	//角
