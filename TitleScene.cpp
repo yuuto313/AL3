@@ -28,7 +28,7 @@ void TitleScene::Initialize() {
 
 	viewProjection_.Initialize();
 
-	float duration = 3.0f;
+	float duration = 2.0f;
 
 	fade_ = new Fade();
 	fade_->Initialize();

@@ -51,6 +51,11 @@ public: // メンバ関数
 	void Draw();
 
 	/// <summary>
+	/// カメラ切り替え
+	/// </summary>
+	void UpdateCamera();
+
+	/// <summary>
 	/// 表示ブロックの生成
 	/// </summary>
 	void GenerateBlocks();
