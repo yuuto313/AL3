@@ -1,6 +1,10 @@
 #include "Fade.h"
 #include "WinApp.h"
 #include <algorithm>
+Fade::~Fade() { 
+	delete sprite_;
+}
+
 void Fade::Initialize() {
 	sprite_ = new Sprite();
 	sprite_->Initialize();

@@ -31,6 +31,8 @@ GameScene::~GameScene() {
 	}
 	enemies_.clear();
 
+	delete deathParticleModel_;
+	delete fade_;
 }
 
 void GameScene::Initialize() {
@@ -91,65 +93,15 @@ void GameScene::Initialize() {
 	//デスパーティクルのモデル
 	deathParticleModel_ = Model::CreateFromOBJ("deathParticle", true);
 
-	//ゲームプレイフェーズから開始
-	phase_ = Phase::kPlay;
+	//フェードの生成、初期化
+	fade_ = new Fade();
+	fade_->Initialize();
+	float duration = 3.0f;
+	fade_->Start(Fade::Status::FadeIn,duration);
+
 }
 
 void GameScene::Update() {
-
-	switch (phase_) {
-	case GameScene::Phase::kPlay:
-
-		// 自キャラの更新
-		player_->Update();
-
-		// 天球
-		skydome_->Update();
-
-		//カメラコントローラの更新
-		cameraController_->Update();
-
-		// 当たり判定を行う
-		CheckAllCollisions();
-
-		//敵の更新
-		for (Enemy* enemy : enemies_) {
-			enemy->Update();
-		}
-		
-		// ブロックの更新
-		UpdateBlocks();
-
-		break;
-	case GameScene::Phase::kDeath:
-
-		//デスパーティクルの更新
-		if (deathParticles_) {
-			deathParticles_->Update();
-		}
-
-		// 天球
-		skydome_->Update();
-
-		// カメラコントローラの更新
-		cameraController_->Update();
-
-		// 当たり判定を行う
-		CheckAllCollisions();
-
-		// 敵の更新
-		for (Enemy* enemy : enemies_) {
-			enemy->Update();
-		}
-
-		//ブロックの更新
-		UpdateBlocks();
-
-		break;
-	default:
-		break;
-	}
-
 	//	フェーズの切り替え
 	ChangePhase();
 
@@ -321,40 +273,80 @@ void GameScene::CheckAllCollisions() {
 }
 
 void GameScene::ChangePhase() {
+
 	switch (phase_) {
 	case GameScene::Phase::kFadeIn:
 
-
-
-		break;
-
-		case GameScene::Phase::kPlay :
-
-		    if (player_->IsDead()) {
-			    // 死亡演出フェーズに切り替え
-			    phase_ = Phase::kDeath;
-			    // 自キャラの座標を取得
-			    const Vector3& deathParticlesPosition = player_->GetWorldPosition();
-
-			    // 自キャラの座標に	デスパーティクルを発生、初期化
-			    deathParticles_ = new DeathParticles;
-			    deathParticles_->Initialize(deathParticleModel_, &viewProjection_, deathParticlesPosition);
-		    }
-
-		break;
-
-	case GameScene::Phase::kDeath:
-
-		if (deathParticles_ && deathParticles_->IsFinished()) {
-			finished_ = true;
+		fade_->Update();
+		if (fade_->IsFinished()) {
+			phase_ = Phase::kPlay;
 		}
 
 		break;
 
+	case GameScene::Phase::kPlay:
+
+		// 自キャラの更新
+		player_->Update();
+
+		// 天球
+		skydome_->Update();
+
+		// カメラコントローラの更新
+		cameraController_->Update();
+
+		// 当たり判定を行う
+		CheckAllCollisions();
+
+		// 敵の更新
+		for (Enemy* enemy : enemies_) {
+			enemy->Update();
+		}
+
+		// ブロックの更新
+		UpdateBlocks();
+
+		if (player_->IsDead()) {
+			//死亡演出フェーズに切り替える
+			phase_ = Phase::kDeath;
+			//自キャラの座標を取得
+			const Vector3& deathParticlePosition = player_->GetWorldPosition();
+
+		}
+
+		break;
+	case GameScene::Phase::kDeath:
+
+		// デスパーティクルの更新
+		if (deathParticles_) {
+			deathParticles_->Update();
+		}
+
+		// 天球
+		skydome_->Update();
+
+		// カメラコントローラの更新
+		cameraController_->Update();
+
+		// 敵の更新
+		for (Enemy* enemy : enemies_) {
+			enemy->Update();
+		}
+
+		// ブロックの更新
+		UpdateBlocks();
+
+		break;
+
 	case GameScene::Phase::kFadeOut:
+
+		fade_->Update();
+		if (fade_->IsFinished()) {
+		}
 
 		break;
 	default:
 		break;
 	}
 }
+

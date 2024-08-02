@@ -39,37 +39,20 @@ void TitleScene::Update() {
 
 	switch (phase_) {
 	case TitleScene::Phase::kFadeIn:
-
-		fade_->Update();
-
-		// フェードイン中にフェードが終わったらメインフェーズに切り替える
-		if (fade_->IsFinished()) {
-			phase_ = Phase::kMain;
-		}
-
-		break;
-	case TitleScene::Phase::kMain:
-
-		// スペースでフェードアウトを開始する
-		if (Input::GetInstance()->PushKey(DIK_SPACE)) {
-			phase_ = Phase::kFadeOut;
-		}
-
-		break;
 	case TitleScene::Phase::kFadeOut:
 
 		fade_->Update();
 
-		// フェードアウト中にフェードが終了したらタイトルシーンを終了する
-		if (fade_->IsFinished()) {
-			finished_ = true;
-		}
+		break;
+	case TitleScene::Phase::kMain:
 
 		break;
+
 	default:
 		break;
 	}
 
+	ChangePhase();
 	titleWorldTransform_.UpdateMatrix();
 	UIWorldTransform_.UpdateMatrix();
 }
@@ -92,17 +75,14 @@ void TitleScene::Draw() {
 
 	switch (phase_) {
 	case TitleScene::Phase::kFadeIn:
+	case TitleScene::Phase::kFadeOut:
 
 		fade_->Draw(commandList);
 
 		break;
 	case TitleScene::Phase::kMain:
 		break;
-	case TitleScene::Phase::kFadeOut:
 
-		fade_->Draw(commandList);
-
-		break;
 	default:
 		break;
 	}
@@ -112,5 +92,33 @@ void TitleScene::Draw() {
 }
 
 void TitleScene::ChangePhase() {
-	
+	switch (phase_) {
+	case TitleScene::Phase::kFadeIn:
+
+		if (fade_->IsFinished()) {
+			phase_ = Phase::kMain;
+		}
+
+		break;
+	case TitleScene::Phase::kMain:
+
+		if (Input::GetInstance()->PushKey(DIK_SPACE)) {
+			//フェードアウト開始
+			float duration = 3.0f;
+			fade_->Start(Fade::Status::FadeOut, duration);
+			phase_ = Phase::kFadeOut;
+		}
+
+		break;
+	case TitleScene::Phase::kFadeOut:
+
+		//フェードアウトが終了したら、シーン終了
+		if (fade_->IsFinished()) {
+			finished_ = true;			
+		}
+
+		break;
+	default:
+		break;
+	}
 }

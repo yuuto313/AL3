@@ -15,6 +15,7 @@
 #include "ViewProjection.h"
 #include "vector"
 #include "DebugCamera.h"
+#include "Fade.h"
 
 //スライド27～
 
@@ -119,6 +120,8 @@ private:
 	Model* deathParticleModel_ = nullptr;
 	DeathParticles* deathParticles_ = nullptr;
 
+	//フェード
+	Fade* fade_ = nullptr;
 
 	// ゲームのフェーズ(型）
 	enum class Phase {
@@ -133,7 +136,7 @@ private:
 	};
 
 	//現在のフェーズ
-	Phase phase_;
+	Phase phase_ = Phase::kFadeIn;
 
 	bool finished_ = false;
 };
