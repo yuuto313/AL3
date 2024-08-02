@@ -31,6 +31,7 @@ GameScene::~GameScene() {
 	}
 	enemies_.clear();
 
+	delete deathParticleModel_;
 }
 
 void GameScene::Initialize() {
