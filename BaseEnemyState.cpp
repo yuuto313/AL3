@@ -11,4 +11,4 @@ void BaseEnemyState::DebugLog() {
 EnemyStateApproach::EnemyStateApproach(Enemy* enemy) : BaseEnemyState("State Approach", enemy) {}
 
 
-EnemyStateLeave::EnemyStateLeave(Enemy* enemy) : BaseEnemyState("State Leave", enemy) {}
+EnemyStateLeave::EnemyStateLeave(Enemy* enemy) : BaseEnemyState("State Leave",enemy){}
