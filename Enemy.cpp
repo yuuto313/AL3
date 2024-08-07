@@ -49,6 +49,15 @@ void Enemy::UpdateLeave() {
 	worldTransform_.translation_ += leaveVelocity_;
 }
 
+Vector3 Enemy::GetPosition() {// ワールド座標を入れる変数
+	Vector3 worldPos;
+	// ワールド行列の平行移動成分を取得（ワールド座標）
+	worldPos.x = worldTransform_.matWorld_.m[3][0];
+	worldPos.y = worldTransform_.matWorld_.m[3][1];
+	worldPos.z = worldTransform_.matWorld_.m[3][2];
+	return worldPos;
+}
+
 Vector3 Enemy::UpdateTranslation(Vector3& position, const Vector3& velocity) {
 	position += velocity; 
 	return position;

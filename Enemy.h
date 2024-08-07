@@ -44,7 +44,7 @@ public:
 	/// 座標のゲッター
 	/// </summary>
 	/// <returns></returns>
-	Vector3 GetPosition() const { return worldTransform_.translation_; }
+	Vector3 GetPosition();
 	/// <summary>
 	/// 接近中の速度のゲッター
 	/// </summary>
