@@ -1,5 +1,6 @@
 #include "Model.h"
 #include "WorldTransform.h"
+#include "BaseEnemyState.h"
 #pragma once
 
 /// <summary>
@@ -33,13 +34,38 @@ public:
 	/// <summary>
 	/// 接近フェーズの更新関数
 	/// </summary>
-	void UpdateApploach();
+	void UpdateApproach();
 	/// <summary>
 	/// 離脱フェーズの更新関数
 	/// </summary>
 	void UpdateLeave();
 
+	/// <summary>
+	/// 座標のゲッター
+	/// </summary>
+	/// <returns></returns>
+	Vector3 GetPosition() const { return worldTransform_.translation_; }
+	/// <summary>
+	/// 接近中の速度のゲッター
+	/// </summary>
+	/// <returns></returns>
+	Vector3 GetApproachVelocity() const { return approachVelocity_; }
+	/// <summary>
+	/// 離脱中の速度のゲッター
+	/// </summary>
+	/// <returns></returns>
+	Vector3 GetLeaveVelocity() const { return leaveVelocity_; }
+	/// <summary>
+	/// 引数で指定した移動量だけ座標を変更する
+	/// </summary>
+	/// <param name="velocity"></param>
+	Vector3 UpdateTranslation(Vector3& position,const Vector3& velocity);
+
+	void ChangeState(BaseEnemyState* newState);
+
 private:
+	BaseEnemyState* state_ = nullptr;
+
 	// ワールド変換データ
 	WorldTransform worldTransform_;
 	// モデルのポインタ
@@ -47,8 +73,8 @@ private:
 	// テクスチャハンドル
 	uint32_t textureHandle_ = 0u;
 	// 速度
-	Vector3 approachVelocity_;
-	Vector3 leaveVelocity_;
+	Vector3 approachVelocity_ = {0,0,0};
+	Vector3 leaveVelocity_ = {0,0,0};
 
 	// 行動フェーズ
 	enum class Phase {
@@ -59,6 +85,5 @@ private:
 	//フェーズ
 	Phase phase_ = Phase::Approach;
 
-	//メンバ関数ポインタのテーブル
-	static void (Enemy::*spFuncTable[])();
+	
 };
