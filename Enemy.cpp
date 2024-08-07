@@ -25,7 +25,7 @@ void Enemy::Initialize(Model* model, const Vector3& position, const Vector3& app
 
 void Enemy::Update() { 
 	//遷移変更
-	state_->Update();
+	state_->Update(this);
 
 	// 行列を更新
 	worldTransform_.UpdateMatrix();
@@ -34,20 +34,6 @@ void Enemy::Update() {
 
 void Enemy::Draw(ViewProjection& viewProjection) { 
 	model_->Draw(worldTransform_, viewProjection, textureHandle_); }
-
-void Enemy::UpdateApproach() {
-	// 移動（ベクトル加算）
-	worldTransform_.translation_ += approachVelocity_;
-	// 基底の位置に到達したら離脱
-	if (worldTransform_.translation_.z < 0.0f) {
-		phase_ = Phase::Leave;
-	}
-}
-
-void Enemy::UpdateLeave() {
-	// 移動（ベクトル加算）
-	worldTransform_.translation_ += leaveVelocity_;
-}
 
 Vector3 Enemy::GetPosition() {// ワールド座標を入れる変数
 	Vector3 worldPos;
@@ -58,9 +44,8 @@ Vector3 Enemy::GetPosition() {// ワールド座標を入れる変数
 	return worldPos;
 }
 
-Vector3 Enemy::UpdateTranslation(Vector3& position, const Vector3& velocity) {
-	position += velocity; 
-	return position;
+void Enemy::UpdateTranslation(const Vector3& velocity) {
+	worldTransform_.translation_ += velocity; 
 }
 
 void Enemy::ChangeState(BaseEnemyState* newState) {
@@ -68,17 +53,16 @@ void Enemy::ChangeState(BaseEnemyState* newState) {
 	state_ = newState;
 }
 
-void EnemyStateApproach::Update() { 
-	Vector3 pos = enemy_->GetPosition();
-	Vector3 approachVelocity = enemy_->GetApproachVelocity();
-	enemy_->UpdateTranslation(pos, approachVelocity);
+void EnemyStateApproach::Update(Enemy* enemy) { 
+	Vector3 approachVelocity = enemy->GetApproachVelocity();
+	Vector3 pos = enemy->GetPosition();
+	enemy->UpdateTranslation(approachVelocity);
 	if (pos.z < 0.0f) {
-		enemy_->ChangeState(new EnemyStateLeave);
+		enemy->ChangeState(new EnemyStateLeave);
 	}
 }
 
-void EnemyStateLeave::Update() {
-	Vector3 pos = enemy_->GetPosition();
-	Vector3 leaveVelocity = enemy_->GetLeaveVelocity();
-	pos += leaveVelocity;
+void EnemyStateLeave::Update(Enemy* enemy) {
+	Vector3 leaveVelocity = enemy->GetLeaveVelocity();
+	enemy->UpdateTranslation(leaveVelocity);
 }

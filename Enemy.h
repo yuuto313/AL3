@@ -31,14 +31,6 @@ public:
 	/// 描画
 	/// </summary>
 	void Draw(ViewProjection& viewProjection);
-	/// <summary>
-	/// 接近フェーズの更新関数
-	/// </summary>
-	void UpdateApproach();
-	/// <summary>
-	/// 離脱フェーズの更新関数
-	/// </summary>
-	void UpdateLeave();
 
 	/// <summary>
 	/// 座標のゲッター
@@ -59,13 +51,14 @@ public:
 	/// 引数で指定した移動量だけ座標を変更する
 	/// </summary>
 	/// <param name="velocity"></param>
-	Vector3 UpdateTranslation(Vector3& position,const Vector3& velocity);
-
+	void UpdateTranslation(const Vector3& velocity);
+	/// <summary>
+	/// ステータスを変更する
+	/// </summary>
+	/// <param name="newState"></param>
 	void ChangeState(BaseEnemyState* newState);
 
 private:
-	BaseEnemyState* state_ = nullptr;
-
 	// ワールド変換データ
 	WorldTransform worldTransform_;
 	// モデルのポインタ
@@ -85,5 +78,5 @@ private:
 	//フェーズ
 	Phase phase_ = Phase::Approach;
 
-	
+	BaseEnemyState* state_ = nullptr;
 };
