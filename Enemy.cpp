@@ -2,13 +2,9 @@
 #include <cassert>
 #include "TextureManager.h"
 
-Enemy::Enemy() { 
-	state_ = new EnemyStateApproach(); 
-}
+Enemy::Enemy() {}
 
-Enemy::~Enemy() { 
-	delete state_;
-}
+Enemy::~Enemy() {}
 
 
 void Enemy::Initialize(Model* model, const Vector3& position, const Vector3& approachVelocity, const Vector3& leaveVelocity) { 
@@ -21,11 +17,14 @@ void Enemy::Initialize(Model* model, const Vector3& position, const Vector3& app
 	worldTransform_.translation_ = position;
 	approachVelocity_ = approachVelocity;
 	leaveVelocity_ = leaveVelocity;
+
+	//初期状態をセット
+	ChangeState(std::make_unique<EnemyStateApproach>(this));
 }
 
 void Enemy::Update() { 
 	//遷移変更
-	state_->Update(this);
+	state_->Update();
 
 	// 行列を更新
 	worldTransform_.UpdateMatrix();
@@ -48,21 +47,20 @@ void Enemy::UpdateTranslation(const Vector3& velocity) {
 	worldTransform_.translation_ += velocity; 
 }
 
-void Enemy::ChangeState(BaseEnemyState* newState) {
-	delete state_; 
-	state_ = newState;
+void Enemy::ChangeState(std::unique_ptr<BaseEnemyState> newState) { 
+	state_ = std::move(newState);
 }
 
-void EnemyStateApproach::Update(Enemy* enemy) { 
-	Vector3 approachVelocity = enemy->GetApproachVelocity();
-	Vector3 pos = enemy->GetPosition();
-	enemy->UpdateTranslation(approachVelocity);
+void EnemyStateApproach::Update() { 
+	Vector3 approachVelocity = enemy_->GetApproachVelocity();
+	Vector3 pos = enemy_->GetPosition();
+	enemy_->UpdateTranslation(approachVelocity);
 	if (pos.z < 0.0f) {
-		enemy->ChangeState(new EnemyStateLeave);
+		enemy_->ChangeState(std::make_unique<EnemyStateLeave>(enemy_));
 	}
 }
 
-void EnemyStateLeave::Update(Enemy* enemy) {
-	Vector3 leaveVelocity = enemy->GetLeaveVelocity();
-	enemy->UpdateTranslation(leaveVelocity);
+void EnemyStateLeave::Update() {
+	Vector3 leaveVelocity = enemy_->GetLeaveVelocity();
+	enemy_->UpdateTranslation(leaveVelocity);
 }

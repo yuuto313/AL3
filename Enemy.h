@@ -56,7 +56,7 @@ public:
 	/// ステータスを変更する
 	/// </summary>
 	/// <param name="newState"></param>
-	void ChangeState(BaseEnemyState* newState);
+	void ChangeState(std::unique_ptr<BaseEnemyState> newState);
 
 private:
 	// ワールド変換データ
@@ -78,5 +78,5 @@ private:
 	//フェーズ
 	Phase phase_ = Phase::Approach;
 
-	BaseEnemyState* state_ = nullptr;
+	std::unique_ptr<BaseEnemyState> state_;
 };
