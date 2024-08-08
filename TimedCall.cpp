@@ -1,10 +1,12 @@
 #include "TimedCall.h"
 
-TimedCall::TimedCall(std::function<void> f, uint32_t time)
-    : f(f_)
+TimedCall::TimedCall(std::function<void(void)> f, uint32_t time){
+	callBack_ = f;	
+	time_ = time;
+}
 
 void TimedCall::Update() { 
-	if (IsFinished) {
+	if (IsFinished()) {
 		return;
 	}
 
@@ -12,6 +14,6 @@ void TimedCall::Update() {
 	if (time_ <= 0) {
 		isComplite = true;
 		//コールバック関数呼び出し
-
+		callBack_();
 	}
 }

@@ -11,7 +11,7 @@ public:
 	/// </summary>
 	/// <param name="f"></param>
 	/// <param name="time"></param>
-	TimedCall(std::function<void>f,uint32_t time);
+	TimedCall(std::function<void(void)> f, uint32_t time);
 
 	/// <summary>
 	/// /更新
@@ -26,7 +26,7 @@ public:
 
 private:
 	// コールバック
-	std::function<void> f_;
+	std::function<void(void)> callBack_;
 
 	// 残り時間
 	uint32_t time_;

@@ -1,6 +1,7 @@
 #include "EnemyBullet.h"
 #include "Model.h"
 #include "WorldTransform.h"
+#include "TimedCall.h"
 #include <list>
 
 #pragma once
@@ -49,7 +50,10 @@ public:
 	/// 弾発射
 	/// </summary>
 	void Fire();
-
+	/// <summary>
+	/// 弾を発射し、タイマーをリセットするコールバック関数
+	/// </summary>
+	void ResetTimer();
 
 private:
 	// ワールド変換データ
@@ -74,11 +78,6 @@ private:
 	//敵の弾
 	std::list<EnemyBullet*> bullets_;
 
-	//発射タイマー
-	int32_t shotTimer_ = 0;
-
-public:
-	//発射間隔
-	static const int kFireInterval = 60;
-
+	//時限発動のタイマー
+	std::list<TimedCall*> timedCalls_;
 };
