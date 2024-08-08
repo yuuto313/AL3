@@ -36,15 +36,14 @@ public:
 	bool IsDead() const { return isDead_; }
 
 	/// <summary>
+	/// ワールド座標を取得
+	/// </summary>
+	Vector3 GetWorldPosition() override;
+
+	/// <summary>
 	/// 衝突を検出したら呼び出されるコールバック関数
 	/// </summary>
 	void OnCollision() override;
-
-	/// <summary>
-	/// ワールド座標を取得
-	/// </summary>
-	/// <returns></returns>
-	Vector3 GetWorldPosition() override;
 	
 	/// <summary>
 	/// 半径を取得するゲッター

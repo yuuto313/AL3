@@ -70,7 +70,6 @@ public:
 	/// <summary>
 	/// ワールド座標を取得
 	/// </summary>
-	/// <returns></returns>
 	Vector3 GetWorldPosition() override;
 
 	/// <summary>

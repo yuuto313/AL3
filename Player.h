@@ -47,13 +47,12 @@ public:
 	/// <summary>
 	/// ワールド座標を取得
 	/// </summary>
-	/// <returns></returns>
-	Vector3 GetWorldPosition()override;
+	Vector3 GetWorldPosition() override;
 
 	/// <summary>
 	/// 衝突を検出したら呼び出されるコールバック関数
 	/// </summary>
-	void OnCollision()override;
+	void OnCollision() override;
 
 	/// <summary>
 	/// 弾リストを取得
@@ -67,11 +66,6 @@ public:
 	/// <param name="radius"></param>
 	/// <returns></returns>
 	float GetRadius() {return kRadius; }
-
-	/// <summary>
-	/// 衝突時に呼ばれる関数
-	/// </summary>
-	void OnCollision();
 
 	private:
 	// ワールド変換データ

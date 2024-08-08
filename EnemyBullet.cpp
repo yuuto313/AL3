@@ -39,11 +39,6 @@ void EnemyBullet::Update() {
 void EnemyBullet::Draw(const ViewProjection& viewProjection) { 
 	model_->Draw(worldTransform_, viewProjection, textureHandle_); }
 
-void EnemyBullet::OnCollision() {
-	// デスフラグを立てる
-	isDead_ = true;
-}
-
 Vector3 EnemyBullet::GetWorldPosition() { 
 	// ワールド座標を入れる変数
 	Vector3 worldPos;
@@ -54,3 +49,9 @@ Vector3 EnemyBullet::GetWorldPosition() {
 	;
 	return worldPos;
 }
+
+void EnemyBullet::OnCollision() {
+	// デスフラグを立てる
+	isDead_ = true;
+}
+
