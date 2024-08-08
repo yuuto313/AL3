@@ -1,5 +1,6 @@
 #include "WorldTransform.h"
 #include "Model.h"
+#include "Player.h"
 
 #pragma once
 /// <summary>
@@ -29,6 +30,11 @@ public:
 	/// </summary>
 	/// <returns></returns>
 	bool IsDead() const { return isDead_; }
+	/// <summary>
+	/// Playerのセッター
+	/// </summary>
+	/// <param name="player"></param>
+	void SetPlayer(Player* player) { player_ = player; }
 
 private:
 	// モデルのポインタ
@@ -48,4 +54,7 @@ private:
 	int32_t deathTimer_ = kLifeTime;
 	//デスフラグ
 	bool isDead_ = false;
+
+	//プレイヤーのポインター
+	Player* player_ = nullptr;
 };

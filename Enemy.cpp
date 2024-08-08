@@ -26,7 +26,6 @@ void Enemy::Initialize(Model* model, const Vector3& position, const Vector3& app
 	
 	//接近フェーズ初期化
 	InitializeApploach();
-
 }
 
 void Enemy::Update() { 
@@ -138,6 +137,9 @@ void Enemy::Fire() {
 	newBullet->Initialize(model_, worldTransform_.translation_,velocity);
 	// 弾を登録する
 	bullets_.push_back(newBullet);
+
+	//敵弾に自キャラを渡す
+	newBullet->SetPlayer(player_);
 }
 
 Vector3 Enemy::GetWorldPosition() {

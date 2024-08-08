@@ -1,4 +1,64 @@
 #include "MyMath.h"
+#include <cmath>
+#include <iostream>
+#include <algorithm>
+
+// 加算
+Vector3 Add(const Vector3& v1, const Vector3& v2) {
+	Vector3 result;
+	result.x = v1.x + v2.x;
+	result.y = v1.y + v2.y;
+	result.z = v1.z + v2.z;
+	return result;
+}
+// 減算
+Vector3 Subtract(const Vector3& v1, const Vector3& v2) {
+	Vector3 result;
+	result.x = v1.x - v2.x;
+	result.y = v1.y - v2.y;
+	result.z = v1.z - v2.z;
+	return result;
+};
+// スカラー倍
+Vector3 Multiply(float scalar, const Vector3& v) {
+	Vector3 result;
+	result.x = scalar * v.x;
+	result.y = scalar * v.y;
+	result.z = scalar * v.z;
+	return result;
+}
+
+//線形補間
+Vector3 Leap(const Vector3& v1, const Vector3& v2, float t){
+	return v1 * t + v2 * (1.0f - t); 
+}
+
+// 球面線形補間
+Vector3 Sleap(const Vector3& v1, const Vector3& v2, float t) { 
+	//引数を正規化
+	Vector3 newV1 = Normalize(v1);
+	Vector3 newV2 = Normalize(v2);
+
+	float dot = Dot(newV1, newV2);
+
+	//内積が1に近い場合Leapにする
+	if (dot > 0.9995f) {
+		return Leap(v1, v2, t);
+	}
+
+
+	dot = std::clamp(dot, -1.0f, 1.0f);
+	float theta = std::acos(dot) * t;
+	Vector3 relativeVec = Normalize(newV2 - newV1 * dot);
+
+	return newV1 * std::cos(theta) + relativeVec * std::sin(theta);
+
+}
+
+// 内積
+float Dot(const Vector3& v1, const Vector3& v2) { 
+	return v1.x * v2.x + v1.y * v2.y + v1.z * v2.z; 
+}
 
 // 長さ
 float Length(const Vector3& v) { return sqrtf(v.x * v.x + v.y * v.y + v.z * v.z); }
@@ -107,3 +167,13 @@ Vector3 TransformNormal(const Vector3& v, const Matrix4x4& m) {
 	};
 	return result;
 }
+
+
+// 二項演算子
+Vector3 operator+(const Vector3& v1, const Vector3& v2) { return Add(v1, v2); }
+Vector3 operator-(const Vector3& v1, const Vector3& v2) { return Subtract(v1, v2); }
+
+Vector3 operator+(float s, const Vector3& v) { return Vector3{s + v.x, s + v.y, s + v.z}; }
+Vector3 operator*(float s, const Vector3& v) { return Multiply(s, v); }
+Vector3 operator*(const Vector3& v, float s) { return s * v; }
+Vector3 operator/(const Vector3& v, float s) { return Multiply(1.0f / s, v); }
