@@ -12,7 +12,9 @@ Vector3 Subtract(const Vector3& v1, const Vector3& v2);
 Vector3 Multiply(float scalar, const Vector3& v);
 
 // 線形保管
-Vector3 Leap(const Vector3& v1, const Vector3& v2, float t);
+Vector3 Lerp(const Vector3& v1, const Vector3& v2, float t);
+
+float Lerp(float a, float b, float t);
 
 //球面線形補間
 Vector3 Sleap(const Vector3& v1, const Vector3& v2, float t);

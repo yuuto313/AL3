@@ -29,8 +29,12 @@ Vector3 Multiply(float scalar, const Vector3& v) {
 }
 
 //線形補間
-Vector3 Leap(const Vector3& v1, const Vector3& v2, float t){
+Vector3 Lerp(const Vector3& v1, const Vector3& v2, float t){
 	return v1 * t + v2 * (1.0f - t); 
+}
+
+float Lerp(float a, float b, float t) {
+	return a * (1.0f - t) + b * t; 
 }
 
 // 球面線形補間
@@ -41,18 +45,37 @@ Vector3 Sleap(const Vector3& v1, const Vector3& v2, float t) {
 
 	float dot = Dot(newV1, newV2);
 
-	//内積が1に近い場合Leapにする
-	if (dot > 0.9995f) {
-		return Leap(v1, v2, t);
+	//誤差により1.0fを超えないように防ぐ
+	dot = std::clamp(dot, -1.0f, 1.0f);
+
+	//アークコサインでθの角度を求める
+	float theta = std::acos(dot);
+	//θの値からsinθを求める
+	float sinTheta = std::sin(theta);
+	//サイン(0(1-t))を求める
+	float sinThetaFrom = std::sin((1 - t) * theta);
+	//サインθtを求める
+	float sinThetaTo = std::sin(t * theta);
+
+	//球面線形補間したベクトル（単位ベクトル）
+	Vector3 normalizedVector = sinThetaFrom / sinTheta * newV1 + sinThetaTo / sinTheta * newV2;
+
+	//ゼロ除算を防ぐ
+	if (sinTheta < 1.0e-5) {
+		normalizedVector = newV1;
+	} else {
+		//球面線形補間したベクトル（単位ベクトル）
+		normalizedVector = (sinThetaFrom * newV1 + sinThetaTo * newV2) / sinTheta;
 	}
 
+	//ベクトルの長さはv1とv2の長さを線形補間
+	float length1 = Length(v1);
+	float length2 = Length(v2);
+	//Lerpで補間ベクトルの長さを求める
+	float length = Lerp(length1, length2, t);
 
-	dot = std::clamp(dot, -1.0f, 1.0f);
-	float theta = std::acos(dot) * t;
-	Vector3 relativeVec = Normalize(newV2 - newV1 * dot);
-
-	return newV1 * std::cos(theta) + relativeVec * std::sin(theta);
-
+	//長さを反映
+	return length * normalizedVector;
 }
 
 // 内積
