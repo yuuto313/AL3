@@ -20,7 +20,7 @@ void EnemyBullet::Initialize(Model* model, const Vector3& position,const Vector3
 	//Z方向に伸びた形状
 	worldTransform_.scale_.x = 0.5f;
 	worldTransform_.scale_.y = 0.5f;
-	worldTransform_.scale_.z = 3.0f;
+	worldTransform_.scale_.z = 2.0f;
 
 	// Y軸周りの回転角度(θy)を計算
 	// atan2: 第一引数に高さ、第二引数に底辺を指定する
@@ -39,16 +39,17 @@ void EnemyBullet::Update() {
 	// 敵弾のホーミング
 	//--------------------------------
 	//敵弾から自キャラへのベクトルを計算
-	Vector3 toPlayer = player_->GetWorldPosition()-world
+	Vector3 toPlayer = player_->GetWorldPosition() - GetWorldPosition();
 
 	//tは1.0fだと回避不可
-	float t = 0.5f;
+	float t = 0.25f;
 	//敵弾の速さ
-	float speed = 3.0f;
+	float speed = 0.3f;
+	
 	// 球面線形保管により、今の速度と自キャラへのベクトルを内挿し、新たな速度とする
 	velocity_ = Sleap(velocity_, toPlayer, t) * speed;
 
-	//進行方向に見た目を合わせる
+	//進行方向に見た目の回転を合わせる
 	// Y軸周りの回転角度(θy)を計算
 	// atan2: 第一引数に高さ、第二引数に底辺を指定する
 	worldTransform_.rotation_.y = std::atan2(velocity_.x, velocity_.z);
@@ -80,4 +81,14 @@ void EnemyBullet::Update() {
 
 void EnemyBullet::Draw(const ViewProjection& viewProjection) { 
 	model_->Draw(worldTransform_, viewProjection, textureHandle_);
+}
+
+Vector3 EnemyBullet::GetWorldPosition() {
+	// ワールド座標を入れる変数
+	Vector3 worldPos;
+	// ワールド行列の平行移動成分を取得（ワールド座標）
+	worldPos.x = worldTransform_.matWorld_.m[3][0];
+	worldPos.y = worldTransform_.matWorld_.m[3][1];
+	worldPos.z = worldTransform_.matWorld_.m[3][2];
+	return worldPos;
 }

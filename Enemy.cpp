@@ -135,20 +135,19 @@ void Enemy::Fire() {
 	// 弾を生成し、初期化
 	EnemyBullet* newBullet = new EnemyBullet();
 	newBullet->Initialize(model_, worldTransform_.translation_,velocity);
+	// 敵弾に自キャラを渡す
+	newBullet->SetPlayer(player_);
 	// 弾を登録する
 	bullets_.push_back(newBullet);
-
-	//敵弾に自キャラを渡す
-	newBullet->SetPlayer(player_);
 }
 
 Vector3 Enemy::GetWorldPosition() {
 	// ワールド座標を入れる変数
 	Vector3 worldPos;
 	// ワールド行列の平行移動成分を取得（ワールド座標）
-	worldPos.x = worldTransform_.translation_.x;
-	worldPos.y = worldTransform_.translation_.y;
-	worldPos.z = worldTransform_.translation_.z;
+	worldPos.x = worldTransform_.matWorld_.m[3][0];
+	worldPos.y = worldTransform_.matWorld_.m[3][1];
+	worldPos.z = worldTransform_.matWorld_.m[3][2];
 
 	return worldPos;
 }

@@ -36,6 +36,12 @@ public:
 	/// <param name="player"></param>
 	void SetPlayer(Player* player) { player_ = player; }
 
+	/// <summary>
+	/// ワールド座標を取得
+	/// </summary>
+	/// <returns></returns>
+	Vector3 GetWorldPosition();
+
 private:
 	// モデルのポインタ
     Model* model_;
