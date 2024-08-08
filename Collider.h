@@ -1,15 +1,16 @@
 #pragma once
+#include <Vector3.h>
 class Collider {
 public:
 	/// <summary>
 	/// 衝突時に呼ばれる関数
 	/// </summary>
-	virtual void OnCollision();
+	virtual void OnCollision() {}
 
 	/// <summary>
 	/// ワールド座標を取得
 	/// </summary>
-	virtual Vector3 GetWorldPosition() = 0;
+	virtual Vector3 GetWorldPosition() const = 0;
 
 	/// <summary>
 	/// 半径を取得

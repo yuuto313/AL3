@@ -139,7 +139,7 @@ void Enemy::Fire() {
 	bullets_.push_back(newBullet);
 }
 
-Vector3 Enemy::GetWorldPosition() { 
+Vector3 Enemy::GetWorldPosition() const{ 
 	// ワールド座標を入れる変数
 	Vector3 worldPos;
 	// ワールド行列の平行移動成分を取得（ワールド座標）

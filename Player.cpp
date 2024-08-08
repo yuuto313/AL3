@@ -152,7 +152,7 @@ void Player::Attack() {
 	}
 }
 
-Vector3 Player::GetWorldPosition() {
+Vector3 Player::GetWorldPosition() const{
 	// ワールド座標を入れる変数
 	Vector3 worldPos;
 	// ワールド行列の平行移動成分を取得（ワールド座標）

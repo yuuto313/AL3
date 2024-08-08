@@ -39,7 +39,7 @@ void EnemyBullet::Update() {
 void EnemyBullet::Draw(const ViewProjection& viewProjection) { 
 	model_->Draw(worldTransform_, viewProjection, textureHandle_); }
 
-Vector3 EnemyBullet::GetWorldPosition() { 
+Vector3 EnemyBullet::GetWorldPosition() const{ 
 	// ワールド座標を入れる変数
 	Vector3 worldPos;
 	// ワールド行列の平行移動成分を取得（ワールド座標）
