@@ -39,7 +39,7 @@ void EnemyBullet::Update() {
 	// 敵弾のホーミング
 	//--------------------------------
 	//敵弾から自キャラへのベクトルを計算
-	Vector3 toPlayer = player_->GetWorldPosition()-
+	Vector3 toPlayer = player_->GetWorldPosition()-world
 
 	//tは1.0fだと回避不可
 	float t = 0.5f;
