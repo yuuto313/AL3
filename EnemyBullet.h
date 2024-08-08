@@ -1,11 +1,12 @@
 #include "WorldTransform.h"
 #include "Model.h"
+#include "Collider.h"
 
 #pragma once
 /// <summary>
 /// 敵の弾
 /// </summary>
-class EnemyBullet {
+class EnemyBullet : public Collider{
 public:
 	EnemyBullet();
 	~EnemyBullet();
@@ -37,13 +38,13 @@ public:
 	/// <summary>
 	/// 衝突を検出したら呼び出されるコールバック関数
 	/// </summary>
-	void OnCollision();
+	void OnCollision() override;
 
 	/// <summary>
 	/// ワールド座標を取得
 	/// </summary>
 	/// <returns></returns>
-	Vector3 GetWorldPosition();
+	Vector3 GetWorldPosition() override;
 	
 	/// <summary>
 	/// 半径を取得するゲッター
@@ -51,6 +52,7 @@ public:
 	/// <param name="radius"></param>
 	/// <returns></returns>
 	float GetRadius() { return kRadius; }
+
 
 private:
 	// モデルのポインタ

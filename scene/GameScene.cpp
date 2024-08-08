@@ -225,3 +225,16 @@ void GameScene::CheckAllCollisions() {
 	}
 	#pragma endregion
 }
+
+void GameScene::CheckCollisionPair(Collider* colliderA, Collider* colliderB) { 
+	//コライダーAとBのワールド座標を取得
+	colliderA->GetWorldPosition();
+	colliderB->GetWorldPosition();
+
+	float radiusA = colliderA->GetRadius();
+	float radiusB = colliderB->GetRadius();
+	float distance=
+
+	//球と球の当たり判定
+	if ()
+}

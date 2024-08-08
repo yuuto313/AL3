@@ -2,12 +2,13 @@
 #include "Vector3.h"
 #include "ViewProjection.h"
 #include "WorldTransform.h"
+#include "Collider.h"
 
 #pragma once
 /// <summary>
 /// 自キャラの弾
 /// </summary>
-class PlayerBullet {
+class PlayerBullet : public Collider{
 public:
 	/// <summary>
 	/// 初期化
@@ -36,13 +37,13 @@ public:
 	/// <summary>
 	/// 衝突を検出したら呼び出されるコールバック関数
 	/// </summary>
-	void OnCollision();
+	void OnCollision() override;
 
 	/// <summary>
 	/// ワールド座標を取得
 	/// </summary>
 	/// <returns></returns>
-	Vector3 GetWorldPosition();
+	Vector3 GetWorldPosition() override;
 
 	/// <summary>
 	/// 半径を取得するゲッター

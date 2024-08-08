@@ -1,6 +1,7 @@
 #include "EnemyBullet.h"
 #include "Model.h"
 #include "WorldTransform.h"
+#include "Collider.h"
 #include <list>
 
 //自機クラスの前方宣言
@@ -10,7 +11,7 @@ class Player;
 /// <summary>
 /// 敵
 /// </summary>
-class Enemy {
+class Enemy : public Collider{
 public:
 	/// <summary>
 	/// コンストラクタ
@@ -70,12 +71,12 @@ public:
 	/// ワールド座標を取得
 	/// </summary>
 	/// <returns></returns>
-	Vector3 GetWorldPosition();
+	Vector3 GetWorldPosition() override;
 
 	/// <summary>
 	/// 衝突を検出したら呼び出されるコールバック関数
 	/// </summary>
-	void OnCollision();
+	void OnCollision() override;
 
 	/// <summary>
 	/// 弾リストを取得
