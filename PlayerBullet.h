@@ -3,6 +3,7 @@
 #include "ViewProjection.h"
 #include "WorldTransform.h"
 #include "Collider.h"
+class CollisionConfig;
 
 #pragma once
 /// <summary>

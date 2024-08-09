@@ -4,6 +4,9 @@
 #include "PlayerBullet.h"
 #include "Collider.h"
 #include <list>
+
+class CollisionConfig;
+
 #pragma once
 /// <summary>
 /// 自キャラ

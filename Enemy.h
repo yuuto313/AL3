@@ -6,6 +6,7 @@
 
 //自機クラスの前方宣言
 class Player;
+class CollisionConfig;
 #pragma once
 
 /// <summary>

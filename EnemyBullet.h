@@ -2,6 +2,8 @@
 #include "Model.h"
 #include "Collider.h"
 
+class CollisionConfig;
+
 #pragma once
 /// <summary>
 /// 敵の弾

@@ -144,76 +144,49 @@ void GameScene::Draw() {
 }
 
 void GameScene::CheckAllCollisions() {
-	//判定対象AとBの座標
-	Vector3 posA;
-	Vector3 posB;
-
 	//自弾リストの取得
 	const std::list<PlayerBullet*>& playerbullets = player_->GetBullets();
 	//敵弾リストの取得
 	const std::list<EnemyBullet*>& enemybullets = enemy_->GetBullets();
 
-	#pragma region 自キャラと敵弾の当たり判定
-	
+	//コライダー
+	std::list<Collider*> colliders_;
+	//コライダーをリストに登録
+	colliders_.push_back(player_);
+	colliders_.push_back(enemy_);
+	//自弾全てについて
+	for (PlayerBullet* playerBullet : playerbullets) {
+		colliders_.push_back(playerBullet);
+	}
 	//敵弾全てについて
 	for (EnemyBullet* enemyBullet : enemybullets) {
-		//ペアの衝突判定
-		CheckCollisionPair(player_, enemyBullet);
+		colliders_.push_back(enemyBullet);
 	}
 
-	#pragma endregion
+	//リスト内のペアを総当たり
+	std::list<Collider*>::iterator itrA = colliders_.begin();
+	for (; itrA != colliders_.end(); ++itrA) {
+		Collider* colliderA = *itrA;
 
-	#pragma region 自弾と敵キャラの当たり判定
-	//敵キャラの座標
-	posA = enemy_->GetWorldPosition();
+		//イテレータBはイテレータAの次の要素からまわす（重複判定を回避）
+		std::list<Collider*>::iterator itrB = itrA;
+		itrB++;
 
-	//敵キャラの自弾すべての当たり判定
-	for (PlayerBullet* bullet : playerbullets) {
-		//自弾の座標
-		posB = bullet->GetWorldPosition();
-		// 座標AとBの距離を求める
-		float distance = Length(posB - posA);
-		float enemyRadius = enemy_->GetRadius();
-		float playerBulletRadius = bullet->GetRadius();
-		// 弾と弾の交差判定
-		if (distance <= enemyRadius + playerBulletRadius) {
-			// 敵キャラの衝突時コールバックを呼び出す
-			enemy_->OnCollision();
-			// 自弾の衝突時コールバックを呼び出す
-			bullet->OnCollision();
+		for (; itrB != colliders_.end(); ++itrB) {
+			Collider* colliderB = *itrB;
+
+			//ペアの当たり判定
+			CheckCollisionPair(colliderA, colliderB);
 		}
 	}
-
-	#pragma endregion
-
-	#pragma region 自弾と敵弾の当たり判定
-	
-	// 敵キャラの自弾すべての当たり判定
-	for (PlayerBullet* playerBullet : playerbullets) {
-		for (EnemyBullet* enemyBullet : enemybullets) {
-			// 自弾の座標
-			posA = playerBullet->GetWorldPosition();
-			// 敵弾の座標
-			posB = enemyBullet->GetWorldPosition();
-
-			// 座標AとBの距離を求める
-			float distance = Length(posB - posA);
-			float playerBulletRadius = playerBullet->GetRadius();
-			float enemyBulletRadius = enemyBullet->GetRadius();
-
-			// 弾と弾の交差判定
-			if (distance <= playerBulletRadius + enemyBulletRadius) {
-				// 自弾の衝突時コールバックを呼び出す
-				playerBullet->OnCollision();
-				// 敵弾の衝突時コールバックを呼び出す
-				enemyBullet->OnCollision();
-			}
-		}
-	}
-	#pragma endregion
 }
 
 void GameScene::CheckCollisionPair(Collider* colliderA, Collider* colliderB) { 
+	//衝突フィルタリング
+	if (colliderA->GetCollisionAttribute() != colliderB->GetCollisionMask() || colliderB->GetCollisionAttribute() != colliderA->GetCollisionMask()) {
+		return;
+	}
+
 	//コライダーAとBのワールド座標を取得
 	Vector3 posA = colliderA->GetWorldPosition();
 	Vector3 posB = colliderB->GetWorldPosition();
