@@ -6,13 +6,16 @@
 GameScene::GameScene() {}
 
 GameScene::~GameScene() { 
-	//3Dモデルデータの開放
+	//3Dモデルデータの解放
 	delete model_;
-	//自キャラ開放
+	//自キャラ解放
 	delete player_;
-	//敵キャラ開放
+	//敵キャラk解放
 	delete enemy_;
+	//デバッグカメラ解放
 	delete debugCamera_;
+	//衝突判定マネージャの解放
+	delete collisionManager_;
 }
 
 void GameScene::Initialize() {
@@ -20,33 +23,40 @@ void GameScene::Initialize() {
 	dxCommon_ = DirectXCommon::GetInstance();
 	input_ = Input::GetInstance();
 	audio_ = Audio::GetInstance();
-
-	//ワールドトランスフォームの初期化
-	//worldTransform_.Initialize();
+	
+	//-------------生成-------------//
 	
 	//３Dモデルデータの生成
 	model_ = Model::Create();
 
-	//ファイル名を指定してテクスチャを読み込む
+	//自キャラの生成
+	player_ = new Player();
+
+	//敵キャラ生成
+	enemy_ = new Enemy();
+
+	//デバッグカメラの生成
+	debugCamera_ = new DebugCamera(1280, 720);
+
+	//衝突判定マネージャの生成
+	collisionManager_ = new CollisionManager();
+
+	//-------------初期化-------------//
+	
+	// ファイル名を指定してテクスチャを読み込む
 	textureHandle_ = TextureManager::Load("sample.png");
 
 	//ビュープロジェクションの初期化
 	viewProjection_.Initialize();
 	
-	//自キャラの生成
-	player_ = new Player();
 	//自キャラの初期化
 	player_->Initialize(model_,textureHandle_);
 
-	//敵キャラ生成
-	enemy_ = new Enemy();
 	//敵キャラ初期化
 	enemy_->Initialize(model_,pos_,approachVelocity_,leaveVelocity_);
+
 	//敵キャラに自キャラのアドレスを渡す
 	enemy_->SetPlayer(player_);
-
-	//デバッグカメラの生成
-	debugCamera_ = new DebugCamera(1280, 720);
 
 	//軸方向表示の表示を有効にする
 	AxisIndicator::GetInstance()->SetVisible(true);
@@ -60,7 +70,7 @@ void GameScene::Update() {
 	//敵キャラ更新
 	enemy_->Update();
 	//当たり判定
-	CheckAllCollisions();
+	collisionManager_->CheckAllCollisions(player_,enemy_);
 
 #ifdef _DEBUG
 	if (input_->TriggerKey(DIK_SPACE)) {
@@ -143,62 +153,3 @@ void GameScene::Draw() {
 #pragma endregion
 }
 
-void GameScene::CheckAllCollisions() {
-	//自弾リストの取得
-	const std::list<PlayerBullet*>& playerbullets = player_->GetBullets();
-	//敵弾リストの取得
-	const std::list<EnemyBullet*>& enemybullets = enemy_->GetBullets();
-
-	//コライダー
-	std::list<Collider*> colliders_;
-	//コライダーをリストに登録
-	colliders_.push_back(player_);
-	colliders_.push_back(enemy_);
-	//自弾全てについて
-	for (PlayerBullet* playerBullet : playerbullets) {
-		colliders_.push_back(playerBullet);
-	}
-	//敵弾全てについて
-	for (EnemyBullet* enemyBullet : enemybullets) {
-		colliders_.push_back(enemyBullet);
-	}
-
-	//リスト内のペアを総当たり
-	std::list<Collider*>::iterator itrA = colliders_.begin();
-	for (; itrA != colliders_.end(); ++itrA) {
-		Collider* colliderA = *itrA;
-
-		//イテレータBはイテレータAの次の要素からまわす（重複判定を回避）
-		std::list<Collider*>::iterator itrB = itrA;
-		itrB++;
-
-		for (; itrB != colliders_.end(); ++itrB) {
-			Collider* colliderB = *itrB;
-
-			//ペアの当たり判定
-			CheckCollisionPair(colliderA, colliderB);
-		}
-	}
-}
-
-void GameScene::CheckCollisionPair(Collider* colliderA, Collider* colliderB) { 
-	//衝突フィルタリング
-	if (colliderA->GetCollisionAttribute() != colliderB->GetCollisionMask() || colliderB->GetCollisionAttribute() != colliderA->GetCollisionMask()) {
-		return;
-	}
-
-	//コライダーAとBのワールド座標を取得
-	Vector3 posA = colliderA->GetWorldPosition();
-	Vector3 posB = colliderB->GetWorldPosition();
-
-	Vector3 difference = posB - posA;
-
-	float distance = Length(difference);
-
-	//球と球の当たり判定
-	if (distance <= colliderA->GetRadius() + colliderB->GetRadius()) {
-		//コライダーAとBの衝突時コールバックを呼び出す
-		colliderA->OnCollision();
-		colliderB->OnCollision();
-	}
-}

@@ -1,14 +1,20 @@
 #include "CollisionManager.h"
+#include "MyMath.h"
 
-void CollisionManager::CheckAllCollisions() {
+void CollisionManager::CheckAllCollisions(Player* player, Enemy* enemy) {
+
+	//衝突マネージャのリストをクリアする
+	colliders_.clear();
+
 	// 自弾リストの取得
-	const std::list<PlayerBullet*>& playerbullets = player_->GetBullets();
+	const std::list<PlayerBullet*>& playerbullets = player->GetBullets();
 	// 敵弾リストの取得
-	const std::list<EnemyBullet*>& enemybullets = enemy_->GetBullets();
+	const std::list<EnemyBullet*>& enemybullets = enemy->GetBullets();
 
 	// コライダーをリストに登録
-	colliders_.push_back(player_);
-	colliders_.push_back(enemy_);
+	colliders_.push_back(player);
+	colliders_.push_back(enemy);
+
 	// 自弾全てについて
 	for (PlayerBullet* playerBullet : playerbullets) {
 		colliders_.push_back(playerBullet);
@@ -35,3 +41,26 @@ void CollisionManager::CheckAllCollisions() {
 		}
 	}
 }
+
+void CollisionManager::CheckCollisionPair(Collider* colliderA, Collider* colliderB) {
+	// 衝突フィルタリング
+	if (colliderA->GetCollisionAttribute() != colliderB->GetCollisionMask() || colliderB->GetCollisionAttribute() != colliderA->GetCollisionMask()) {
+		return;
+	}
+
+	// コライダーAとBのワールド座標を取得
+	Vector3 posA = colliderA->GetWorldPosition();
+	Vector3 posB = colliderB->GetWorldPosition();
+
+	Vector3 difference = posB - posA;
+
+	float distance = Length(difference);
+
+	// 球と球の当たり判定
+	if (distance <= colliderA->GetRadius() + colliderB->GetRadius()) {
+		// コライダーAとBの衝突時コールバックを呼び出す
+		colliderA->OnCollision();
+		colliderB->OnCollision();
+	}
+}
+

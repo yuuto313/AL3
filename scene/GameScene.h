@@ -46,26 +46,15 @@ public: // メンバ関数
 	/// </summary>
 	void Draw();
 
-	/// <summary>
-	/// 衝突判定と応答
-	/// </summary>
-	void CheckAllCollisions();
-
 private: // メンバ変数
 	DirectXCommon* dxCommon_ = nullptr;
 	Input* input_ = nullptr;
 	Audio* audio_ = nullptr;
-	// ワールドトランスフォーム
-	//WorldTransform worldTransform_;
-	
+
+	//-------------ポインタ類-------------//
+
 	//3Dモデルデータ
 	Model* model_ = nullptr;
-
-	//テクスチャハンドル
-	uint32_t textureHandle_ = 0;
-
-	// ビュープロジェクション
-	ViewProjection viewProjection_;
 	
 	//デバッグカメラ有効
 	bool isDebugCameraActive_ = false;
@@ -78,17 +67,21 @@ private: // メンバ変数
 	//敵キャラ
 	Enemy* enemy_ = nullptr;
 
+	//衝突判定マネージャ
+	CollisionManager* collisionManager_ = nullptr;
+
+	// テクスチャハンドル
+	uint32_t textureHandle_ = 0;
+
+	// ビュープロジェクション
+	ViewProjection viewProjection_;
+
 	// 敵キャラの座標
 	Vector3 pos_ = {2.0f, 2.0f, 50.0};
 	// 敵キャラの速度
 	Vector3 approachVelocity_ = {0.0f, 0.0f, -0.05f};
 	Vector3 leaveVelocity_ = {0.1f, 0.1f, -0.05f};
 	
-	/// <summary>
-	/// コライダー2つの衝突判定と応答
-	/// </summary>
-	/// <param name="colliderA"></param>
-	/// <param name="colliderB"></param>
-	void CheckCollisionPair(Collider* colliderA, Collider* colliderB);
+	
 
 };
