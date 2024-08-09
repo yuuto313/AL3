@@ -10,6 +10,7 @@
 #include "WorldTransform.h"
 #include "DebugCamera.h"
 #include "Collider.h"
+#include "CollisionManager.h"
 #pragma once
 
 
@@ -84,7 +85,7 @@ private: // メンバ変数
 	Vector3 leaveVelocity_ = {0.1f, 0.1f, -0.05f};
 	
 	/// <summary>
-	/// koraida2つの衝突判定と応答
+	/// コライダー2つの衝突判定と応答
 	/// </summary>
 	/// <param name="colliderA"></param>
 	/// <param name="colliderB"></param>
