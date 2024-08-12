@@ -7,6 +7,9 @@
 // 長さ
 float Length(const Vector3& v);
 
+//最短角度補間
+float LerpShortAngle(float a, float b, float t);
+
 // 正規化
 Vector3 Normalize(const Vector3& v);
 

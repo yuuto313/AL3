@@ -290,57 +290,50 @@ void Player::Movement() {
 	const float speed = 0.3f;
 	XINPUT_STATE joyState;
 
-	// キーボード入力の取得
-	/*bool moveForward = Input::GetInstance()->PushKey(DIK_W);
-	bool moveBackward = Input::GetInstance()->PushKey(DIK_S);
-	bool moveLeft = Input::GetInstance()->PushKey(DIK_A);
-	bool moveRight = Input::GetInstance()->PushKey(DIK_D);*/
-
 	Input::GetInstance()->GetJoystickState(0, joyState);
 
 	if ((float)joyState.Gamepad.sThumbLX != 0 || (float)joyState.Gamepad.sThumbLY != 0) {
+
+		const float threshold = 0.7f;
+		bool isMoveing = false;
+
 		// 移動量
 		velocity_ = {(float)joyState.Gamepad.sThumbLX / SHRT_MAX, 0.0f, (float)joyState.Gamepad.sThumbLY / SHRT_MAX};
 
-		// キーボード入力の確認
-		/*if (moveForward) {
-		    velocity_.z += 1.0f;
+		if (Length(velocity_) > threshold) {
+			isMoveing = true;
 		}
-		if (moveBackward) {
-		    velocity_.z -= 1.0f;
+
+		if (isMoveing) {
+			//移動処理
+			// 移動量に速さを反映
+			velocity_ = velocity_ * speed;
+
+			// カメラの回転角度を取得
+			Vector3 rotationAngle = {GetViewProjection()->rotation_.x, GetViewProjection()->rotation_.y, GetViewProjection()->rotation_.z};
+
+			////カメラの角度から回転行列を計算する
+			Matrix4x4 rotateXMatrix = MakeRotateXMatrix(rotationAngle.x);
+			Matrix4x4 rotateYMatrix = MakeRotateYMatrix(rotationAngle.y);
+			Matrix4x4 rotateZMatrix = MakeRotateZMatrix(rotationAngle.z);
+			Matrix4x4 rotateXYZMatrix = Multiply(rotateXMatrix, Multiply(rotateYMatrix, rotateZMatrix));
+
+			// 移動ベクトルをカメラの座標だけ回転する
+			velocity_ = TransformNormal(velocity_, rotateXYZMatrix);
+
+			// 移動
+			worldTransform_.translation_ += velocity_;
+
+			//--------------------------------
+			// 移動方向に見た目を合わせる
+			//--------------------------------
+
+			// 目標角度の算出
+			targetAngle_ = std::atan2(velocity_.x, velocity_.z);
 		}
-		if (moveLeft) {
-		    velocity_.x -= 1.0f;
-		}
-		if (moveRight) {
-		    velocity_.x += 1.0f;
-		}*/
-		// 移動量に速さを反映
-		velocity_ = velocity_ * speed;
 
-		// 移動量がゼロでない場合にのみ移動処理を行う
-		// if (velocity_.x != 0 || velocity_.z != 0) {
-		// カメラの回転角度を取得
-		Vector3 rotationAngle = {GetViewProjection()->rotation_.x, GetViewProjection()->rotation_.y, GetViewProjection()->rotation_.z};
-
-		////カメラの角度から回転行列を計算する
-		Matrix4x4 rotateXMatrix = MakeRotateXMatrix(rotationAngle.x);
-		Matrix4x4 rotateYMatrix = MakeRotateYMatrix(rotationAngle.y);
-		Matrix4x4 rotateZMatrix = MakeRotateZMatrix(rotationAngle.z);
-		Matrix4x4 rotateXYZMatrix = Multiply(rotateXMatrix, Multiply(rotateYMatrix, rotateZMatrix));
-
-		// 移動ベクトルをカメラの座標だけ回転する
-		velocity_ = TransformNormal(velocity_, rotateXYZMatrix);
-
-		// 移動
-		worldTransform_.translation_ += velocity_;
-
-		//--------------------------------
-		// 移動方向に見た目を合わせる
-		//--------------------------------
-
-		// Y軸周りの角度
-		worldTransform_.rotation_.y = std::atan2(velocity_.x, velocity_.z);
+		//最短角度補間
+		worldTransformBody_.rotation_.y = LerpShortAngle(worldTransformBody_.rotation_.y, targetAngle_, 0.2f);
 
 	} else if (lockOn_ && lockOn_->ExistTarget()) {
 		// ロックオン座標
