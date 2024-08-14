@@ -85,7 +85,9 @@ private:
 
 	//敵
 	std::unique_ptr<Model> modelEnemy_ = nullptr;
-	std::unique_ptr<Model> modelEnemyWeapon_ = nullptr;
+	std::unique_ptr<Model> modelEnemyLeftWeapon_ = nullptr;
+	std::unique_ptr<Model> modelEnemyRightWeapon_ = nullptr;
+	
 
 	//天球のモデル
 	std::unique_ptr<Model> modelSkydome_ = nullptr;

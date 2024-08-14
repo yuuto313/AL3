@@ -7,10 +7,17 @@ void Enemy::Initialize(const std::vector<Model*>& models) {
 	//ワールド行列の初期化
 	worldTransform_.Initialize();
 	worldTransform_.translation_ = {0.0f, 0.0f, 3.0f};
-	worldTransformWeapon_.Initialize();
+
+	worldTransformLeftWeapon_.Initialize();
+	worldTransformLeftWeapon_.translation_ = {-3.0f, 0.0f, 0.0f};
+
+	worldTransformRightWeapon_.Initialize();
+	worldTransformRightWeapon_.translation_ = {3.0f, 0.0f, 0.0f};
+
 
 	//本体と親子関係を結ぶ
-	worldTransformWeapon_.parent_ = &worldTransform_;
+	worldTransformLeftWeapon_.parent_ = &worldTransform_;
+	worldTransformRightWeapon_.parent_ = &worldTransform_;
 
 }
 
@@ -32,12 +39,14 @@ void Enemy::Update() {
 	//--------------------------------
 
 	worldTransform_.UpdateMatrix();
-	worldTransformWeapon_.UpdateMatrix();
+	worldTransformLeftWeapon_.UpdateMatrix();
+	worldTransformRightWeapon_.UpdateMatrix();
 }
 
 void Enemy::Draw(const ViewProjection& viewProjection) { 
 	models_[0]->Draw(worldTransform_, viewProjection);
-	models_[1]->Draw(worldTransformWeapon_, viewProjection);
+	models_[1]->Draw(worldTransformLeftWeapon_, viewProjection);
+	models_[2]->Draw(worldTransformRightWeapon_, viewProjection);
 }
 
 void Enemy::Movement() { 
