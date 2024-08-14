@@ -16,6 +16,13 @@ enum class Behavior {
 	kRoot,   // 通常状態
 	kAttack, // 攻撃中
 	kJump,//ジャンプ中
+	kDash,//ダッシュ中
+};
+
+//ダッシュ用ワーク
+struct WorkDash {
+	//ダッシュ用の媒介変数
+	uint32_t dashParameter_ = 0;
 };
 
 /// <summary>
@@ -58,6 +65,10 @@ public:
 	/// </summary>
 	void BehaviorJumpInitialize();
 	/// <summary>
+	/// ダッシュ行動初期化
+	/// </summary>
+	void BehaviorDashInitialize();
+	/// <summary>
 	/// 通常行動更新
 	/// </summary>
 	void BehaviorRootUpdate();
@@ -70,6 +81,10 @@ public:
 	/// </summary>
 	void BehaviorjumpUpdate();
 	/// <summary>
+	/// ダッシュ行動更新
+	/// </summary>
+	void BehaviorDashUpdate();
+	/// <summary>
 	///	Behavior遷移の実装
 	/// </summary>
 	void ChangeBehavior();
@@ -77,6 +92,10 @@ public:
 	/// 移動処理
 	/// </summary>
 	void Movement();
+	/// <summary>
+	/// ダッシュの移動処理
+	/// </summary>
+	void DashMovement();
 	/// <summary>
 	/// カメラのビュープロジェクションのみ参照するセッター
 	/// </summary>
@@ -157,5 +176,8 @@ private:
 	// キーボード入力
 	Input* input_ = nullptr;
 
+	//目標角度
 	float targetAngle_ = 0.0f;
+
+	WorkDash workDash_;
 };

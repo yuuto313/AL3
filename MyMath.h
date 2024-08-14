@@ -4,8 +4,18 @@
 #include <corecrt_math_defines.h>
 #pragma once
 
+// 加算
+Vector3 Add(const Vector3& v1, const Vector3& v2);
+// 減算
+Vector3 Subtract(const Vector3& v1, const Vector3& v2);
+// スカラー倍
+Vector3 Multiply(float scalar, const Vector3& v);
+
 // 長さ
 float Length(const Vector3& v);
+
+//線形補間
+Vector3 Lerp(const Vector3& a, const Vector3& b, float t);
 
 // 最短角度補間
 float LerpShortAngle(float a, float b, float t);
@@ -48,3 +58,12 @@ Matrix4x4 MakeViewportMatrix(float left, float top, float width, float height, f
 // ベクトル変換
 // ベクトルの向きだけを回転させるため、4x4行列の平行移動成分を打ち消して、回転（とスケーリング）のみ反映させたもの
 Vector3 TransformNormal(const Vector3& v, const Matrix4x4& m);
+
+// 二項演算子
+Vector3 operator+(const Vector3& v1, const Vector3& v2);
+Vector3 operator-(const Vector3& v1, const Vector3& v2);
+
+Vector3 operator+(float s, const Vector3& v);
+Vector3 operator*(float s, const Vector3& v);
+Vector3 operator*(const Vector3& v, float s);
+Vector3 operator/(const Vector3& v, float s);

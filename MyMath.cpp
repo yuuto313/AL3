@@ -1,8 +1,37 @@
 #include "MyMath.h"
 #include "cassert"
 
+// 加算
+Vector3 Add(const Vector3& v1, const Vector3& v2) {
+	Vector3 result;
+	result.x = v1.x + v2.x;
+	result.y = v1.y + v2.y;
+	result.z = v1.z + v2.z;
+	return result;
+}
+// 減算
+Vector3 Subtract(const Vector3& v1, const Vector3& v2) {
+	Vector3 result;
+	result.x = v1.x - v2.x;
+	result.y = v1.y - v2.y;
+	result.z = v1.z - v2.z;
+	return result;
+};
+// スカラー倍
+Vector3 Multiply(float scalar, const Vector3& v) {
+	Vector3 result;
+	result.x = scalar * v.x;
+	result.y = scalar * v.y;
+	result.z = scalar * v.z;
+	return result;
+}
+
 // 長さ
 float Length(const Vector3& v) { return sqrtf(v.x * v.x + v.y * v.y + v.z * v.z); }
+
+Vector3 Lerp(const Vector3& a, const Vector3& b, float t) { 
+		return a * t + b * (1.0f - t);
+}
 
 // 最短角度補間
 float LerpShortAngle(float a, float b, float t) {
@@ -249,3 +278,13 @@ Vector3 TransformNormal(const Vector3& v, const Matrix4x4& m) {
 	};
 	return result;
 }
+
+
+// 二項演算子
+Vector3 operator+(const Vector3& v1, const Vector3& v2) { return Add(v1, v2); }
+Vector3 operator-(const Vector3& v1, const Vector3& v2) { return Subtract(v1, v2); }
+
+Vector3 operator+(float s, const Vector3& v) { return Vector3{s + v.x, s + v.y, s + v.z}; }
+Vector3 operator*(float s, const Vector3& v) { return Multiply(s, v); }
+Vector3 operator*(const Vector3& v, float s) { return s * v; }
+Vector3 operator/(const Vector3& v, float s) { return Multiply(1.0f / s, v); }

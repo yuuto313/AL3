@@ -132,6 +132,12 @@ void Player::BehaviorJumpInitialize() {
 	velocity_.y = kJumpFirstSpeed;
 }
 
+void Player::BehaviorDashInitialize() { 
+	workDash_.dashParameter_ = 0;
+	//ダッシュ開始時に補間を切って、一瞬で目標角度に達するようにする
+	worldTransformBody_.rotation_.y = targetAngle_;
+}
+
 void Player::BehaviorRootUpdate() {
 	
 	//--------------------------------
@@ -220,6 +226,19 @@ void Player::BehaviorjumpUpdate() {
 	}
 }
 
+void Player::BehaviorDashUpdate() {
+	//自キャラの向いてる方向に移動する処理
+	DashMovement();
+
+	//ダッシュの時間<frame>
+	const uint32_t behaviorDashTime = 60;
+
+	//既定の時間経過で通常行動に戻る
+	if (++workDash_.dashParameter_ >= behaviorDashTime) {
+		behaviorRequest_ = Behavior::kRoot;
+	}
+}
+
 void Player::ChangeBehavior() {
 	// std::nullopt以外の値がはいってるときtrueになる
 	if (behaviorRequest_) {
@@ -229,22 +248,35 @@ void Player::ChangeBehavior() {
 		switch (behavior_) {
 		case Behavior::kRoot:
 		default:
-
+			//--------------------------------
+			// 通常行動初期化
+			//--------------------------------
 			BehaviorRootInitialize();
 
 			break;
 
 		case Behavior::kAttack:
-
+			//--------------------------------
+			// 攻撃行動初期化
+			//--------------------------------
 			BehaviorAttackInitialize();
 
 			break;
 
 		case Behavior::kJump:
+			//--------------------------------
+			// ジャンプ行動初期化
+			//--------------------------------
 			BehaviorJumpInitialize();
 
 			break;
+		case Behavior::kDash:
+			//--------------------------------
+			// ダッシュ行動初期化
+			//--------------------------------
+			BehaviorDashInitialize();
 		
+			break;
 		}
 		// 振る舞いリクエストをリセット
 		behaviorRequest_ = std::nullopt;
@@ -267,7 +299,7 @@ void Player::ChangeBehavior() {
 		//--------------------------------
 
 		BehaviorAttackUpdate();
-	
+
 		break;
 
 	case Behavior::kJump:
@@ -278,6 +310,15 @@ void Player::ChangeBehavior() {
 		BehaviorjumpUpdate();
 
 		break;
+
+	case Behavior::kDash:
+		//--------------------------------
+		// ダッシュ行動更新
+		//--------------------------------
+		BehaviorDashUpdate();
+
+		break;
+	
 	}
 }
 
@@ -306,13 +347,13 @@ void Player::Movement() {
 
 		if (isMoveing) {
 			// 移動処理
-			//  移動量に速さを反映
+			// 移動量に速さを反映
 			velocity_ = velocity_ * speed;
 
 			// カメラの回転角度を取得
 			Vector3 rotationAngle = {GetViewProjection()->rotation_.x, GetViewProjection()->rotation_.y, GetViewProjection()->rotation_.z};
 
-			////カメラの角度から回転行列を計算する
+			// カメラの角度から回転行列を計算する
 			Matrix4x4 rotateXMatrix = MakeRotateXMatrix(rotationAngle.x);
 			Matrix4x4 rotateYMatrix = MakeRotateYMatrix(rotationAngle.y);
 			Matrix4x4 rotateZMatrix = MakeRotateZMatrix(rotationAngle.z);
@@ -360,6 +401,64 @@ void Player::Movement() {
 
 	if (input_->TriggerKey(DIK_J) || joyState.Gamepad.wButtons & XINPUT_GAMEPAD_B) {
 		behaviorRequest_ = Behavior::kAttack;
+	}
+
+	//--------------------------------
+	// ダッシュ発動
+	//--------------------------------
+
+	if (joyState.Gamepad.wButtons & XINPUT_GAMEPAD_X) {
+		//ダッシュリクエスト
+		behaviorRequest_ = Behavior::kDash;
+	}
+}
+
+void Player::DashMovement() {
+	// 速さ
+	const float speed = 0.7f;
+	XINPUT_STATE joyState;
+
+	Input::GetInstance()->GetJoystickState(0, joyState);
+
+	if ((float)joyState.Gamepad.sThumbLX != 0 || (float)joyState.Gamepad.sThumbLY != 0) {
+
+		// 移動量
+		velocity_ = {(float)joyState.Gamepad.sThumbLX / SHRT_MAX, 0.0f, (float)joyState.Gamepad.sThumbLY / SHRT_MAX};
+
+		// 移動処理
+		// 移動量に速さを反映
+		velocity_ = velocity_ * speed;
+
+		// カメラの回転角度を取得
+		Vector3 rotationAngle = {GetViewProjection()->rotation_.x, GetViewProjection()->rotation_.y, GetViewProjection()->rotation_.z};
+
+		////カメラの角度から回転行列を計算する
+		Matrix4x4 rotateXMatrix = MakeRotateXMatrix(rotationAngle.x);
+		Matrix4x4 rotateYMatrix = MakeRotateYMatrix(rotationAngle.y);
+		Matrix4x4 rotateZMatrix = MakeRotateZMatrix(rotationAngle.z);
+		Matrix4x4 rotateXYZMatrix = Multiply(rotateXMatrix, Multiply(rotateYMatrix, rotateZMatrix));
+
+		// 移動ベクトルをカメラの座標だけ回転する
+		velocity_ = TransformNormal(velocity_, rotateXYZMatrix);
+
+		// 移動
+		worldTransform_.translation_ += velocity_;
+
+		//--------------------------------
+		// 移動方向に見た目を合わせる
+		//--------------------------------
+
+		// 目標角度の算出
+		worldTransformBody_.rotation_.y = std::atan2(velocity_.x, velocity_.z);
+
+	} else if (lockOn_ && lockOn_->ExistTarget()) {
+		// ロックオン座標
+		Vector3 lockOnPosition = lockOn_->GetTargetPosition();
+		// 追従対象からロックオン対象へのベクトル
+		Vector3 sub = lockOnPosition - worldTransform_.translation_;
+
+		// Y軸周り角度
+		worldTransform_.rotation_.y = std::atan2(sub.x, sub.z);
 	}
 }
 
