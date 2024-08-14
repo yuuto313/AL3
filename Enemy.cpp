@@ -9,10 +9,10 @@ void Enemy::Initialize(const std::vector<Model*>& models) {
 	worldTransform_.translation_ = {0.0f, 0.0f, 3.0f};
 
 	worldTransformLeftWeapon_.Initialize();
-	worldTransformLeftWeapon_.translation_ = {-3.0f, 0.0f, 0.0f};
+	worldTransformLeftWeapon_.translation_ = {-3.0f, 1.8f, 0.0f};
 
 	worldTransformRightWeapon_.Initialize();
-	worldTransformRightWeapon_.translation_ = {3.0f, 0.0f, 0.0f};
+	worldTransformRightWeapon_.translation_ = {3.0f, 1.8f, 0.0f};
 
 
 	//本体と親子関係を結ぶ
@@ -51,7 +51,7 @@ void Enemy::Draw(const ViewProjection& viewProjection) {
 
 void Enemy::Movement() { 
 	//--------------------------------
-	//  回転処理
+	// 回転処理
 	//--------------------------------
 	//回転速度
 	Vector3 rotationSpeed = {0.0f, 0.03f, 0.0f};
@@ -69,6 +69,15 @@ void Enemy::Movement() {
 
 	worldTransform_.translation_.x = radius * cos(worldTransform_.rotation_.y);
 	worldTransform_.translation_.z = radius * sin(worldTransform_.rotation_.y);
+
+	//--------------------------------
+	// バーツギミックアニメーションを付ける
+	//--------------------------------
+	// 左右の武器を回転させる
+	const float rotationX = 0.05f;
+	worldTransformLeftWeapon_.rotation_.x += rotationX;
+	worldTransformRightWeapon_.rotation_.x += rotationX;
+
 }
 
 Vector3 Enemy::GetCenterPosition()const {
