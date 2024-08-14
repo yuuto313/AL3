@@ -157,4 +157,5 @@ private:
 	// キーボード入力
 	Input* input_ = nullptr;
 
+	float targetAngle_ = 0.0f;
 };

@@ -4,6 +4,29 @@
 // 長さ
 float Length(const Vector3& v) { return sqrtf(v.x * v.x + v.y * v.y + v.z * v.z); }
 
+// 最短角度補間
+float LerpShortAngle(float a, float b, float t) {
+	// 角度差分を求める
+	float diff = b - a;
+
+	// 角度を[-2PI,+2PI]に補正する
+	if (diff > 2.0f * (float)M_PI) {
+		diff = std::fmod(diff, 2.0f * (float)M_PI);
+	}
+
+	// 角度を[-PI,+PI]に補正する
+	//+πを上回っていれば
+	if (diff > (float)M_PI) {
+		diff -= 2.0f * (float)M_PI;
+	}
+	//-πを下回っていれば
+	if (diff < -(float)M_PI) {
+		diff += 2.0f * (float)M_PI;
+	}
+
+	return a + diff * t;
+}
+
 // 正規化
 Vector3 Normalize(const Vector3& v) {
 	Vector3 result;
