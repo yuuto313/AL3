@@ -31,9 +31,10 @@ void GameScene::Initialize() {
 	modelFighterLightArm_.reset(Model::CreateFromOBJ("LeftArm", true));
 	modelFighterWeapon_.reset(Model::CreateFromOBJ("Hammer", true));
 
-	//敵
-	modelEnemy_.reset(Model::CreateFromOBJ("Enemy", true));
-	modelEnemyWeapon_.reset(Model::CreateFromOBJ("Weapon", true));
+	// 敵
+	modelEnemy_.reset(Model::CreateFromOBJ("EnemyBody", true));
+	modelEnemyLeftWeapon_.reset(Model::CreateFromOBJ("EnemyWeapon", true));
+	modelEnemyRightWeapon_.reset(Model::CreateFromOBJ("EnemyWeapon", true));
 
 	//天球のモデルを生成
 	modelSkydome_.reset(Model::CreateFromOBJ("skydome", true));
@@ -71,8 +72,8 @@ void GameScene::Initialize() {
 	//自キャラモデル
 	std::vector<Model*> playerModels = {modelFighterBody_.get(), modelFighterHead_.get(), modelFighterRightArm_.get(), modelFighterLightArm_.get(), modelFighterWeapon_.get()};
 
-	//敵キャラのモデル
-	std::vector<Model*> enemyMoldels = {modelEnemy_.get(),modelEnemyWeapon_.get()};
+	// 敵キャラのモデル
+	std::vector<Model*> enemyMoldels = {modelEnemy_.get(), modelEnemyLeftWeapon_.get(), modelEnemyRightWeapon_.get()};
 
 	//--------------------------------
 	// 初期化

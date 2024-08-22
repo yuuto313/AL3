@@ -23,5 +23,6 @@ public:
 	Vector3 GetCenterPosition()const;
 
 private:
-	WorldTransform worldTransformWeapon_;
+	WorldTransform worldTransformLeftWeapon_;
+	WorldTransform worldTransformRightWeapon_;
 };
