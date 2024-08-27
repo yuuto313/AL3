@@ -11,7 +11,6 @@ void Player::Initialize(const std::vector<Model*>&models) {
 	//基底クラスの初期化
 	BaseCharacter::Initialize(models);
 
-	//textureHandle_ = textureHandle;
 	//  ワールド変換初期化
 	worldTransform_.Initialize();
 	worldTransform_.translation_ = {0.0f, 0.0f, -30.0f};
@@ -37,6 +36,10 @@ void Player::Initialize(const std::vector<Model*>&models) {
 	worldTransformLeftArm_.parent_ = &worldTransformBody_;
 	worldTransformRightArm_.parent_ = &worldTransformBody_;
 	worldTransformWeapon_.parent_ = &worldTransformBody_;
+
+	//ハンマーの初期化
+	hammer_ = std::make_unique<Hammer>();
+
 
 	GlobalVariables* globalVariables = GlobalVariables::GetInstance();
 	const char* groupName = "Player";
@@ -416,7 +419,7 @@ Vector3 Player::GetCeterPosition() const {
 	return worldPos;
 }
 
-void Player::OnCollison() {
+void Player::OnCollision() {
 	//ジャンプリクエスト
 	behaviorRequest_ = Behavior::kJump;
 }

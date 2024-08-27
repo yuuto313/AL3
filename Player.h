@@ -7,6 +7,7 @@
 
 #include "BaseCharacter.h"
 #include "GlobalVariables.h"
+#include "Hammer.h"
 
 #pragma once
 
@@ -113,7 +114,7 @@ public:
 	/// <summary>
 	/// 衝突を検出したら呼び出されるコールバック関数
 	/// </summary>
-	void OnCollison() override;
+	void OnCollision() override;
 
 private:
 	//ワールド変換データ
@@ -157,4 +158,6 @@ private:
 	// キーボード入力
 	Input* input_ = nullptr;
 
+	//ハンマー
+	std::unique_ptr<Hammer> hammer_;
 };

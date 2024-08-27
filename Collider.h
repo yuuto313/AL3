@@ -26,7 +26,7 @@ public:
 	/// <summary>
 	/// 衝突時に呼ばれる関数
 	/// </summary>
-	virtual void OnCollison() {}
+	virtual void OnCollision() {}
 	/// <summary>
 	/// 中心座標取得
 	/// </summary>

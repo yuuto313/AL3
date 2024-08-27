@@ -53,9 +53,9 @@ void CollisionManager::CheckCollisionPair(Collider* colliderA, Collider* collide
 	float distance = Length(subtract);
 	if (distance <= colliderA->GetRadius() + colliderB->GetRadius()) {
 		//コライダーAの衝突時コールバックを呼び出す
-		colliderA->OnCollison();
+		colliderA->OnCollision();
 		//コライダーBの衝突時コールバックを呼び出す
-		colliderB->OnCollison();
+		colliderB->OnCollision();
 	}
 
 }
