@@ -25,7 +25,8 @@ public:
 	/// <summary>
 	/// 描画
 	/// </summary>
-	void Draw();
+	/// <param name="viewProjection"></param>
+	void Draw(const ViewProjection& viewProjection);
 
 	/// <summary>
 	/// 攻撃行動更新
@@ -34,6 +35,12 @@ public:
 
 	const Vector3& GetRotation() const { return worldTransform_.rotation_;}
 	void SetRotation(const Vector3& rotaion) { worldTransform_.rotation_ = rotaion; }
+
+	/// <summary>
+	/// 親子関係を結ぶ
+	/// </summary>
+	/// <param name="parent"></param>
+	void SetParent(const WorldTransform* parent) { worldTransform_.parent_ = parent; }
 
 	/// <summary>
 	/// 衝突を検出したら呼び出されるコールバック関数

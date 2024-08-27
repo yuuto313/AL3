@@ -26,19 +26,17 @@ void Player::Initialize(const std::vector<Model*>&models) {
 	// 左腕
 	worldTransformLeftArm_.Initialize();
 	worldTransformLeftArm_.translation_ = {-2.0f, 3.0f, 0.0f};
-	//武器
-	worldTransformWeapon_.Initialize();
-
 
 	// 親子関係を結ぶ
 	worldTransformBody_.parent_ = &worldTransform_;
 	worldTransformHead_.parent_ = &worldTransformBody_;
 	worldTransformLeftArm_.parent_ = &worldTransformBody_;
 	worldTransformRightArm_.parent_ = &worldTransformBody_;
-	worldTransformWeapon_.parent_ = &worldTransformBody_;
 
 	//ハンマーの初期化
 	hammer_ = std::make_unique<Hammer>();
+	hammer_->Initialize(models_[4], this);
+	hammer_->SetParent(&worldTransformBody_);
 
 
 	GlobalVariables* globalVariables = GlobalVariables::GetInstance();
@@ -57,8 +55,6 @@ void Player::Initialize(const std::vector<Model*>&models) {
 
 	//浮遊ギミック初期化
 	InitializeFloatingGimmick();
-
-
 }
 
 void Player::Update() { 
@@ -88,9 +84,6 @@ void Player::Update() {
 	worldTransformHead_.UpdateMatrix();
 	worldTransformRightArm_.UpdateMatrix();
 	worldTransformLeftArm_.UpdateMatrix();
-	worldTransformWeapon_.UpdateMatrix();
-
-
 }
 
 void Player::Draw(const ViewProjection& viewProjection) { 
@@ -98,7 +91,7 @@ void Player::Draw(const ViewProjection& viewProjection) {
 	models_[1]->Draw(worldTransformHead_, viewProjection);
 	models_[2]->Draw(worldTransformRightArm_, viewProjection);
 	models_[3]->Draw(worldTransformLeftArm_, viewProjection);
-	models_[4]->Draw(worldTransformWeapon_, viewProjection);
+	hammer_->Draw(viewProjection);
 }
 
 void Player::ApplyGlobalVariables() { 
@@ -113,14 +106,14 @@ void Player::ApplyGlobalVariables() {
 
 void Player::BehaviorRootInitialize() { 
 	InitializeFloatingGimmick();
-	worldTransformWeapon_.rotation_ = {};
+	hammer_->SetRotation({});
 	worldTransformLeftArm_.rotation_ = {};
 	worldTransformRightArm_.rotation_ = {};
 }
 
 void Player::BehaviorAttackInitialize() { 
 	//ギミックのアニメーション用数値のリセット
-	currentRotationAngleX = 0.0f;
+	//currentRotationAngleX = 0.0f;
 }
 
 void Player::BehaviorJumpInitialize() {
@@ -166,7 +159,6 @@ void Player::BehaviorRootUpdate() {
 	ImGui::SliderInt("floatingCycle", &floatingCycle_, -10, 10);
 	ImGui::SliderFloat("floatingAmplitude", &amplitude_, -10.0f, 10.0f);
 
-	ImGui::SliderFloat3("Weapon.rotate", &worldTransformWeapon_.rotation_.x, -10.0f, 10.f);
 	ImGui::End();
 }
 
@@ -193,7 +185,7 @@ void Player::BehaviorAttackUpdate() {
 
 	
 
-	if (currentRotationAngleX < targetRotationAngleX) {
+	/*if (currentRotationAngleX < targetRotationAngleX) {
 		currentRotationAngleX += rotationSpeed;
 		if (currentRotationAngleX > targetRotationAngleX) {
 			currentRotationAngleX = targetRotationAngleX;
@@ -202,7 +194,7 @@ void Player::BehaviorAttackUpdate() {
 		behaviorRequest_ = Behavior::kRoot;	
 	}
 
-	worldTransformWeapon_.rotation_.x = currentRotationAngleX;
+	worldTransformWeapon_.rotation_.x = currentRotationAngleX;*/
 }
 
 void Player::BehaviorjumpUpdate() {

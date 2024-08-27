@@ -5,23 +5,17 @@ void Hammer::Initialize(Model* model, Player* player) {
 	assert(model);
 	model_ = model;
 	player_ = player;
+	worldTransform_.Initialize();
 }
 
-void Hammer::Update() {}
-
-void Hammer::Draw() {}
-
-void Hammer::BehaviorAttackUpdate() {
-	if (currentRotationAngleX < targetRotationAngleX) {
-		currentRotationAngleX += rotationSpeed;
-		if (currentRotationAngleX > targetRotationAngleX) {
-			currentRotationAngleX = targetRotationAngleX;
-		}
-	} else {
-		behaviorRequest_ = Behavior::kRoot;
-	}
-
-	worldTransform_.rotation_.x = currentRotationAngleX;
+void Hammer::Update() { 
+	worldTransform_.UpdateMatrix();
 }
+
+void Hammer::Draw(const ViewProjection& viewProjection) { 
+	model_->Draw(worldTransform_, viewProjection);
+}
+
+void Hammer::BehaviorAttackUpdate() {}
 
 void Hammer::OnCollision() {}

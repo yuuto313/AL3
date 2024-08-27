@@ -122,7 +122,6 @@ private:
 	WorldTransform worldTransformHead_;
 	WorldTransform worldTransformLeftArm_;
 	WorldTransform worldTransformRightArm_;
-	WorldTransform worldTransformWeapon_;
 
 	//カメラのビュープロジェクション
 	const ViewProjection* cameraViewProjection_ = nullptr;
@@ -138,9 +137,9 @@ private:
 
 	float amplitude_ = 0.5f;
 
-	float currentRotationAngleX = 0.0f;
+	/*float currentRotationAngleX = 0.0f;
 	const float rotationSpeed = (float)M_PI / 45.0f;
-	const float targetRotationAngleX = (float)M_PI / 2.0f;
+	const float targetRotationAngleX = (float)M_PI / 2.0f;*/
 
 	//速度
 	Vector3 velocity_ = {};
