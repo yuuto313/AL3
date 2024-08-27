@@ -1,13 +1,14 @@
+#include <optional>
 #include "Model.h"
 #include "WorldTransform.h"
 #include "cassert"
 #include "DebugCamera.h"
 #include "MyMath.h"
-#include <optional>
 
+#include "Hammer.h"
 #include "BaseCharacter.h"
 #include "GlobalVariables.h"
-#include "Hammer.h"
+
 
 #pragma once
 
@@ -51,10 +52,6 @@ public:
 	/// </summary>
 	void BehaviorRootInitialize();
 	/// <summary>
-	/// 攻撃行動初期化
-	/// </summary>
-	void BehaviorAttackInitialize();
-	/// <summary>
 	/// ジャンプ行動初期化
 	/// </summary>
 	void BehaviorJumpInitialize();
@@ -62,10 +59,6 @@ public:
 	/// 通常行動更新
 	/// </summary>
 	void BehaviorRootUpdate();
-	/// <summary>
-	/// 攻撃行動更新
-	/// </summary>
-	void BehaviorAttackUpdate();
 	/// <summary>
 	/// ジャンプ行動更新
 	/// </summary>
@@ -91,6 +84,7 @@ public:
 	/// 浮遊ギミック更新
 	/// </summary>
 	void UpdateFloatingGimmick();
+
 	/// <summary>
 	/// 自キャラのWorldTransformを取得する
 	/// </summary>
@@ -102,21 +96,49 @@ public:
 	/// <returns></returns>
 	const ViewProjection* GetViewProjection() { return cameraViewProjection_; }
 	/// <summary>
+	/// 振る舞いを設定
+	/// </summary>
+	/// <param name="behavior"></param>
+	void SetBehavior(Behavior behavior) { behaviorRequest_ = behavior; }
+	/// <summary>
 	/// ロックオンセッター
 	/// </summary>
 	/// <param name="lockOn"></param>
 	void SetLockOn(LockOn* lockOn) { lockOn_ = lockOn; }
+
 	/// <summary>
 	/// 中心座標取得
 	/// </summary>
 	/// <returns></returns>
-	Vector3 GetCeterPosition() const override;
+	Vector3 GetCenterPosition() const override;
 	/// <summary>
 	/// 衝突を検出したら呼び出されるコールバック関数
 	/// </summary>
-	void OnCollision() override;
+	void OnCollision([[maybe_unused]] Collider* other) override;
+	/// <summary>
+	/// ハンマーのゲッター
+	/// </summary>
+	/// <returns></returns>
+	Hammer* GetHammer() { return hammer_.get(); }
 
 private:
+
+	// 振る舞い
+	Behavior behavior_ = Behavior::kRoot;
+	// 振る舞いのリクエスト
+	// std::nulloptはそのstd::optionalが無効状態であることを表す値
+	// std::nulloptではなくBehavior型の値を入れたときは有効状態となる
+	std::optional<Behavior> behaviorRequest_ = std::nullopt;
+
+	// ロックオン
+	const LockOn* lockOn_ = nullptr;
+
+	// ハンマー(武器)
+	std::unique_ptr<Hammer> hammer_;
+
+	// キーボード入力
+	Input* input_ = nullptr;
+
 	//ワールド変換データ
 	WorldTransform worldTransformBody_;
 	WorldTransform worldTransformHead_;
@@ -137,26 +159,6 @@ private:
 
 	float amplitude_ = 0.5f;
 
-	/*float currentRotationAngleX = 0.0f;
-	const float rotationSpeed = (float)M_PI / 45.0f;
-	const float targetRotationAngleX = (float)M_PI / 2.0f;*/
-
 	//速度
 	Vector3 velocity_ = {};
-
-	//振る舞い
-	Behavior behavior_ = Behavior::kRoot;
-	//振る舞いのリクエスト
-	//std::nulloptはそのstd::optionalが無効状態であることを表す値
-	//std::nulloptではなくBehavior型の値を入れたときは有効状態となる
-	std::optional<Behavior> behaviorRequest_ = std::nullopt;
-
-	//ロックオン
-	const LockOn* lockOn_ = nullptr;
-
-	// キーボード入力
-	Input* input_ = nullptr;
-
-	//ハンマー
-	std::unique_ptr<Hammer> hammer_;
 };

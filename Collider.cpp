@@ -7,7 +7,7 @@ void Collider::Initialize() {
 
 void Collider::UpdateWorldTransform() {
 	//ワールド座標をワールドトランスフォームに適用
-	worldTransform_.translation_ = GetCeterPosition();
+	worldTransform_.translation_ = GetCenterPosition();
 	worldTransform_.UpdateMatrix();
 }
 

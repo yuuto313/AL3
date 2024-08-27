@@ -4,6 +4,7 @@
 #include <WorldTransform.h>
 
 class Player;
+class Enemy;
 
 /// <summary>
 /// ハンマー
@@ -29,6 +30,11 @@ public:
 	void Draw(const ViewProjection& viewProjection);
 
 	/// <summary>
+	/// 攻撃行動初期化
+	/// </summary>
+	void BehaviorAttackInitialize();
+
+	/// <summary>
 	/// 攻撃行動更新
 	/// </summary>
 	void BehaviorAttackUpdate();
@@ -43,9 +49,15 @@ public:
 	void SetParent(const WorldTransform* parent) { worldTransform_.parent_ = parent; }
 
 	/// <summary>
+	/// 中心座標取得
+	/// </summary>
+	/// <returns></returns>
+	Vector3 GetCenterPosition() const override;
+
+	/// <summary>
 	/// 衝突を検出したら呼び出されるコールバック関数
 	/// </summary>
-	void OnCollision() override;
+	void OnCollision([[maybe_unused]] Collider* other) override;
 
 private:
 	Model* model_ = nullptr;

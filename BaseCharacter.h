@@ -32,7 +32,7 @@ public:
 	/// 中心座標取得
 	/// </summary>
 	/// <returns></returns>
-	virtual Vector3 GetCeterPosition() const override;
+	virtual Vector3 GetCenterPosition() const override;
 
 protected:
 	//モデルデータ配列

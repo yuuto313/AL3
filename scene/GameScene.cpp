@@ -258,6 +258,7 @@ void GameScene::CheckAllCollsions() {
 
 	//コライダーをリストに登録
 	collisionManager_->AddCollider(player_.get());
+	collisionManager_->AddCollider(player_->GetHammer());
 	//敵すべてに対して
 	for (const std::unique_ptr<Enemy>& enemy : enemies_) {
 		collisionManager_->AddCollider(enemy.get());

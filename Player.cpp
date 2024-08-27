@@ -2,6 +2,7 @@
 #include "iostream"
 #include "ImGuiManager.h"
 #include "LockOn.h"
+#include "CollisionTypeIdDef.h"
 
 Player::Player() {}
 
@@ -55,6 +56,9 @@ void Player::Initialize(const std::vector<Model*>&models) {
 
 	//浮遊ギミック初期化
 	InitializeFloatingGimmick();
+
+	//識別IDを設定
+	Collider::SetTypeID(static_cast<uint32_t>(CollisionTypeIdDef::kPlayer));
 }
 
 void Player::Update() { 
@@ -84,6 +88,7 @@ void Player::Update() {
 	worldTransformHead_.UpdateMatrix();
 	worldTransformRightArm_.UpdateMatrix();
 	worldTransformLeftArm_.UpdateMatrix();
+	hammer_->Update();
 }
 
 void Player::Draw(const ViewProjection& viewProjection) { 
@@ -111,10 +116,6 @@ void Player::BehaviorRootInitialize() {
 	worldTransformRightArm_.rotation_ = {};
 }
 
-void Player::BehaviorAttackInitialize() { 
-	//ギミックのアニメーション用数値のリセット
-	//currentRotationAngleX = 0.0f;
-}
 
 void Player::BehaviorJumpInitialize() {
 	//階層アニメーション出のパーツの回転などをリセットする
@@ -162,41 +163,6 @@ void Player::BehaviorRootUpdate() {
 	ImGui::End();
 }
 
-void Player::BehaviorAttackUpdate() { 
-	////ロックオン中
-	//if (lockOn_ && lockOn_->ExistTarget()) {
-	//	// ロックオン座標
-	//	Vector3 lockOnPosition = lockOn_->GetTargetPosition();
-	//	// 追従対象からロックオン対象へのベクトル
-	//	Vector3 sub = lockOnPosition - worldTransform_.translation_;
-
-	//	//距離
-	//	float distance = Length(sub);
-	//	//距離しきい値
-	//	const float threshold = 0.2f;
-
-	//	//しきい値より離れているときのみ
-	//	if (distance > threshold) {
-	//		//Y軸周り角度
-	//		worldTransform_.rotation_.y = std::atan2(sub.x, sub.z);
-	//		//追い越し防止処理未実装
-	//	}
-	//}
-
-	
-
-	/*if (currentRotationAngleX < targetRotationAngleX) {
-		currentRotationAngleX += rotationSpeed;
-		if (currentRotationAngleX > targetRotationAngleX) {
-			currentRotationAngleX = targetRotationAngleX;
-		}
-	} else {
-		behaviorRequest_ = Behavior::kRoot;	
-	}
-
-	worldTransformWeapon_.rotation_.x = currentRotationAngleX;*/
-}
-
 void Player::BehaviorjumpUpdate() {
 	//移動
 	worldTransform_.translation_ += velocity_;
@@ -231,7 +197,7 @@ void Player::ChangeBehavior() {
 
 		case Behavior::kAttack:
 
-			BehaviorAttackInitialize();
+			hammer_->BehaviorAttackInitialize();
 
 			break;
 
@@ -261,7 +227,7 @@ void Player::ChangeBehavior() {
 		// 攻撃行動の更新
 		//--------------------------------
 
-		BehaviorAttackUpdate();
+		hammer_->BehaviorAttackUpdate();
 	
 		break;
 
@@ -403,7 +369,7 @@ void Player::UpdateFloatingGimmick() {
 
 }
 
-Vector3 Player::GetCeterPosition() const { 
+Vector3 Player::GetCenterPosition() const { 
 	//ローカル座標でのオフセット
 	const Vector3 offset = {0.0f, 1.5f, 0.0f};
 	//ワールド座標に変換
@@ -411,7 +377,7 @@ Vector3 Player::GetCeterPosition() const {
 	return worldPos;
 }
 
-void Player::OnCollision() {
+void Player::OnCollision([[maybe_unused]] Collider* other) {
 	//ジャンプリクエスト
 	behaviorRequest_ = Behavior::kJump;
 }

@@ -45,17 +45,17 @@ void CollisionManager::Reset() {
 }
 
 void CollisionManager::CheckCollisionPair(Collider* colliderA, Collider* colliderB) {
-	Vector3 posA = colliderA->GetCeterPosition();
-	Vector3 posB = colliderB->GetCeterPosition();
+	Vector3 posA = colliderA->GetCenterPosition();
+	Vector3 posB = colliderB->GetCenterPosition();
 	//座標の差分ベクトル
 	Vector3 subtract = posB - posA;
 	//座標AとBの距離を求める
 	float distance = Length(subtract);
 	if (distance <= colliderA->GetRadius() + colliderB->GetRadius()) {
 		//コライダーAの衝突時コールバックを呼び出す
-		colliderA->OnCollision();
+		colliderA->OnCollision(colliderB);
 		//コライダーBの衝突時コールバックを呼び出す
-		colliderB->OnCollision();
+		colliderB->OnCollision(colliderA);
 	}
 
 }

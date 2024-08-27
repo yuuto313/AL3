@@ -1,4 +1,5 @@
 #include "Enemy.h"
+#include "CollisionTypeIdDef.h"
 
 void Enemy::Initialize(const std::vector<Model*>& models) { 
 	//基底クラスの初期化
@@ -11,6 +12,9 @@ void Enemy::Initialize(const std::vector<Model*>& models) {
 
 	//本体と親子関係を結ぶ
 	worldTransformWeapon_.parent_ = &worldTransform_;
+
+	//識別IDを設定
+	Collider::SetTypeID(static_cast<uint32_t>(CollisionTypeIdDef::KEnemy));
 
 }
 
