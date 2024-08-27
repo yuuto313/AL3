@@ -3,6 +3,8 @@
 #include <Model.h>
 #include <WorldTransform.h>
 
+class Player;
+
 /// <summary>
 /// ハンマー
 /// </summary>
@@ -11,6 +13,8 @@ public:
 	/// <summary>
 	/// 初期化
 	/// </summary>
+	/// <param name="model"></param>
+	/// <param name="player"></param>
 	void Initialize(Model* model,Player* player);
 
 	/// <summary>
@@ -39,6 +43,8 @@ public:
 private:
 	Model* model_ = nullptr;
 	WorldTransform worldTransform_;
+
+	Player* player_ = nullptr;
 
 	float currentRotationAngleX = 0.0f;
 	const float rotationSpeed = (float)M_PI / 45.0f;

@@ -1,6 +1,11 @@
 #include "Hammer.h"
+#include <cassert>
 
-void Hammer::Initialize(Model* model, Player* player) {}
+void Hammer::Initialize(Model* model, Player* player) { 
+	assert(model);
+	model_ = model;
+	player_ = player;
+}
 
 void Hammer::Update() {}
 
