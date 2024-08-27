@@ -73,3 +73,9 @@ Vector3 Enemy::GetCenterPosition()const {
 	Vector3 worldPos = Transform(offset, worldTransform_.matWorld_);
 	return worldPos;	
 }
+
+void Enemy::Reaction() {
+	models_[0]->SetAlpha(0);
+	models_[1]->SetAlpha(0);
+}
+

@@ -20,7 +20,16 @@ public:
 	/// <returns></returns>
 	const WorldTransform& GetWorldTransform(){ return worldTransform_; }
 
+	/// <summary>
+	/// 中心座標を取得
+	/// </summary>
+	/// <returns></returns>
 	Vector3 GetCenterPosition()const;
+
+	/// <summary>
+	/// 攻撃を受けた時のリアクション
+	/// </summary>
+	void Reaction();
 
 private:
 	WorldTransform worldTransformWeapon_;

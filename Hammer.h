@@ -1,10 +1,10 @@
 #pragma once
 #include "Collider.h"
+#include "Enemy.h"
 #include <Model.h>
-#include <WorldTransform.h>
+#include "WorldTransform.h"
 
 class Player;
-class Enemy;
 
 /// <summary>
 /// ハンマー
@@ -64,6 +64,7 @@ private:
 	WorldTransform worldTransform_;
 
 	Player* player_ = nullptr;
+	Enemy* enemy_ = nullptr;
 
 	float currentRotationAngleX = 0.0f;
 	const float rotationSpeed = (float)M_PI / 45.0f;

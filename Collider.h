@@ -62,7 +62,7 @@ public:
 	/// <param name="typeID"></param>
 	void SetTypeID(uint32_t typeID) { typeID_ = typeID; } 
 
-	private:
+private:
 	//衝突判定
 	float radius_ = 1.5f;
 

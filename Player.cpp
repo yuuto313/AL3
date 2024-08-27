@@ -378,8 +378,15 @@ Vector3 Player::GetCenterPosition() const {
 }
 
 void Player::OnCollision([[maybe_unused]] Collider* other) {
-	//ジャンプリクエスト
-	behaviorRequest_ = Behavior::kJump;
+	//衝突相手の識別IDを取得
+	uint32_t typeID = other->GetTypeID();
+
+	//衝突相手が敵なら
+	if (typeID == static_cast<uint32_t>(CollisionTypeIdDef::KEnemy)) {
+		//ジャンプリクエスト
+		behaviorRequest_ = Behavior::kJump;
+	}
+	
 }
 
 

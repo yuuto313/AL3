@@ -1,10 +1,11 @@
 #include "Hammer.h"
 #include "Player.h"
-#include "Enemy.h"
 #include "CollisionTypeIdDef.h"
 #include <cassert>
 
 void Hammer::Initialize(Model* model, Player* player) { 
+	Collider::Initialize();
+
 	assert(model);
 	model_ = model;
 	player_ = player;
@@ -64,7 +65,7 @@ void Hammer::BehaviorAttackUpdate() {
 
 Vector3 Hammer::GetCenterPosition() const { 
 	//ローカル座標でのオフセット
-	const Vector3 offset = {0.0f, 1.5f, 0.0f};
+	const Vector3 offset = {0.0f, 10.0f, 0.3f};
 	// ワールド座標に変換
 	Vector3 worldPos = Transform(offset, worldTransform_.matWorld_);
 	return worldPos;
@@ -76,8 +77,8 @@ void Hammer::OnCollision([[maybe_unused]] Collider* other) {
 
 	//衝突相手が敵なら
 	if (typeID == static_cast<uint32_t>(CollisionTypeIdDef::KEnemy)) {
-		Enemy* enemy = static_cast<Enemy*>(other);
+		enemy_ = static_cast<Enemy*>(other);
 		//敵の位置にエフェクト発生
-
+		enemy_->Reaction();
 	}
 }
