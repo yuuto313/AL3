@@ -3,6 +3,7 @@
 #include "Enemy.h"
 #include <Model.h>
 #include "WorldTransform.h"
+#include "CollisionRecord.h"
 
 class Player;
 
@@ -59,12 +60,18 @@ public:
 	/// </summary>
 	void OnCollision([[maybe_unused]] Collider* other) override;
 
+	/// <summary>
+	/// 接触履歴を抹消
+	/// </summary>
+	void Clear();
+
 private:
 	Model* model_ = nullptr;
 	WorldTransform worldTransform_;
 
 	Player* player_ = nullptr;
 	Enemy* enemy_ = nullptr;
+	CollisionRecord collisionRecord;
 
 	float currentRotationAngleX = 0.0f;
 	const float rotationSpeed = (float)M_PI / 45.0f;

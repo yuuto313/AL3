@@ -1,6 +1,15 @@
 #include "Enemy.h"
 #include "CollisionTypeIdDef.h"
 
+uint32_t Enemy::nextSerialNumber_ = 0;
+
+Enemy::Enemy() {
+	//シリアル番号を振る
+	serialNumber_ = nextSerialNumber_;
+	//次のシリアルナンバー番号を1加算
+	++nextSerialNumber_;
+}
+
 void Enemy::Initialize(const std::vector<Model*>& models) { 
 	//基底クラスの初期化
 	BaseCharacter::Initialize(models);
@@ -66,16 +75,33 @@ void Enemy::Movement() {
 	worldTransform_.translation_.z = radius * sin(worldTransform_.rotation_.y);
 }
 
+void Enemy::Reaction() {
+	Vector3 scale = Collider::GetScale();
+	Vector3 baseScale = {2.0f, 2.0f, 2.0f};
+	float increment = 0.1f;
+
+	// フレームごとの時間差
+	float deltaTime = 1.0f / 60.f;
+	// 時間経過を追跡する変数
+	float elapsedTIme = 0.0f;
+
+	elapsedTIme += deltaTime;
+
+	if (elapsedTIme <= 1.0f) {
+		scale.x += increment;
+		scale.y += increment;
+		scale.z += increment;
+		Collider::SetScale(scale);
+	} else {
+		elapsedTIme = 0.0f;
+	}
+}
+
+
 Vector3 Enemy::GetCenterPosition()const {
 	//見た目上の中心点オフセット
-	const Vector3 offset = {0.0f, 1.0f, 0.0f};
+	const Vector3 offset = {0.0f, 0.0f, 0.0f};
 	//ワールド座標に変換
 	Vector3 worldPos = Transform(offset, worldTransform_.matWorld_);
 	return worldPos;	
 }
-
-void Enemy::Reaction() {
-	models_[0]->SetAlpha(0);
-	models_[1]->SetAlpha(0);
-}
-

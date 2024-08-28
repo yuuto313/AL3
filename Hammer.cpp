@@ -13,6 +13,9 @@ void Hammer::Initialize(Model* model, Player* player) {
 
 	// 識別IDを設定
 	Collider::SetTypeID(static_cast<uint32_t>(CollisionTypeIdDef::kPlayerWeapon));
+
+	//コリジョンの当たり判定半径を設定
+	Collider::SetRadius(3.0f);
 }
 
 void Hammer::Update() { 
@@ -26,6 +29,7 @@ void Hammer::Draw(const ViewProjection& viewProjection) {
 void Hammer::BehaviorAttackInitialize() {
 	// ギミックのアニメーション用数値のリセット
 	currentRotationAngleX = 0.0f;
+	Clear();
 }
 
 void Hammer::BehaviorAttackUpdate() {
@@ -78,7 +82,22 @@ void Hammer::OnCollision([[maybe_unused]] Collider* other) {
 	//衝突相手が敵なら
 	if (typeID == static_cast<uint32_t>(CollisionTypeIdDef::KEnemy)) {
 		enemy_ = static_cast<Enemy*>(other);
+		uint32_t serialNumber = enemy_->GetSerialNumber();
+
+		//接触履歴があれば何もせず抜ける
+		if (collisionRecord.CheckHistory(serialNumber)) {
+			return;
+		}
+
+		//接触履歴に登録
+		collisionRecord.AddRecord(serialNumber);
+		
 		//敵の位置にエフェクト発生
 		enemy_->Reaction();
 	}
+}
+
+void Hammer::Clear() {
+	//接触履歴を抹消
+	collisionRecord.Clear();
 }

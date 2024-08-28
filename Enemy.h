@@ -6,13 +6,34 @@
 
 class Enemy : public BaseCharacter{
 public:
+	Enemy();
+
+	/// <summary>
+	/// 初期化
+	/// </summary>
+	/// <param name="models"></param>
 	void Initialize(const std::vector<Model*>&models) override;
 
+	/// <summary>
+	/// 更新
+	/// </summary>
 	void Update() override;
 
+	/// <summary>
+	/// 描画
+	/// </summary>
+	/// <param name="viewProjection"></param>
 	void Draw(const ViewProjection& viewProjection) override;
 
+	/// <summary>
+	/// 動き
+	/// </summary>
 	void Movement();
+
+	/// <summary>
+	/// 攻撃を受けた時のリアクション
+	/// </summary>
+	void Reaction();
 
 	/// <summary>
 	/// 敵のWorldTransformを取得する
@@ -27,10 +48,17 @@ public:
 	Vector3 GetCenterPosition()const;
 
 	/// <summary>
-	/// 攻撃を受けた時のリアクション
+	/// シリアルナンバーを取得
 	/// </summary>
-	void Reaction();
+	/// <returns></returns>
+	uint32_t GetSerialNumber() const { return serialNumber_; }
 
 private:
 	WorldTransform worldTransformWeapon_;
+
+	//シリアルナンバー
+	uint32_t serialNumber_ = 0;
+
+	//次のシリアルナンバー
+	static uint32_t nextSerialNumber_;
 };
