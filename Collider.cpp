@@ -1,5 +1,6 @@
 #include "Collider.h"
 
+
 void Collider::Initialize() {
 	worldTransform_.Initialize();
 	worldTransform_.scale_ = {2.0f, 2.0f, 2.0f};
