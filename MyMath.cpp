@@ -92,6 +92,14 @@ Matrix4x4 Multiply(const Matrix4x4& m1, const Matrix4x4& m2) {
 	return result;
 }
 
+float LerpShortAngle(float a, float b, float t) { 
+	//角度差分を求める
+	float diff = b - a;
+
+
+	return 
+}
+
 // 座標変換
 Vector3 Transform(const Vector3& vector, const Matrix4x4& matrix) {
 	Vector3 result{};
