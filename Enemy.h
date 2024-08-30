@@ -54,7 +54,8 @@ public:
 	uint32_t GetSerialNumber() const { return serialNumber_; }
 
 private:
-	WorldTransform worldTransformWeapon_;
+	WorldTransform worldTransformRightWeapon_;
+	WorldTransform worldTransformLeftWeapon_;
 
 	//シリアルナンバー
 	uint32_t serialNumber_ = 0;
