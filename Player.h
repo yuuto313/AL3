@@ -161,4 +161,7 @@ private:
 
 	//速度
 	Vector3 velocity_ = {};
+
+	//目標角度
+	float targetAngle_ = 0.0f;
 };
