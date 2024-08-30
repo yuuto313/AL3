@@ -19,7 +19,9 @@ void Enemy::Initialize(const std::vector<Model*>& models) {
 	worldTransform_.translation_ = {0.0f, 0.0f, 3.0f};
 
 	worldTransformLeftWeapon_.Initialize();
+	worldTransformLeftWeapon_.translation_ = {3.0f, 1.8f, 0.0f};
 	worldTransformRightWeapon_.Initialize();
+	worldTransformRightWeapon_.translation_ = {-3.0f, 1.8f, 0.0f};
 
 	//本体と親子関係を結ぶ
 	worldTransformLeftWeapon_.parent_ = &worldTransform_;
