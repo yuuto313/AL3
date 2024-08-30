@@ -310,7 +310,7 @@ void Player::Movement() {
 			//--------------------------------
 
 			// Y軸周りの角度
-			worldTransform_.rotation_.y = std::atan2(velocity_.x, velocity_.z);
+			float targetAngle = std::atan2(velocity_.x, velocity_.z);
 		
 		}
 	} else if (lockOn_ && lockOn_->ExistTarget()) {
@@ -323,6 +323,8 @@ void Player::Movement() {
 		worldTransform_.rotation_.y = std::atan2(sub.x, sub.z);
 	}
 
+	//最短角度補間
+	worldTransform_.rotation_.y = LerpShortAngle(worldTransform_.rotation_.y,)
 
 	//--------------------------------
 	// ジャンプ発動

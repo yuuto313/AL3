@@ -93,11 +93,25 @@ Matrix4x4 Multiply(const Matrix4x4& m1, const Matrix4x4& m2) {
 }
 
 float LerpShortAngle(float a, float b, float t) { 
-	//角度差分を求める
+	// 角度差分を求める
 	float diff = b - a;
 
+	// 角度を[-2PI,+2PI]に補正する
+	if (diff > 2.0f * (float)M_PI) {
+		diff = std::fmod(diff, 2.0f * (float)M_PI);
+	}
 
-	return 
+	// 角度を[-PI,+PI]に補正する
+	//+πを上回っていれば
+	if (diff > (float)M_PI) {
+		diff -= 2.0f * (float)M_PI;
+	}
+	//-πを下回っていれば
+	if (diff < -(float)M_PI) {
+		diff += 2.0f * (float)M_PI;
+	}
+
+	return a + diff * t;
 }
 
 // 座標変換
