@@ -341,8 +341,11 @@ void GameScene::ChangePhase() {
 		if (player_->IsDead()) {
 			//死亡演出フェーズに切り替える
 			phase_ = Phase::kDeath;
-			//自キャラの座標にデスパーティクルを発生,、初期化
+			//自キャラの座標を取得
+			const Vector3& deathParticlesPosion = player_->GetCenterPosition();
 
+			//自キャラの座標にデスパーティクルを発生,、初期化
+			
 		}
 		break;
 	case GameScene::Phase::kDeath:
