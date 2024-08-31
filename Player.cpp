@@ -362,7 +362,7 @@ void Player::Movement() {
 		}
 
 		// 最短角度補間
-		worldTransform_.rotation_.y = LerpShortAngle(worldTransform_.rotation_.y, targetAngle_, 0.3f);
+		worldTransform_.rotation_.y = LerpShortAngle(worldTransform_.rotation_.y, targetAngle_, 0.2f);
 
 	} else if (lockOn_ && lockOn_->ExistTarget()) {
 		// ロックオン座標
