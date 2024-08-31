@@ -12,8 +12,10 @@ public:
 	/// <summary>
 	/// 初期化
 	/// </summary>
+	/// <param name="model"></param>
+	/// <param name="viewProjection"></param>
 	/// <param name="player"></param>
-	void Initialize(Player* player);
+	void Initialize(Model* model,ViewProjection* viewProjection,Player* player);
 
 	/// <summary>
 	/// 更新
@@ -30,5 +32,5 @@ private:
 	Model* model_ = nullptr;
 
 	//ビュープロジェクションのポインタ
-	ViewProjection viewProjection_;
+	ViewProjection* viewProjection_ = nullptr;
 };
