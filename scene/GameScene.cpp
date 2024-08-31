@@ -9,9 +9,6 @@ GameScene::GameScene() {}
 GameScene::~GameScene() {}
 
 void GameScene::Initialize() {
-	//ゲームプレイフェーズから開始
-	phase_ = Phase::kPlay;
-
 	dxCommon_ = DirectXCommon::GetInstance();
 	input_ = Input::GetInstance();
 
@@ -124,6 +121,10 @@ void GameScene::Initialize() {
 	// それぞれのロックオンを設定
 	followCamera_->SetLockOn(lockOn_.get());
 	player_->SetLockOn(lockOn_.get());
+
+	// ゲームプレイフェーズから開始
+	phase_ = Phase::kPlay;
+
 	//--------------------------------
 	// 軸方向表示の使用
 	//--------------------------------
@@ -162,10 +163,7 @@ void GameScene::Update() {
 
 		    // 衝突判定と応答
 		    CheckAllCollsions();
-
-
 		break;
-
 		case Phase::kDeath:
 			//天球の更新
 		    skydome_->Update();
@@ -182,7 +180,6 @@ void GameScene::Update() {
 
 			 //地面の更新
 		    ground_->Update();
-
 		break;
 	}
 

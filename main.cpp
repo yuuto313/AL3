@@ -11,6 +11,7 @@
 
 TitleScene* titleScene = nullptr;
 GameScene* gameScene = nullptr;
+
 //シーン(型)
 enum class Scene {
 	kUnknown=0,
@@ -91,11 +92,11 @@ int WINAPI WinMain(HINSTANCE, HINSTANCE, LPSTR, int) {
 	//最初のシーンの初期化
 	scene = Scene::kTitle;
 	//タイトルシーンの初期化
-	titleScene = new TitleScene();
+	titleScene = new TitleScene;
 	titleScene->Initialize();
 
 	// ゲームシーンの初期化
-	gameScene = new GameScene();
+	gameScene = new GameScene;
 	gameScene->Initialize();
 
 	// メインループ

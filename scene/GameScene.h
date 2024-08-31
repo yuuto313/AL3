@@ -65,15 +65,6 @@ public: // メンバ関数
 	bool IsFinished() const { return finished_; }
 
 private:
-	// ゲームのフェーズ(型)
-	enum class Phase {
-		kPlay,  // ゲームプレイ
-		kDeath, // デス演出
-	};
-
-	//ゲームの現在フェーズ(変数)
-	Phase phase_;
-
 	// メンバ変数
 	DirectXCommon* dxCommon_ = nullptr;
 	Input* input_ = nullptr;
@@ -138,6 +129,15 @@ private:
 	// デバッグカメラ有効
 	bool isDebugCameraActive_ = false;
 	
+	// ゲームのフェーズ(型)
+	enum class Phase {
+		kPlay,  // ゲームプレイ
+		kDeath, // デス演出
+	};
+
+	// ゲームの現在フェーズ(変数)
+	Phase phase_;
+
 	//終了フラグ
 	bool finished_ = false;
 };
