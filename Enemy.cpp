@@ -79,6 +79,23 @@ void Enemy::Movement() {
 
 	worldTransform_.translation_.x = radius * cos(worldTransform_.rotation_.y);
 	worldTransform_.translation_.z = radius * sin(worldTransform_.rotation_.y);
+
+	//--------------------------------
+	// 武器にアニメーションを付ける
+	//--------------------------------
+	
+	Vector3 velocity = {};
+	Vector3 acceleration = {};
+	//角度を更新
+	angle_ += angularVelocity_ * deltaTime_;
+
+	worldTransformLeftWeapon_.translation_.x = center_.x + std::cos(angle_) * radius_;
+	worldTransformLeftWeapon_.translation_.y = center_.y + std::sin(angle_) * deltaTime_;
+	worldTransformLeftWeapon_.translation_.z = center_.z;
+
+	velocity += acceleration * deltaTime_;
+	worldTransformLeftWeapon_.translation_ += velocity * deltaTime_;
+	worldTransformRightWeapon_.translation_ += velocity * deltaTime_;
 }
 
 void Enemy::Reaction() {

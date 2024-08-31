@@ -57,6 +57,12 @@ private:
 	WorldTransform worldTransformRightWeapon_;
 	WorldTransform worldTransformLeftWeapon_;
 
+	Vector3 center_ = {0.0f, 0.0f, 0.0f};
+	float deltaTime_ = 1.0f / 60.0f;
+	float angle_ = 0.0f;
+	float angularVelocity_ = 3.14f;
+	float radius_ = 1.0f;
+
 	//シリアルナンバー
 	uint32_t serialNumber_ = 0;
 
