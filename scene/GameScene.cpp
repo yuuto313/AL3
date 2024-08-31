@@ -71,6 +71,9 @@ void GameScene::Initialize() {
 	//デスパーティクルの生成
 	deathParticles_ = std::make_unique<DeathParticles>();
 
+	//フェードの生成
+	fade_ = std::make_unique<Fade>();
+
 	//--------------------------------
 	// モデルデータをモデルデータ配列に格納
 	//--------------------------------
@@ -115,6 +118,10 @@ void GameScene::Initialize() {
 	//デスパーティクルの初期化
 	deathParticles_->Initialize(modelDeathParticle_.get(),&viewProjection_,player_->GetCenterPosition());
 
+	//フェードの初期化
+	fade_->Initialize();
+	fade_->Start(Fade::Status::FadeIn,3.0f);
+
 	//自キャラに追従カメラのビュープロジェクションをアドレス渡しする
 	player_->SetViewProjection(&followCamera_->GetViewProjection());
 
@@ -137,10 +144,36 @@ void GameScene::Initialize() {
 
 void GameScene::Update() {
 	switch (phase_) {
+	case GameScene::Phase::kFadeIn:
+		// フェードの更新
+		fade_->Update();
+
+		// 自キャラの更新
+		player_->Update();
+
+		// 敵キャラの更新
+		for (std::list<std::unique_ptr<Enemy>>::iterator enemy = enemies_.begin(); enemy != enemies_.end(); ++enemy) {
+			(*enemy)->Update();
+		}
+
+		// 天球の更新
+		skydome_->Update();
+
+		// 地面の更新
+		ground_->Update();
+
+		if (fade_->IsFinished()) {
+			phase_ = Phase::kPlay;
+		}
+
+		break;
 	case GameScene::Phase::kPlay:
 		//--------------------------------
 		// 更新処理関数を呼び出し
 		//--------------------------------
+		//フェードの更新
+		fade_->Update();
+
 		// 自キャラの更新
 		player_->Update();
 
@@ -165,6 +198,7 @@ void GameScene::Update() {
 		CheckAllCollsions();
 		break;
 	case GameScene::Phase::kDeath:
+
 		// 天球の更新
 		skydome_->Update();
 
@@ -180,6 +214,21 @@ void GameScene::Update() {
 
 		// 地面の更新
 		ground_->Update();
+
+		// フェードアウト開始
+		if (deathParticles_ && deathParticles_->IsFinished()) {
+			float duration = 3.0f;
+			fade_->Start(Fade::Status::FadeOut, duration);
+			phase_ = Phase::kFadeOut;
+		}
+
+		break;
+	case GameScene::Phase::kFadeOut:
+		fade_->Update();
+
+		if (fade_->IsFinished()) {
+			finished_ = true;
+		}
 		break;
 	}
 
@@ -272,6 +321,25 @@ void GameScene::Draw() {
 	if (deathParticles_) {
 		deathParticles_->Draw();
 	}
+
+	// フェードの描画
+	switch (phase_) {
+	case GameScene::Phase::kFadeIn:
+	case GameScene::Phase::kFadeOut:
+
+		fade_->Draw(commandList);
+
+		break;
+	case GameScene::Phase::kPlay:
+
+		break;
+	case GameScene::Phase::kDeath:
+
+		break;
+	default:
+		break;
+	}
+
 
 	// 3Dオブジェクト描画後処理
 	Model::PostDraw();

@@ -14,6 +14,7 @@
 #include "LockOn.h"
 #include "CollisionManager.h"
 #include "DeathParticles.h"
+#include "Fade.h"
 
 #include <memory>
 
@@ -119,6 +120,9 @@ private:
 
 	//デスパーティクル
 	std::unique_ptr<DeathParticles> deathParticles_;
+
+	//フェード
+	std::unique_ptr<Fade> fade_;
 
 	//テクスチャハンドル
 	//uint32_t textureHandle_ = 0;
