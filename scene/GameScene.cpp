@@ -163,41 +163,6 @@ void GameScene::Update() {
 		    // 衝突判定と応答
 		    CheckAllCollsions();
 
-		    //--------------------------------
-		    // デバッグカメラ
-		    //--------------------------------
-
-#ifdef _DEBUG
-		    if (input_->TriggerKey(DIK_C)) {
-			    if (isDebugCameraActive_) {
-				    isDebugCameraActive_ = false;
-			    } else {
-				    isDebugCameraActive_ = true;
-			    }
-		    }
-
-#endif // _DEBUG
-
-		    if (isDebugCameraActive_) {
-			    // デバッグカメラの更新
-			    debugCamera_->Update();
-			    viewProjection_.matView = debugCamera_->GetViewProjection().matView;
-
-			    viewProjection_.matProjection = debugCamera_->GetViewProjection().matProjection;
-
-			    // ビュープロジェクション行列の更新と転送
-			    viewProjection_.UpdateMatrix();
-		    } else {
-
-			    // 追従カメラの更新
-			    followCamera_->Update();
-			    viewProjection_.matView = followCamera_->GetViewProjection().matView;
-
-			    viewProjection_.matProjection = followCamera_->GetViewProjection().matProjection;
-
-			    // ビュープロジェクション行列の転送
-			    viewProjection_.TransferMatrix();
-		    }
 
 		break;
 
@@ -215,31 +180,46 @@ void GameScene::Update() {
 			    deathParticles_->Update();
 			}
 
-			if (isDebugCameraActive_) {
-			    // デバッグカメラの更新
-			    debugCamera_->Update();
-			    viewProjection_.matView = debugCamera_->GetViewProjection().matView;
-
-			    viewProjection_.matProjection = debugCamera_->GetViewProjection().matProjection;
-
-			    // ビュープロジェクション行列の更新と転送
-			    viewProjection_.UpdateMatrix();
-		    } else {
-
-			    // 追従カメラの更新
-			    followCamera_->Update();
-			    viewProjection_.matView = followCamera_->GetViewProjection().matView;
-
-			    viewProjection_.matProjection = followCamera_->GetViewProjection().matProjection;
-
-			    // ビュープロジェクション行列の転送
-			    viewProjection_.TransferMatrix();
-		    }
-
 			 //地面の更新
 		    ground_->Update();
 
 		break;
+	}
+
+	 //--------------------------------
+	// デバッグカメラ
+	//--------------------------------
+
+#ifdef _DEBUG
+	if (input_->TriggerKey(DIK_C)) {
+		if (isDebugCameraActive_) {
+			isDebugCameraActive_ = false;
+		} else {
+			isDebugCameraActive_ = true;
+		}
+	}
+
+#endif // _DEBUG
+
+	if (isDebugCameraActive_) {
+		// デバッグカメラの更新
+		debugCamera_->Update();
+		viewProjection_.matView = debugCamera_->GetViewProjection().matView;
+
+		viewProjection_.matProjection = debugCamera_->GetViewProjection().matProjection;
+
+		// ビュープロジェクション行列の更新と転送
+		viewProjection_.UpdateMatrix();
+	} else {
+
+		// 追従カメラの更新
+		followCamera_->Update();
+		viewProjection_.matView = followCamera_->GetViewProjection().matView;
+
+		viewProjection_.matProjection = followCamera_->GetViewProjection().matProjection;
+
+		// ビュープロジェクション行列の転送
+		viewProjection_.TransferMatrix();
 	}
 
 	ChangePhase();
