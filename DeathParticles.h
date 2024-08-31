@@ -29,6 +29,12 @@ public:
 	/// </summary>
 	void Draw();
 
+	/// <summary>
+	/// デスフラグのゲッター
+	/// </summary>
+	/// <returns></returns>
+	bool IsFinished() const { return isFinished_; }
+
 private:
 	// モデルのポインタ
 	Model* model_ = nullptr;

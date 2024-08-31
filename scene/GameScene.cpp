@@ -241,6 +241,8 @@ void GameScene::Update() {
 
 		break;
 	}
+
+	ChangePhase();
 }
 	
 
@@ -345,11 +347,14 @@ void GameScene::ChangePhase() {
 			const Vector3& deathParticlesPosion = player_->GetCenterPosition();
 
 			//自キャラの座標にデスパーティクルを発生,、初期化
-			
+			deathParticles_ = std::make_unique<DeathParticles>();
+			deathParticles_->Initialize(modelDeathParticle_.get(), &viewProjection_, deathParticlesPosion);
 		}
 		break;
 	case GameScene::Phase::kDeath:
-
+		if (deathParticles_ && deathParticles_->IsFinished()) {
+			finished_ = true;
+		}
 		break;
 	default:
 		break;
