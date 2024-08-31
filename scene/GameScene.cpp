@@ -137,7 +137,7 @@ void GameScene::Initialize() {
 
 void GameScene::Update() {
 	switch (phase_) { 
-		case Phase::kPlay:
+		case GameScene::Phase::kPlay:
 		    //--------------------------------
 		    // 更新処理関数を呼び出し
 		    //--------------------------------
@@ -164,7 +164,7 @@ void GameScene::Update() {
 		    // 衝突判定と応答
 		    CheckAllCollsions();
 		break;
-		case Phase::kDeath:
+	    case GameScene::Phase::kDeath :
 			//天球の更新
 		    skydome_->Update();
 
