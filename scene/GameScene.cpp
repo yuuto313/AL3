@@ -68,6 +68,9 @@ void GameScene::Initialize() {
 	//衝突マネージャの生成
 	collisionManager_ = std::make_unique<CollisionManager>();
 
+	//デスパーティクルの生成
+	deathParticles_ = std::make_unique<DeathParticles>();
+
 	//--------------------------------
 	// モデルデータをモデルデータ配列に格納
 	//--------------------------------
@@ -108,6 +111,9 @@ void GameScene::Initialize() {
 
 	//衝突マネージャ初期化
 	collisionManager_->Initialize();
+
+	//デスパーティクルの初期化
+	deathParticles_->Initialize();
 
 	//自キャラに追従カメラのビュープロジェクションをアドレス渡しする
 	player_->SetViewProjection(&followCamera_->GetViewProjection());

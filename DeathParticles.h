@@ -17,7 +17,8 @@ public:
 	/// <param name="model"></param>
 	/// <param name="viewProjection"></param>
 	/// <param name="player"></param>
-	void Initialize(Model* model, ViewProjection* viewProjection, Player* player,Vector3& position);
+	/// <param name="position"></param>
+	void Initialize(Model* model, ViewProjection* viewProjection, Player* player,const Vector3& position);
 
 	/// <summary>
 	/// 更新

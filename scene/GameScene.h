@@ -13,6 +13,7 @@
 #include "FollowCamera.h"
 #include "LockOn.h"
 #include "CollisionManager.h"
+#include "DeathParticles.h"
 
 #include <memory>
 
@@ -121,6 +122,9 @@ private:
 
 	//衝突マネージャ
 	std::unique_ptr<CollisionManager> collisionManager_;
+
+	//デスパーティクル
+	std::unique_ptr<DeathParticles> deathParticles_;
 
 	//テクスチャハンドル
 	//uint32_t textureHandle_ = 0;
