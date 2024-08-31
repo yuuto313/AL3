@@ -44,6 +44,9 @@ void GameScene::Initialize() {
 	//地面のモデルデータを生成
 	modelGround_.reset(Model::CreateFromOBJ("ground", true));
 
+	//デスパーティクルのモデルを生成
+	modelDeathParticle_.reset(Model::CreateFromOBJ("deathParticle", true));
+
 	//自キャラの生成
 	player_ = std::make_unique<Player>();
 
@@ -113,7 +116,7 @@ void GameScene::Initialize() {
 	collisionManager_->Initialize();
 
 	//デスパーティクルの初期化
-	deathParticles_->Initialize();
+	deathParticles_->Initialize(modelDeathParticle_.get(),&viewProjection_,player_->GetCenterPosition());
 
 	//自キャラに追従カメラのビュープロジェクションをアドレス渡しする
 	player_->SetViewProjection(&followCamera_->GetViewProjection());
@@ -209,7 +212,9 @@ void GameScene::Update() {
 		    }
 
 			//デスパーティクルの更新
-
+		    if (deathParticles_) {
+			    deathParticles_->Update();
+			}
 
 			if (isDebugCameraActive_) {
 			    // デバッグカメラの更新
@@ -267,18 +272,27 @@ void GameScene::Draw() {
 	/// ここに3Dオブジェクトの描画処理を追加できる
 	/// </summary>
 
+	//自キャラの描画
 	player_->Draw(viewProjection_);
 
+	//敵の描画
 	for (std::list<std::unique_ptr<Enemy>>::iterator enemy = enemies_.begin(); enemy != enemies_.end(); ++enemy) {
 		(*enemy)->Draw(viewProjection_);
 	}
 
+	//天球の描画
 	skydome_->Draw();
 
+	//地面の描画
 	ground_->Draw();
 
 	//衝突マネージャ描画
 	collisionManager_->Draw(viewProjection_);
+
+	//デスパーティクルの描画
+	if (deathParticles_) {
+		deathParticles_->Draw();
+	}
 
 	// 3Dオブジェクト描画後処理
 	Model::PostDraw();

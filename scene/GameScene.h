@@ -62,7 +62,7 @@ public: // メンバ関数
 	/// デスフラグのゲッター
 	/// </summary>
 	/// <returns></returns>
-	bool IsFinished() const { return IsFinished; }
+	bool IsFinished() const { return finished_; }
 
 private:
 	// ゲームのフェーズ(型)
@@ -110,6 +110,9 @@ private:
 
 	//地面のモデル
 	std::unique_ptr<Model> modelGround_ = nullptr;
+
+	//デスパーティクルのモデル
+	std::unique_ptr<Model> modelDeathParticle_ = nullptr;
 
 	// デバッグカメラ
 	std::unique_ptr<DebugCamera> debugCamera_ = nullptr;
