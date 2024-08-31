@@ -1,6 +1,8 @@
 #pragma once
 #include "Model.h"
 #include "ViewProjection.h"
+#include "WorldTransform.h"
+#include <array>
 
 class Player;
 
@@ -15,7 +17,7 @@ public:
 	/// <param name="model"></param>
 	/// <param name="viewProjection"></param>
 	/// <param name="player"></param>
-	void Initialize(Model* model,ViewProjection* viewProjection,Player* player);
+	void Initialize(Model* model, ViewProjection* viewProjection, Player* player,Vector3& position);
 
 	/// <summary>
 	/// 更新
@@ -28,9 +30,14 @@ public:
 	void Draw();
 
 private:
-	//モデルのポインタ
+	// モデルのポインタ
 	Model* model_ = nullptr;
 
-	//ビュープロジェクションのポインタ
+	// ビュープロジェクションのポインタ
 	ViewProjection* viewProjection_ = nullptr;
+
+	// パーティクルの個数
+	static inline const uint32_t kNumParticles = 8;
+
+	std::array<WorldTransform, kNumParticles> worldTransforms_;
 };
