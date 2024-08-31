@@ -9,6 +9,9 @@ GameScene::GameScene() {}
 GameScene::~GameScene() {}
 
 void GameScene::Initialize() {
+	//ゲームプレイフェーズから開始
+	phase_ = Phase::kPlay;
+
 	dxCommon_ = DirectXCommon::GetInstance();
 	input_ = Input::GetInstance();
 
@@ -123,66 +126,110 @@ void GameScene::Initialize() {
 }
 
 void GameScene::Update() {
-	//--------------------------------
-	// 更新処理関数を呼び出し
-	//--------------------------------
-    //自キャラの更新
-	player_->Update();
+	switch (phase_) { 
+		
+		case Phase::kPlay:
+		    //--------------------------------
+		    // 更新処理関数を呼び出し
+		    //--------------------------------
+		    // 自キャラの更新
+		    player_->Update();
 
-	//敵キャラの更新
-	for (std::list<std::unique_ptr<Enemy>>::iterator enemy = enemies_.begin(); enemy != enemies_.end(); ++enemy) {
-		(*enemy)->Update();
-	}
+		    // 敵キャラの更新
+		    for (std::list<std::unique_ptr<Enemy>>::iterator enemy = enemies_.begin(); enemy != enemies_.end(); ++enemy) {
+			    (*enemy)->Update();
+		    }
 
-	//天球の更新
-	skydome_->Update();
+		    // 天球の更新
+		    skydome_->Update();
 
-	//地面の更新
-	ground_->Update();
+		    // 地面の更新
+		    ground_->Update();
 
-	//ロックオンの更新
-	lockOn_->Update(enemies_,viewProjection_);
+		    // ロックオンの更新
+		    lockOn_->Update(enemies_, viewProjection_);
 
-	//衝突マネージャ更新
-	collisionManager_->UpdateWorldTransform();
+		    // 衝突マネージャ更新
+		    collisionManager_->UpdateWorldTransform();
 
-	//衝突判定と応答
-	CheckAllCollsions();
+		    // 衝突判定と応答
+		    CheckAllCollsions();
 
-	//--------------------------------
-	// デバッグカメラ
-	//--------------------------------
+		    //--------------------------------
+		    // デバッグカメラ
+		    //--------------------------------
 
-	#ifdef _DEBUG
-	if (input_->TriggerKey(DIK_C)) {
-		if (isDebugCameraActive_) {
-			isDebugCameraActive_ = false;
-		} else {
-			isDebugCameraActive_ = true;
-		}
-	}
+#ifdef _DEBUG
+		    if (input_->TriggerKey(DIK_C)) {
+			    if (isDebugCameraActive_) {
+				    isDebugCameraActive_ = false;
+			    } else {
+				    isDebugCameraActive_ = true;
+			    }
+		    }
 
 #endif // _DEBUG
 
-	if (isDebugCameraActive_) {
-		// デバッグカメラの更新
-		debugCamera_->Update();
-		viewProjection_.matView = debugCamera_->GetViewProjection().matView;
+		    if (isDebugCameraActive_) {
+			    // デバッグカメラの更新
+			    debugCamera_->Update();
+			    viewProjection_.matView = debugCamera_->GetViewProjection().matView;
 
-		viewProjection_.matProjection = debugCamera_->GetViewProjection().matProjection;
+			    viewProjection_.matProjection = debugCamera_->GetViewProjection().matProjection;
 
-		// ビュープロジェクション行列の更新と転送
-		viewProjection_.UpdateMatrix();
-	} else {
+			    // ビュープロジェクション行列の更新と転送
+			    viewProjection_.UpdateMatrix();
+		    } else {
 
-		// 追従カメラの更新
-		followCamera_->Update();
-		viewProjection_.matView = followCamera_->GetViewProjection().matView;
+			    // 追従カメラの更新
+			    followCamera_->Update();
+			    viewProjection_.matView = followCamera_->GetViewProjection().matView;
 
-		viewProjection_.matProjection = followCamera_->GetViewProjection().matProjection;
+			    viewProjection_.matProjection = followCamera_->GetViewProjection().matProjection;
 
-		// ビュープロジェクション行列の転送
-		viewProjection_.TransferMatrix();
+			    // ビュープロジェクション行列の転送
+			    viewProjection_.TransferMatrix();
+		    }
+
+		break;
+
+		case Phase::kDeath:
+			//天球の更新
+		    skydome_->Update();
+
+		    // 敵キャラの更新
+		    for (std::list<std::unique_ptr<Enemy>>::iterator enemy = enemies_.begin(); enemy != enemies_.end(); ++enemy) {
+			    (*enemy)->Update();
+		    }
+
+			//デスパーティクルの更新
+
+
+			if (isDebugCameraActive_) {
+			    // デバッグカメラの更新
+			    debugCamera_->Update();
+			    viewProjection_.matView = debugCamera_->GetViewProjection().matView;
+
+			    viewProjection_.matProjection = debugCamera_->GetViewProjection().matProjection;
+
+			    // ビュープロジェクション行列の更新と転送
+			    viewProjection_.UpdateMatrix();
+		    } else {
+
+			    // 追従カメラの更新
+			    followCamera_->Update();
+			    viewProjection_.matView = followCamera_->GetViewProjection().matView;
+
+			    viewProjection_.matProjection = followCamera_->GetViewProjection().matProjection;
+
+			    // ビュープロジェクション行列の転送
+			    viewProjection_.TransferMatrix();
+		    }
+
+			 //地面の更新
+		    ground_->Update();
+
+		break;
 	}
 }
 	
@@ -266,4 +313,23 @@ void GameScene::CheckAllCollsions() {
 
 	//衝突判定と応答
 	collisionManager_->CheckAllCollisons();
+}
+
+void GameScene::ChangePhase() { 
+	//フェーズの切り替え
+	switch (phase_) {
+	case GameScene::Phase::kPlay:
+		if (player_->IsDead()) {
+			//死亡演出フェーズに切り替える
+			phase_ = Phase::kDeath;
+			//自キャラの座標にデスパーティクルを発生,、初期化
+
+		}
+		break;
+	case GameScene::Phase::kDeath:
+
+		break;
+	default:
+		break;
+	}
 }

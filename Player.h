@@ -140,6 +140,18 @@ public:
 	void SetLockOn(LockOn* lockOn) { lockOn_ = lockOn; }
 
 	/// <summary>
+	/// ハンマーのゲッター
+	/// </summary>
+	/// <returns></returns>
+	Hammer* GetHammer() { return hammer_.get(); }
+
+	/// <summary>
+	/// デスフラグのゲッター
+	/// </summary>
+	/// <returns></returns>
+	bool IsDead() const { return isDead_; }
+
+	/// <summary>
 	/// 中心座標取得
 	/// </summary>
 	/// <returns></returns>
@@ -148,11 +160,6 @@ public:
 	/// 衝突を検出したら呼び出されるコールバック関数
 	/// </summary>
 	void OnCollision([[maybe_unused]] Collider* other) override;
-	/// <summary>
-	/// ハンマーのゲッター
-	/// </summary>
-	/// <returns></returns>
-	Hammer* GetHammer() { return hammer_.get(); }
 
 private:
 
@@ -199,4 +206,7 @@ private:
 	float targetAngle_ = 0.0f;
 
 	WorkDash workDash_;
+
+	//デスフラグ
+	bool isDead_ = false;
 };

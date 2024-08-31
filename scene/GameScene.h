@@ -16,9 +16,6 @@
 
 #include <memory>
 
-//カメラの挙動修正
-//コントローラーとキーボードの操作
-
 /// <summary>
 /// ゲームシーン
 /// </summary>
@@ -55,7 +52,27 @@ public: // メンバ関数
 	/// </summary>
 	void CheckAllCollsions();
 
+	/// <summary>
+	/// フェーズの切り替え
+	/// </summary>
+	void ChangePhase();
+
+	/// <summary>
+	/// デスフラグのゲッター
+	/// </summary>
+	/// <returns></returns>
+	bool IsFinished() const { return IsFinished; }
+
 private:
+	// ゲームのフェーズ(型)
+	enum class Phase {
+		kPlay,  // ゲームプレイ
+		kDeath, // デス演出
+	};
+
+	//ゲームの現在フェーズ(変数)
+	Phase phase_;
+
 	// メンバ変数
 	DirectXCommon* dxCommon_ = nullptr;
 	Input* input_ = nullptr;
@@ -114,8 +131,6 @@ private:
 	// デバッグカメラ有効
 	bool isDebugCameraActive_ = false;
 	
-
-	/// <summary>
-	/// ゲームシーン用
-	/// </summary>
+	//終了フラグ
+	bool finished_ = false;
 };
