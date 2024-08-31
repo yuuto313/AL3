@@ -36,12 +36,27 @@ void TitleScene::Initialize() {
 
 	fade_ = new Fade();
 	fade_->Initialize();
-	fade_->Start(Fade::Status::FadeIn, 60.f);
+	fade_->Start(Fade::Status::FadeIn, 5.f);
 }
 
 void TitleScene::Update() { 
 
-	fade_->Update();
+	switch (phase_) {
+	case TitleScene::Phase::kFadeIn:
+	case TitleScene::Phase::kFadeOut:
+
+		fade_->Update();
+
+		break;
+	case TitleScene::Phase::kMain:
+
+		break;
+
+	default:
+		break;
+	}
+
+	ChangePhase();
 
 	XINPUT_STATE joyState;
 	Input::GetInstance()->GetJoystickState(0, joyState);
@@ -96,4 +111,36 @@ void TitleScene::Draw() {
 	Model::PostDraw();
 
 #pragma endregion
+}
+
+void TitleScene::ChangePhase() {
+	switch (phase_) {
+	case TitleScene::Phase::kFadeIn:
+
+		if (fade_->IsFinished()) {
+			phase_ = Phase::kMain;
+		}
+
+		break;
+	case TitleScene::Phase::kMain:
+
+		if (Input::GetInstance()->PushKey(DIK_SPACE)) {
+			// フェードアウト開始
+			float duration = 3.0f;
+			fade_->Start(Fade::Status::FadeOut, duration);
+			phase_ = Phase::kFadeOut;
+		}
+
+		break;
+	case TitleScene::Phase::kFadeOut:
+
+		// フェードアウトが終了したら、シーン終了
+		if (fade_->IsFinished()) {
+			finished_ = true;
+		}
+
+		break;
+	default:
+		break;
+	}
 }

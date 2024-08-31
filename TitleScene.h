@@ -11,13 +11,6 @@
 /// </summary>
 class TitleScene {
 public:
-	//シーンのフェーズ
-	enum class Phase {
-		kFadeIn,
-		kMain,
-		kFadeOut
-	};
-
 	~TitleScene();
 
 	/// <summary>
@@ -34,6 +27,11 @@ public:
 	/// 描画
 	/// </summary>
 	void Draw();
+
+	/// <summary>
+	/// フェーズの切り替え
+	/// </summary>
+	void ChangePhase();
 
 	/// <summary>
 	/// デスフラグのゲッター
@@ -68,6 +66,12 @@ private:
 
 	Fade* fade_ = nullptr;
 
+	// シーンのフェーズ
+	enum class Phase { 
+		kFadeIn,
+		kMain,
+		kFadeOut };
+
 	//現在のフェーズ
-	Phase pahse_ = Phase::kFadeIn;
+	Phase phase_ = Phase::kFadeIn;
 };
