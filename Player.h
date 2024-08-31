@@ -98,6 +98,11 @@ public:
 	void Movement();
 
 	/// <summary>
+	/// ダッシュ時の移動処理
+	/// </summary>
+	void DashMovement();
+
+	/// <summary>
 	/// カメラのビュープロジェクションのみ参照するセッター
 	/// </summary>
 	/// <param name="viewProjection"></param>

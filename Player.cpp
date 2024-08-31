@@ -400,6 +400,8 @@ void Player::Movement() {
 
 }
 
+void Player::DashMovement() {}
+
 void Player::InitializeFloatingGimmick() { 
 	//浮遊ギミックに使う変数を初期化
 	floatingParameter_ = 0.0f;
