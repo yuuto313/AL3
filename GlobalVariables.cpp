@@ -6,6 +6,8 @@ void GlobalVariables::CreateGroup(const std::string& groupName) {
 }
 
 void GlobalVariables::Update() {
+#ifdef _DEBUG
+
 	if (!ImGui::Begin("Global Variables", nullptr, ImGuiWindowFlags_MenuBar)) {
 		ImGui::End();
 		return;
@@ -63,6 +65,8 @@ void GlobalVariables::Update() {
 
 	ImGui::EndMenuBar();
 	ImGui::End();
+#endif // _DEBUG
+
 
 }
 
@@ -126,7 +130,10 @@ void GlobalVariables::SaveFile(const std::string& groupName) {
 	//ファイルオープン失敗?
 	if (ofs.fail()) {
 		std::string message = "Failed open data file for write.";
+#ifdef _DEBUG
 		MessageBoxA(nullptr, message.c_str(), "GlobalVariables", 0);
+#endif // _DEBUG
+
 		assert(0);
 		return;
 	}
@@ -171,7 +178,10 @@ void GlobalVariables::LoadFile(const std::string& groupName) {
 	//ファイルオープン失敗？
 	if (ifs.fail()) {
 		std::string message = "Failed open data file for write.";
+#ifdef _DEBUG
 		MessageBoxA(nullptr, message.c_str(), "GlobalVariables", 0);
+#endif // _DEBUG
+
 		assert(0);
 		return;
 	}

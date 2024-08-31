@@ -152,6 +152,7 @@ void Player::BehaviorRootUpdate() {
 	//--------------------------------
 	// ImGui
 	//--------------------------------
+#ifdef _DEBUG
 
 	ImGui::Begin("Player");
 	ImGui::Text("C:Camera\nSPACE:Jump");
@@ -166,6 +167,7 @@ void Player::BehaviorRootUpdate() {
 	ImGui::SliderFloat("floatingAmplitude", &amplitude_, -10.0f, 10.0f);
 
 	ImGui::End();
+#endif // _DEBUG
 }
 
 void Player::BehaviorjumpUpdate() {
