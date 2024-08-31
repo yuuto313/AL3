@@ -41,7 +41,7 @@ void DeathParticles::Update() {
 	//一定時間で消す
 	counter_ += 1.0f / 60.0f;
 
-	//存属時間の上限に達したら
+	//存続時間の上限に達したら
 	if (counter_ >= kDuration) {
 		counter_ = kDuration;
 		//終了扱いにする
