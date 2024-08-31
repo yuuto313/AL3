@@ -136,7 +136,6 @@ void GameScene::Initialize() {
 
 void GameScene::Update() {
 	switch (phase_) { 
-		
 		case Phase::kPlay:
 		    //--------------------------------
 		    // 更新処理関数を呼び出し
