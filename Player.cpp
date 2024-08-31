@@ -129,6 +129,11 @@ void Player::BehaviorJumpInitialize() {
 	velocity_.y = kJumpFirstSpeed;
 }
 
+void Player::BehaviorDashInitialize() { 
+	workDash_.dashParameter_ = 0;
+	worldTransform_.rotation_.y=
+}
+
 void Player::BehaviorRootUpdate() {
 	
 	//--------------------------------
@@ -181,6 +186,10 @@ void Player::BehaviorjumpUpdate() {
 	}
 }
 
+void Player::BehaviorDashUpdate() {
+
+}
+
 void Player::ChangeBehavior() {
 	// std::nullopt以外の値がはいってるときtrueになる
 	if (behaviorRequest_) {
@@ -190,22 +199,41 @@ void Player::ChangeBehavior() {
 		switch (behavior_) {
 		case Behavior::kRoot:
 		default:
+			//--------------------------------
+			// 通常行動の初期化
+			//--------------------------------
 
 			BehaviorRootInitialize();
 
 			break;
 
 		case Behavior::kAttack:
+			//--------------------------------
+			//　攻撃行動の初期化
+			//--------------------------------
 
 			hammer_->BehaviorAttackInitialize();
 
 			break;
 
 		case Behavior::kJump:
+			//--------------------------------
+			// ジャンプ行動の初期化
+			//--------------------------------
+
 			BehaviorJumpInitialize();
 
 			break;
 		
+		case Behavior::kDash:
+			//--------------------------------
+			// ダッシュ行動の初期化
+			//--------------------------------
+
+			BehaviorDashInitialize();
+
+			break;
+
 		}
 		// 振る舞いリクエストをリセット
 		behaviorRequest_ = std::nullopt;
@@ -237,6 +265,15 @@ void Player::ChangeBehavior() {
 		//--------------------------------
 
 		BehaviorjumpUpdate();
+
+		break;
+
+	case Behavior::kDash:
+		//--------------------------------
+		// ダッシュ行動の初期化
+		//--------------------------------
+
+		BehaviorDashUpdate();
 
 		break;
 	}
@@ -343,6 +380,15 @@ void Player::Movement() {
 	if (input_->TriggerKey(DIK_J) || joyState.Gamepad.wButtons & XINPUT_GAMEPAD_B) {
 		behaviorRequest_ = Behavior::kAttack;
 	}
+
+	//--------------------------------
+	// ダッシュ発動
+	//--------------------------------
+
+	if (input_->TriggerKey(DIK_Q) || joyState.Gamepad.wButtons & XINPUT_GAMEPAD_X) {
+		behaviorRequest_ = Behavior::kDash;
+	}
+
 }
 
 void Player::InitializeFloatingGimmick() { 

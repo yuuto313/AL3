@@ -84,18 +84,10 @@ void Enemy::Movement() {
 	// 武器にアニメーションを付ける
 	//--------------------------------
 	
-	Vector3 velocity = {};
-	Vector3 acceleration = {};
-	//角度を更新
-	angle_ += angularVelocity_ * deltaTime_;
-
-	worldTransformLeftWeapon_.translation_.x = center_.x + std::cos(angle_) * radius_;
-	worldTransformLeftWeapon_.translation_.y = center_.y + std::sin(angle_) * deltaTime_;
-	worldTransformLeftWeapon_.translation_.z = center_.z;
-
-	velocity += acceleration * deltaTime_;
-	worldTransformLeftWeapon_.translation_ += velocity * deltaTime_;
-	worldTransformRightWeapon_.translation_ += velocity * deltaTime_;
+	// 左右の武器を回転させる
+	const float rotationX = 0.05f;
+	worldTransformLeftWeapon_.rotation_.x += rotationX;
+	worldTransformRightWeapon_.rotation_.x += rotationX;
 }
 
 void Enemy::Reaction() {
