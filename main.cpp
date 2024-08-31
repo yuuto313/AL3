@@ -158,23 +158,21 @@ void ChangeScene() {
 			delete titleScene;
 			titleScene = nullptr;
 			//新シーンの生成と初期化
-			gameScene = new GameScene;
+			gameScene = new GameScene();
 			gameScene->Initialize();
 		}
-
 		break;
-	case Scene::kGame: {
-		if (gameScene->IsFinished())
+	case Scene::kGame: 
+		if (gameScene->IsFinished()){
 			// シーン変更
 			scene = Scene::kTitle;
 			// 旧シーン解放
 			delete gameScene;
 			gameScene = nullptr;
 			// 新シーンの生成と初期化
-			titleScene = new TitleScene;
+			titleScene = new TitleScene();
 			titleScene->Initialize();
-	}
-
+		}
 		break;
 	default:
 		break;
