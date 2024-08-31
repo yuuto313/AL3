@@ -130,7 +130,7 @@ void GameScene::Initialize() {
 	player_->SetLockOn(lockOn_.get());
 
 	// ゲームプレイフェーズから開始
-	phase_ = GameScene::Phase::kPlay;
+	phase_ = GameScene::Phase::kFadeIn;
 
 	//--------------------------------
 	// 軸方向表示の使用

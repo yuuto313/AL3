@@ -58,13 +58,6 @@ void TitleScene::Update() {
 
 	ChangePhase();
 
-	XINPUT_STATE joyState;
-	Input::GetInstance()->GetJoystickState(0, joyState);
-	//Aボタンでタイトルシーンを終了
-	if (joyState.Gamepad.wButtons & XINPUT_GAMEPAD_Y) {
-		finished_ = true;
-	}
-
 	if (isIncreasing_) {
 		counter_ += 1.0f / 60.0f; // 1秒で60回呼び出されると仮定
 		if (counter_ >= kDuration) {
@@ -124,7 +117,10 @@ void TitleScene::ChangePhase() {
 		break;
 	case TitleScene::Phase::kMain:
 
-		if (Input::GetInstance()->PushKey(DIK_SPACE)) {
+		XINPUT_STATE joyState;
+		Input::GetInstance()->GetJoystickState(0, joyState);
+		// Aボタンでタイトルシーンを終了
+		if (joyState.Gamepad.wButtons & XINPUT_GAMEPAD_Y) {
 			// フェードアウト開始
 			float duration = 3.0f;
 			fade_->Start(Fade::Status::FadeOut, duration);

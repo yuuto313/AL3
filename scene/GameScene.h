@@ -142,7 +142,7 @@ private:
 	};
 
 	// ゲームの現在フェーズ(変数)
-	Phase phase_;
+	Phase phase_ = Phase::kFadeIn;
 
 	//終了フラグ
 	bool finished_ = false;
