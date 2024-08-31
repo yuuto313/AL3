@@ -131,7 +131,7 @@ void Player::BehaviorJumpInitialize() {
 
 void Player::BehaviorDashInitialize() { 
 	workDash_.dashParameter_ = 0;
-	worldTransform_.rotation_.y=
+	worldTransform_.rotation_.y = targetAngle_;
 }
 
 void Player::BehaviorRootUpdate() {
@@ -188,6 +188,15 @@ void Player::BehaviorjumpUpdate() {
 
 void Player::BehaviorDashUpdate() {
 
+
+
+	//ダッシュの時間<frame>
+	const uint32_t behaviorDashTime = 2;
+
+	//既定の時間経過で通常行動に戻る戻る
+	if (++workDash_.dashParameter_ >= behaviorDashTime) {
+		behaviorRequest_ = Behavior::kRoot;
+	}
 }
 
 void Player::ChangeBehavior() {
