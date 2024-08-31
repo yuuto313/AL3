@@ -189,10 +189,10 @@ void Player::BehaviorjumpUpdate() {
 void Player::BehaviorDashUpdate() {
 
 	//自キャラの向いてる方向に移動する処理
-	//DashMovement();
+	DashMovement();
 
 	//ダッシュの時間<frame>
-	const uint32_t behaviorDashTime = 2;
+	const uint32_t behaviorDashTime = 60;
 
 	//既定の時間経過で通常行動に戻る戻る
 	if (++workDash_.dashParameter_ >= behaviorDashTime) {
@@ -362,7 +362,7 @@ void Player::Movement() {
 		}
 
 		// 最短角度補間
-		worldTransform_.rotation_.y = LerpShortAngle(worldTransform_.rotation_.y, targetAngle_, 0.1f);
+		worldTransform_.rotation_.y = LerpShortAngle(worldTransform_.rotation_.y, targetAngle_, 0.3f);
 
 	} else if (lockOn_ && lockOn_->ExistTarget()) {
 		// ロックオン座標
