@@ -123,7 +123,7 @@ void GameScene::Initialize() {
 	player_->SetLockOn(lockOn_.get());
 
 	// ゲームプレイフェーズから開始
-	phase_ = Phase::kPlay;
+	phase_ = GameScene::Phase::kPlay;
 
 	//--------------------------------
 	// 軸方向表示の使用
@@ -136,54 +136,55 @@ void GameScene::Initialize() {
 }
 
 void GameScene::Update() {
-	switch (phase_) { 
-		case GameScene::Phase::kPlay:
-		    //--------------------------------
-		    // 更新処理関数を呼び出し
-		    //--------------------------------
-		    // 自キャラの更新
-		    player_->Update();
+	switch (phase_) {
+	case GameScene::Phase::kPlay:
+		//--------------------------------
+		// 更新処理関数を呼び出し
+		//--------------------------------
+		// 自キャラの更新
+		player_->Update();
 
-		    // 敵キャラの更新
-		    for (std::list<std::unique_ptr<Enemy>>::iterator enemy = enemies_.begin(); enemy != enemies_.end(); ++enemy) {
-			    (*enemy)->Update();
-		    }
+		// 敵キャラの更新
+		for (std::list<std::unique_ptr<Enemy>>::iterator enemy = enemies_.begin(); enemy != enemies_.end(); ++enemy) {
+			(*enemy)->Update();
+		}
 
-		    // 天球の更新
-		    skydome_->Update();
+		// 天球の更新
+		skydome_->Update();
 
-		    // 地面の更新
-		    ground_->Update();
+		// 地面の更新
+		ground_->Update();
 
-		    // ロックオンの更新
-		    lockOn_->Update(enemies_, viewProjection_);
+		// ロックオンの更新
+		lockOn_->Update(enemies_, viewProjection_);
 
-		    // 衝突マネージャ更新
-		    collisionManager_->UpdateWorldTransform();
+		// 衝突マネージャ更新
+		collisionManager_->UpdateWorldTransform();
 
-		    // 衝突判定と応答
-		    CheckAllCollsions();
+		// 衝突判定と応答
+		CheckAllCollsions();
 		break;
-	    case GameScene::Phase::kDeath :
-			//天球の更新
-		    skydome_->Update();
+	case GameScene::Phase::kDeath:
+		// 天球の更新
+		skydome_->Update();
 
-		    // 敵キャラの更新
-		    for (std::list<std::unique_ptr<Enemy>>::iterator enemy = enemies_.begin(); enemy != enemies_.end(); ++enemy) {
-			    (*enemy)->Update();
-		    }
+		// 敵キャラの更新
+		for (std::list<std::unique_ptr<Enemy>>::iterator enemy = enemies_.begin(); enemy != enemies_.end(); ++enemy) {
+			(*enemy)->Update();
+		}
 
-			//デスパーティクルの更新
-		    if (deathParticles_) {
-			    deathParticles_->Update();
-			}
+		// デスパーティクルの更新
+		if (deathParticles_) {
+			deathParticles_->Update();
+		}
 
-			 //地面の更新
-		    ground_->Update();
+		// 地面の更新
+		ground_->Update();
 		break;
 	}
 
-	 //--------------------------------
+
+	//--------------------------------
 	// デバッグカメラ
 	//--------------------------------
 
