@@ -6,6 +6,7 @@
 TitleScene::~TitleScene() { 
 	delete modelTitle_;
 	delete modelUI_;
+	delete fade_;
 }
 
 void TitleScene::Initialize() {
@@ -32,9 +33,16 @@ void TitleScene::Initialize() {
 
 	objectColor_.Initialize();
 	color_ = {1, 1, 1, 1};
+
+	fade_ = new Fade();
+	fade_->Initialize();
+	fade_->Start(Fade::Status::FadeIn, 60.f);
 }
 
 void TitleScene::Update() { 
+
+	fade_->Update();
+
 	XINPUT_STATE joyState;
 	Input::GetInstance()->GetJoystickState(0, joyState);
 	//Aボタンでタイトルシーンを終了
@@ -81,6 +89,8 @@ void TitleScene::Draw() {
 	// モデル描画
 	modelTitle_->Draw(worldTransformTitle_, viewProjection_);
 	modelUI_->Draw(worldTransformUI_, viewProjection_,&objectColor_);
+
+	fade_->Draw(commandList);
 
 	// 3Dオブジェクト描画後処理
 	Model::PostDraw();

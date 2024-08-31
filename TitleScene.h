@@ -2,14 +2,22 @@
 #include "Model.h"
 #include "WorldTransform.h"
 #include "ViewProjection.h"
-
 #include "DirectXCommon.h"
+
+#include "Fade.h"
 
 /// <summary>
 /// タイトルシーン
 /// </summary>
 class TitleScene {
 public:
+	//シーンのフェーズ
+	enum class Phase {
+		kFadeIn,
+		kMain,
+		kFadeOut
+	};
+
 	~TitleScene();
 
 	/// <summary>
@@ -57,4 +65,9 @@ private:
 	ObjectColor objectColor_;
 	// 色の数値
 	Vector4 color_;
+
+	Fade* fade_ = nullptr;
+
+	//現在のフェーズ
+	Phase pahse_ = Phase::kFadeIn;
 };

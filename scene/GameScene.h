@@ -131,8 +131,10 @@ private:
 	
 	// ゲームのフェーズ(型)
 	enum class Phase {
+		kFadeIn,//フェードイン
 		kPlay,  // ゲームプレイ
 		kDeath, // デス演出
+		kFadeOut,//フェードアウト
 	};
 
 	// ゲームの現在フェーズ(変数)
