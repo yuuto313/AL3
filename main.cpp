@@ -207,7 +207,7 @@ void DrawScene() {
 		titleScene->Draw();
 		break;
 	case Scene::kGame:
-		titleScene->Draw();
+		gameScene->Draw();
 		break;
 	default:
 		break;
