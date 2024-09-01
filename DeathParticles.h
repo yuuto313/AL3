@@ -48,9 +48,9 @@ private:
 	std::array<WorldTransform, kNumParticles> worldTransforms_;
 
 	//存続時間(消滅までの時間)<秒>
-	static inline const float kDuration = 1.5f;
+	static inline const float kDuration = 2.0f;
 	//移動の速さ
-	static inline const float kSpeed = 0.7f;
+	static inline const float kSpeed = 0.4f;
 	//分割した一個分の角度
 	static inline const float kAngleUnit = 2.0f * (float)M_PI / 8.0f;
 

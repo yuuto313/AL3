@@ -90,33 +90,21 @@ void Enemy::Movement() {
 	worldTransformRightWeapon_.rotation_.x += rotationX;
 }
 
-void Enemy::Reaction() {
-	Vector3 scale = Collider::GetScale();
-	Vector3 baseScale = {2.0f, 2.0f, 2.0f};
-	float increment = 0.1f;
-
-	// フレームごとの時間差
-	float deltaTime = 1.0f / 60.f;
-	// 時間経過を追跡する変数
-	float elapsedTIme = 0.0f;
-
-	elapsedTIme += deltaTime;
-
-	if (elapsedTIme <= 1.0f) {
-		scale.x += increment;
-		scale.y += increment;
-		scale.z += increment;
-		Collider::SetScale(scale);
-	} else {
-		elapsedTIme = 0.0f;
-	}
-}
-
-
 Vector3 Enemy::GetCenterPosition()const {
 	//見た目上の中心点オフセット
 	const Vector3 offset = {0.0f, 0.0f, 0.0f};
 	//ワールド座標に変換
 	Vector3 worldPos = Transform(offset, worldTransform_.matWorld_);
 	return worldPos;	
+}
+
+void Enemy::OnCollision(Collider* other) {
+	// 衝突相手の識別IDを取得
+	uint32_t typeID = other->GetTypeID();
+
+	// 衝突相手が敵なら
+	if (typeID == static_cast<uint32_t>(CollisionTypeIdDef::kPlayerWeapon)) {
+		// デスフラグを立てる
+		isDead_ = true;
+	}
 }

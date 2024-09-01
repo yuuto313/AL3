@@ -91,9 +91,6 @@ void Hammer::OnCollision([[maybe_unused]] Collider* other) {
 
 		//接触履歴に登録
 		collisionRecord.AddRecord(serialNumber);
-		
-		//敵の位置にエフェクト発生
-		enemy_->Reaction();
 	}
 }
 

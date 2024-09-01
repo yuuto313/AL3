@@ -202,10 +202,6 @@ void GameScene::Update() {
 		// 天球の更新
 		skydome_->Update();
 
-		// 敵キャラの更新
-		for (std::list<std::unique_ptr<Enemy>>::iterator enemy = enemies_.begin(); enemy != enemies_.end(); ++enemy) {
-			(*enemy)->Update();
-		}
 
 		// デスパーティクルの更新
 		if (deathParticles_) {
@@ -396,6 +392,20 @@ void GameScene::ChangePhase() {
 			deathParticles_ = std::make_unique<DeathParticles>();
 			deathParticles_->Initialize(modelDeathParticle_.get(), &viewProjection_, deathParticlesPosion);
 		}
+
+		for (std::list<std::unique_ptr<Enemy>>::iterator enemy = enemies_.begin(); enemy != enemies_.end(); ++enemy) {
+			if ((*enemy)->IsDead()) {
+				// 死亡演出フェーズに切り替える
+				phase_ = Phase::kDeath;
+				// 自キャラの座標を取得
+				const Vector3& deathParticlesPosion = (*enemy)->GetCenterPosition();
+
+				// 自キャラの座標にデスパーティクルを発生,、初期化
+				deathParticles_ = std::make_unique<DeathParticles>();
+				deathParticles_->Initialize(modelDeathParticle_.get(), &viewProjection_, deathParticlesPosion);
+			}
+		}
+		
 		break;
 	case GameScene::Phase::kDeath:
 		if (deathParticles_ && deathParticles_->IsFinished()) {

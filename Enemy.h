@@ -31,11 +31,6 @@ public:
 	void Movement();
 
 	/// <summary>
-	/// 攻撃を受けた時のリアクション
-	/// </summary>
-	void Reaction();
-
-	/// <summary>
 	/// 敵のWorldTransformを取得する
 	/// </summary>
 	/// <returns></returns>
@@ -53,6 +48,17 @@ public:
 	/// <returns></returns>
 	uint32_t GetSerialNumber() const { return serialNumber_; }
 
+	/// <summary>
+	/// デスフラグのゲッター
+	/// </summary>
+	/// <returns></returns>
+	bool IsDead() const { return isDead_; }
+
+	/// <summary>
+	/// 衝突を検出したら呼び出されるコールバック関数
+	/// </summary>
+	void OnCollision([[maybe_unused]] Collider* other) override;
+
 private:
 	WorldTransform worldTransformRightWeapon_;
 	WorldTransform worldTransformLeftWeapon_;
@@ -68,4 +74,7 @@ private:
 
 	//次のシリアルナンバー
 	static uint32_t nextSerialNumber_;
+
+	// デスフラグ
+	bool isDead_ = false;
 };
