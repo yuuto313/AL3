@@ -9,6 +9,7 @@
 #include "WinApp.h"
 #include "GlobalVariables.h"
 
+
 TitleScene* titleScene = nullptr;
 GameScene* gameScene = nullptr;
 
