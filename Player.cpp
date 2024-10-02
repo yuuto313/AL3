@@ -241,11 +241,13 @@ void Player::Reticle(ViewProjection& viewProjection) {
 		// スプライトのレティクルに座標設定
 		//sprite2DReticle_->SetPosition(Vector2(positionReticle.x, positionReticle.y));
 	}
+#ifdef DEBUG
 
 	ImGui::Begin("Player");
 	ImGui::Text("2DReticle:(%f,%f", sprite2DReticle_->GetPosition().x, sprite2DReticle_->GetPosition().y);
 	ImGui::SliderFloat3("3Dreticle", &worldTransform3Dreticle_.translation_.x, -20.0f, 20.0f);
 	ImGui::End();
+#endif // DEBUG
 }
 
 void Player::MouseCursor(ViewProjection& viewProjection) {
