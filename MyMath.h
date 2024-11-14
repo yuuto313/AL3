@@ -2,6 +2,7 @@
 #include "Vector3.h"
 #include <cmath>
 #include <corecrt_math_defines.h>
+#include <algorithm>
 #pragma once
 
 // 長さ
@@ -12,6 +13,14 @@ Vector3 Normalize(const Vector3& v);
 
 // 逆行列
 Matrix4x4 Inverse(const Matrix4x4& m);
+
+// 線形保管
+Vector3 Lerp(const Vector3& v1, const Vector3& v2, float t);
+
+float Lerp(float a, float b, float t);
+
+// 球面線形補間
+Vector3 Sleap(const Vector3& v1, const Vector3& v2, float t);
 
 // 積
 Matrix4x4 Multiply(const Matrix4x4& m1, const Matrix4x4& m2);
