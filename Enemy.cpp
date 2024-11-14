@@ -48,7 +48,7 @@ void Enemy::Update() {
 	// 移動処理
 	//--------------------------------
 
-	Movement();
+	//Movement();
 
 	//--------------------------------
 	// 攻撃処理
@@ -111,7 +111,7 @@ void Enemy::Attack() {
 	});
 
 	// 球の速度
-	const float kBulletSpeed = -0.1f;
+	const float kBulletSpeed = -1.0f;
 	// 敵キャラの座標を取得
 	Vector3 translate = GetWorldPosition();
 	// 敵キャラの座標を取得
