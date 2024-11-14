@@ -14,6 +14,18 @@ void EnemyCanon::Initialize(Model* model, Enemy* enemy, const Vector3& velocity)
 	worldTransform_.Initialize();
 	//　敵の中心座標を取得
 	worldTransform_.translation_ = enemy_->GetWorldPosition();
+
+	// Y軸周りの回転角度(θy)を計算
+	// atan2: 第一引数に高さ、第二引数に底辺を指定する
+	worldTransform_.rotation_.y = std::atan2(velocity_.x, velocity_.z);
+
+	Vector3 newVelocity = velocity_;
+	newVelocity.y = 0;
+	float velocityXZ = Length(newVelocity);
+
+	// X軸周りの回転角度(θx)を計算
+	worldTransform_.rotation_.x = std::atan2(-velocity_.y, velocityXZ);
+
 }
 
 void EnemyCanon::Update() {
