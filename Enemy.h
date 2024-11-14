@@ -3,10 +3,14 @@
 #include "Model.h"
 #include "WorldTransform.h"
 #include "ViewProjection.h"
+#include <list>
+
+#include "EnemyCanon.h"
 
 class Enemy : public BaseCharacter{
 public:
 	Enemy();
+	~Enemy();
 
 	/// <summary>
 	/// 初期化
@@ -29,6 +33,11 @@ public:
 	/// 動き
 	/// </summary>
 	void Movement();
+
+	/// <summary>
+	/// 通常攻撃
+	/// </summary>
+	void Attack();
 
 	/// <summary>
 	/// 攻撃を受けた時のリアクション
@@ -61,4 +70,8 @@ private:
 
 	//次のシリアルナンバー
 	static uint32_t nextSerialNumber_;
+
+	std::list<EnemyCanon*> canons_;
+	float coolTime_ = 3.0f;
+
 };

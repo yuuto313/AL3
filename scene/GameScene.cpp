@@ -32,7 +32,7 @@ void GameScene::Initialize() {
 	modelFighterWeapon_.reset(Model::CreateFromOBJ("Hammer", true));
 
 	//敵
-	modelEnemy_.reset(Model::CreateFromOBJ("Enemy", true));
+	modelEnemy_.reset(Model::CreateFromOBJ("tdBoss", true));
 	modelEnemyWeapon_.reset(Model::CreateFromOBJ("Weapon", true));
 
 	//天球のモデルを生成

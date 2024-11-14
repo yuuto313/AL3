@@ -10,6 +10,15 @@ Enemy::Enemy() {
 	++nextSerialNumber_;
 }
 
+Enemy::~Enemy() {
+	for (EnemyCanon* canon : canons_) {
+		delete canon;
+	}
+
+	canons_.clear();
+
+}
+
 void Enemy::Initialize(const std::vector<Model*>& models) { 
 	//基底クラスの初期化
 	BaseCharacter::Initialize(models);
@@ -41,6 +50,16 @@ void Enemy::Update() {
 	Movement();
 
 	//--------------------------------
+	// 攻撃処理
+	//--------------------------------
+
+	Attack();
+
+	for (EnemyCanon* canon_ : canons_) {
+		canon_->Update();
+	}
+
+	//--------------------------------
 	// ワールド行列の更新
 	//--------------------------------
 
@@ -50,7 +69,11 @@ void Enemy::Update() {
 
 void Enemy::Draw(const ViewProjection& viewProjection) { 
 	models_[0]->Draw(worldTransform_, viewProjection);
-	models_[1]->Draw(worldTransformWeapon_, viewProjection);
+
+	for (EnemyCanon* canon : canons_) {
+		canon->Draw(viewProjection);
+	}
+
 }
 
 void Enemy::Movement() { 
@@ -73,6 +96,40 @@ void Enemy::Movement() {
 
 	worldTransform_.translation_.x = radius * cos(worldTransform_.rotation_.y);
 	worldTransform_.translation_.z = radius * sin(worldTransform_.rotation_.y);
+}
+
+void Enemy::Attack() {
+	
+	// デスフラグが立った大砲を削除
+	canons_.remove_if([](EnemyCanon* canon) {
+		if (canon->IsDead()) {
+			delete canon;
+			return true;
+		}
+		return false;
+	});
+
+	float deltaTime = 1.0f / 60.0f;
+
+	coolTime_ -= deltaTime;
+
+	// 球の速度
+	const float kBulletSpeed = 1.0f;
+	Vector3 velocity(0, 0, kBulletSpeed);
+
+	// 速度ベクトルを自機の向きに合わせて回転させる
+	velocity = TransformNormal(velocity, worldTransform_.matWorld_);
+
+	if (coolTime_ <= 0.0f) {
+		EnemyCanon* newCanon = new EnemyCanon();
+		newCanon->Initialize(models_[1], this, velocity);
+
+		// 弾を登録する
+		canons_.push_back(newCanon);
+
+		coolTime_ = 3.0f;
+	}
+
 }
 
 void Enemy::Reaction() {
