@@ -111,6 +111,13 @@ public:
 	/// </summary>
 	/// <returns></returns>
 	Vector3 GetCenterPosition() const override;
+
+	/// <summary>
+	/// ワールド座標を取得
+	/// </summary>
+	/// <returns></returns>
+	Vector3 GetWorldPosition();
+
 	/// <summary>
 	/// 衝突を検出したら呼び出されるコールバック関数
 	/// </summary>

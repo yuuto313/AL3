@@ -13,7 +13,7 @@ void EnemyCanon::Initialize(Model* model, Enemy* enemy, const Vector3& velocity)
 
 	worldTransform_.Initialize();
 	//　敵の中心座標を取得
-	worldTransform_.translation_ = enemy_->GetCenterPosition();
+	worldTransform_.translation_ = enemy_->GetWorldPosition();
 }
 
 void EnemyCanon::Update() {
