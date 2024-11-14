@@ -87,6 +87,7 @@ void GameScene::Initialize() {
 	//敵の初期化
 	for (std::list<std::unique_ptr<Enemy>>::iterator enemy = enemies_.begin(); enemy != enemies_.end(); ++enemy) {
 		(*enemy)->Initialize(enemyMoldels);
+		(*enemy)->SetPlayer(player_.get());
 	}
 	
 

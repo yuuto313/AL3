@@ -1,5 +1,6 @@
 #include "Enemy.h"
 #include "CollisionTypeIdDef.h"
+#include "Player.h"
 
 uint32_t Enemy::nextSerialNumber_ = 0;
 
@@ -109,16 +110,28 @@ void Enemy::Attack() {
 		return false;
 	});
 
-	float deltaTime = 1.0f / 60.0f;
-
-	coolTime_ -= deltaTime;
-
 	// 球の速度
 	const float kBulletSpeed = 1.0f;
-	Vector3 velocity(0, 0, kBulletSpeed);
+	// 敵キャラの座標を取得
+	Vector3 translate = GetCenterPosition();
+	// 敵キャラの座標を取得
+	Vector3 playerTranslate = player_->GetCenterPosition();
+	// 敵キャラから自キャラへの差分ベクトルを求める
+	Vector3 diff = translate - playerTranslate;
+	// ベクトルの正規化
+	Normalize(diff);
+	// ベクトルの長さを速さに合わせる
+	diff *= kBulletSpeed;
+
+	Vector3 velocity = velocity + diff;
 
 	// 速度ベクトルを自機の向きに合わせて回転させる
 	velocity = TransformNormal(velocity, worldTransform_.matWorld_);
+	
+	// 3秒間隔で大砲を生成する
+	float deltaTime = 1.0f / 60.0f;
+
+	coolTime_ -= deltaTime;
 
 	if (coolTime_ <= 0.0f) {
 		EnemyCanon* newCanon = new EnemyCanon();

@@ -7,6 +7,8 @@
 
 #include "EnemyCanon.h"
 
+class Player;
+
 class Enemy : public BaseCharacter{
 public:
 	Enemy();
@@ -62,6 +64,8 @@ public:
 	/// <returns></returns>
 	uint32_t GetSerialNumber() const { return serialNumber_; }
 
+	void SetPlayer(Player* player) { player_ = player; }
+
 private:
 	WorldTransform worldTransformWeapon_;
 
@@ -73,5 +77,8 @@ private:
 
 	std::list<EnemyCanon*> canons_;
 	float coolTime_ = 3.0f;
+
+	// 自キャラ
+	Player* player_ = nullptr;
 
 };
