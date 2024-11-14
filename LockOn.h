@@ -47,6 +47,7 @@ public:
 	/// </summary>
 	/// <returns></returns>
 	Vector3 GetTargetPosition()const;
+
 	/// <summary>
 	/// ロックオン中かどうか確認
 	/// </summary>

@@ -136,6 +136,7 @@ void Enemy::Attack() {
 	if (coolTime_ <= 0.0f) {
 		EnemyCanon* newCanon = new EnemyCanon();
 		newCanon->Initialize(models_[1], this, velocity);
+		newCanon->SetPlayer(player_);
 
 		// 弾を登録する
 		canons_.push_back(newCanon);

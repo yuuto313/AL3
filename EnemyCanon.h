@@ -3,6 +3,7 @@
 #include <Model.h>
 
 class Enemy;
+class Player;
 
 /// <summary>
 /// 敵の攻撃
@@ -31,11 +32,20 @@ public:
 	/// <returns></returns>
 	bool IsDead() const { return isDead_; }
 
+	/// <summary>
+	/// ワールド座標を取得
+	/// </summary>
+	/// <returns></returns>
+	Vector3 GetWorldPosition();
+
+	void SetPlayer(Player* player) { player_ = player; }
+
 private:
 	Model* model_ = nullptr;
 	WorldTransform worldTransform_;
 
 	Enemy* enemy_ = nullptr;
+	Player* player_ = nullptr;
 
 	uint32_t textureHandel_;
 
@@ -43,7 +53,7 @@ private:
 	Vector3 velocity_ = {};
 
 	// 寿命<frame>
-	static const int32_t kLifeTime_ = 60 * 3;
+	static const int32_t kLifeTime_ = 60 * 5;
 	// デスタイマー
 	int32_t deathTimer_ = kLifeTime_;
 	// デスフラグ
