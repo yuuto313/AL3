@@ -125,6 +125,10 @@ Vector3 Sleap(const Vector3& v1, const Vector3& v2, float t) {
 	return length * normalizedVector;
 }
 
+// 内積
+float Dot(const Vector3& v1, const Vector3& v2) { return v1.x * v2.x + v1.y * v2.y + v1.z * v2.z; }
+
+
 // 積
 Matrix4x4 Multiply(const Matrix4x4& m1, const Matrix4x4& m2) {
 	Matrix4x4 result{};
@@ -272,3 +276,12 @@ Vector3 TransformNormal(const Vector3& v, const Matrix4x4& m) {
 	};
 	return result;
 }
+
+// 二項演算子
+Vector3 operator+(const Vector3& v1, const Vector3& v2) { return Add(v1, v2); }
+Vector3 operator-(const Vector3& v1, const Vector3& v2) { return Subtract(v1, v2); }
+
+Vector3 operator+(float s, const Vector3& v) { return Vector3{s + v.x, s + v.y, s + v.z}; }
+Vector3 operator*(float s, const Vector3& v) { return Multiply(s, v); }
+Vector3 operator*(const Vector3& v, float s) { return s * v; }
+Vector3 operator/(const Vector3& v, float s) { return Multiply(1.0f / s, v); }
