@@ -111,19 +111,19 @@ void Enemy::Attack() {
 	});
 
 	// 球の速度
-	const float kBulletSpeed = 1.0f;
+	const float kBulletSpeed = - 0.5f;
 	// 敵キャラの座標を取得
 	Vector3 translate = GetCenterPosition();
 	// 敵キャラの座標を取得
 	Vector3 playerTranslate = player_->GetCenterPosition();
 	// 敵キャラから自キャラへの差分ベクトルを求める
-	Vector3 diff = translate - playerTranslate;
+	Vector3 diff = playerTranslate - translate;
 	// ベクトルの正規化
 	Normalize(diff);
 	// ベクトルの長さを速さに合わせる
-	diff *= kBulletSpeed;
+	diff = diff * kBulletSpeed;
 
-	Vector3 velocity = velocity + diff;
+	Vector3 velocity = diff;
 
 	// 速度ベクトルを自機の向きに合わせて回転させる
 	velocity = TransformNormal(velocity, worldTransform_.matWorld_);
