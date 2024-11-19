@@ -62,6 +62,9 @@ void GameScene::Initialize() {
 	//ロックオンの生成
 	lockOn_ = std::make_unique<LockOn>();
 
+	// プレイヤーへのロックオンの生成
+	lockOnPlayer_ = std::make_unique<LockOnPlayer>();
+
 	//衝突マネージャの生成
 	collisionManager_ = std::make_unique<CollisionManager>();
 
@@ -104,6 +107,9 @@ void GameScene::Initialize() {
 	//ロックオンの初期化
 	lockOn_->Initalize();
 
+	// プレイヤーへのロックオン初期化
+	lockOnPlayer_->Initialize();
+
 	//衝突マネージャ初期化
 	collisionManager_->Initialize();
 
@@ -143,6 +149,9 @@ void GameScene::Update() {
 
 	//ロックオンの更新
 	lockOn_->Update(enemies_,viewProjection_);
+
+	// プレイヤーへのロックオン更新
+	lockOnPlayer_->Update(player_,viewProjection_);
 
 	//衝突マネージャ更新
 	collisionManager_->UpdateWorldTransform();
@@ -246,6 +255,9 @@ void GameScene::Draw() {
 
 	//ロックオンの描画
 	lockOn_->Draw();
+
+	// プレイヤーへのロックオンの描画
+	lockOnPlayer_->Draw();
 
 	// スプライト描画後処理
 	Sprite::PostDraw();

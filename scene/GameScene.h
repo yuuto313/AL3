@@ -12,6 +12,7 @@
 #include "Ground.h"
 #include "FollowCamera.h"
 #include "LockOn.h"
+#include "LockOnPlayer.h"
 #include "CollisionManager.h"
 
 #include <memory>
@@ -101,6 +102,8 @@ private:
 
 	//ロックオン
 	std::unique_ptr<LockOn> lockOn_;
+	// プレイヤーへのロックオン
+	std::unique_ptr<LockOnPlayer> lockOnPlayer_;
 
 	//衝突マネージャ
 	std::unique_ptr<CollisionManager> collisionManager_;

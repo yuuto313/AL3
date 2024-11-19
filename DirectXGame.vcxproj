@@ -121,6 +121,7 @@
     <ClCompile Include="Ground.cpp" />
     <ClCompile Include="Hammer.cpp" />
     <ClCompile Include="LockOn.cpp" />
+    <ClCompile Include="LockOnPlayer.cpp" />
     <ClCompile Include="main.cpp" />
     <ClCompile Include="MyMath.cpp" />
     <ClCompile Include="Player.cpp" />
@@ -164,6 +165,7 @@
     <ClInclude Include="Hammer.h" />
     <ClInclude Include="input\Input.h" />
     <ClInclude Include="LockOn.h" />
+    <ClInclude Include="LockOnPlayer.h" />
     <ClInclude Include="math\Matrix4x4.h" />
     <ClInclude Include="math\Vector2.h" />
     <ClInclude Include="math\Vector3.h" />
