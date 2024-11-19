@@ -1,6 +1,7 @@
 #include "Enemy.h"
 #include "CollisionTypeIdDef.h"
 #include "Player.h"
+#include "LockOnPlayer.h"
 
 uint32_t Enemy::nextSerialNumber_ = 0;
 

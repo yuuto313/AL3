@@ -44,8 +44,7 @@ public:
 	/// ロックオンセッター
 	/// </summary>
 	void SetLockOn(LockOn* lockOn) { lockOn_ = lockOn; }
-
-private:
+private :
 	ViewProjection viewProjection_;
 
 	//追従対象

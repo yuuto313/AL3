@@ -25,8 +25,6 @@ void LockOnPlayer::Update(const std::unique_ptr<Player>& player, const ViewProje
 		Search(player, viewProjection);
 	}
 
-	
-
 	// ロックオン継続
 	if (target_) {
 		// プレイヤーのロックオン座標

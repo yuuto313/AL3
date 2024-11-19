@@ -8,6 +8,7 @@
 #include "EnemyCanon.h"
 
 class Player;
+class LockOnPlayer;
 
 class Enemy : public BaseCharacter{
 public:
@@ -72,6 +73,8 @@ public:
 
 	void SetPlayer(Player* player) { player_ = player; }
 
+	void SetLockOn(LockOnPlayer* lockOn) { lockOn_ = lockOn; }
+
 private:
 	WorldTransform worldTransformWeapon_;
 
@@ -86,5 +89,8 @@ private:
 
 	// 自キャラ
 	Player* player_ = nullptr;
+
+	// ロックオン
+	LockOnPlayer* lockOn_ = nullptr;
 
 };
