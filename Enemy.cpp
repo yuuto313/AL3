@@ -2,6 +2,7 @@
 #include "CollisionTypeIdDef.h"
 #include "Player.h"
 #include "LockOnPlayer.h"
+#include "ImGuiManager.h"
 
 uint32_t Enemy::nextSerialNumber_ = 0;
 
@@ -28,6 +29,7 @@ void Enemy::Initialize(const std::vector<Model*>& models) {
 	//ワールド行列の初期化
 	worldTransform_.Initialize();
 	worldTransform_.translation_ = {0.0f, 0.0f, 3.0f};
+	worldTransform_.rotation_.y = 1.5f;
 	worldTransformWeapon_.Initialize();
 
 	//本体と親子関係を結ぶ
@@ -49,7 +51,7 @@ void Enemy::Update() {
 	// 移動処理
 	//--------------------------------
 
-	//Movement();
+	Movement();
 
 	//--------------------------------
 	// 攻撃処理
@@ -82,22 +84,39 @@ void Enemy::Movement() {
 	//--------------------------------
 	//  回転処理
 	//--------------------------------
-	//回転速度
-	Vector3 rotationSpeed = {0.0f, 0.03f, 0.0f};
 	
-	//速度ベクトルを自機の向きに合わせて回転させる
-	rotationSpeed = TransformNormal(rotationSpeed, worldTransform_.matWorld_);
+	//回転速度
+	//Vector3 rotationSpeed = {0.0f, 0.03f, 0.0f};
+	//
+	////速度ベクトルを自機の向きに合わせて回転させる
+	//rotationSpeed = TransformNormal(rotationSpeed, worldTransform_.matWorld_);
 
-	worldTransform_.rotation_ += rotationSpeed;
+	//worldTransform_.rotation_ += rotationSpeed;
 
 	//--------------------------------
 	// 回転角度から位置を決める
 	//--------------------------------
+	
 	//円の半径
-	const float radius = 15.0f;
+	/*const float radius = 15.0f;
 
 	worldTransform_.translation_.x = radius * cos(worldTransform_.rotation_.y);
-	worldTransform_.translation_.z = radius * sin(worldTransform_.rotation_.y);
+	worldTransform_.translation_.z = radius * sin(worldTransform_.rotation_.y);*/
+
+	if (lockOn_ && lockOn_->ExistTarget()) {
+		// ロックオン座標
+		Vector3 lockOnPosition = lockOn_->GetTargetPosition();
+		// 追従対象からロックオン対象へのベクトル
+		Vector3 sub = lockOnPosition - worldTransform_.translation_;
+
+		// Y軸周り角度
+		worldTransform_.rotation_.y = std::atan2(sub.x, sub.z);
+	}
+
+	ImGui::Begin("Enemy");
+	ImGui::SliderFloat3("rotate", &worldTransform_.rotation_.x, -10.0f, 10.0f);
+	ImGui::End();
+
 }
 
 void Enemy::Attack() {

@@ -111,3 +111,10 @@ bool LockOnPlayer::OutsideSelectionRange(const ViewProjection& viewProjection) {
 	// 範囲外である
 	return true;
 }
+
+Vector3 LockOnPlayer::GetTargetPosition() const {
+	if (target_) {
+		return target_->GetCenterPosition();
+	}
+	return Vector3{};
+}

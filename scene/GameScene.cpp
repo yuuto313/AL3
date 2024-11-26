@@ -32,7 +32,7 @@ void GameScene::Initialize() {
 	modelFighterWeapon_.reset(Model::CreateFromOBJ("Hammer", true));
 
 	//敵
-	modelEnemy_.reset(Model::CreateFromOBJ("tdBoss", true));
+	modelEnemy_.reset(Model::CreateFromOBJ("Boss", true));
 	modelEnemyWeapon_.reset(Model::CreateFromOBJ("Weapon", true));
 
 	//天球のモデルを生成
@@ -119,6 +119,9 @@ void GameScene::Initialize() {
 	// それぞれのロックオンを設定
 	followCamera_->SetLockOn(lockOn_.get());
 	player_->SetLockOn(lockOn_.get());
+	for (std::list<std::unique_ptr<Enemy>>::iterator enemy = enemies_.begin(); enemy != enemies_.end(); ++enemy) {
+		(*enemy)->SetLockOn(lockOnPlayer_.get());
+	}
 	//--------------------------------
 	// 軸方向表示の使用
 	//--------------------------------

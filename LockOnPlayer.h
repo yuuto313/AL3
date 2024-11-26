@@ -44,6 +44,18 @@ public:
 	/// <returns></returns>
 	bool OutsideSelectionRange(const ViewProjection& viewProjection);
 
+	/// <summary>
+	/// 中心座標取得
+	/// </summary>
+	/// <returns></returns>
+	Vector3 GetTargetPosition() const;
+
+	/// <summary>
+	/// ロックオン中かどうか確認
+	/// </summary>
+	/// <returns></returns>
+	bool ExistTarget() const { return target_ ? true : false; }
+
 private:
 	// テクスチャ
 	uint32_t textureHandel_ = 0u;
