@@ -8,6 +8,10 @@
 void EnemyCanon::Initialize(Model* model, Enemy* enemy, const Vector3& velocity) { 
 
 	Collider::Initialize();
+	Collider::SetTranslate({5.0f, 0.0f, 0.0f});
+	// 種別IDの設定
+	Collider::SetTypeID(static_cast<uint32_t>(CollisionTypeIdDef::kEnemyCanon));
+	Collider::SetRadius(3.0f);
 
 	model_ = model;
 	enemy_ = enemy;
@@ -77,6 +81,7 @@ void EnemyCanon::Update() {
 
 	float height = 8.49f;
 
+
 	ImGui::Begin("Canon");
 	ImGui::SliderFloat("Height", &height, 0.0f, 10.0f);
 	ImGui::End();
@@ -97,6 +102,11 @@ void EnemyCanon::Draw(const ViewProjection& viewProjection) {
 
 }
 
+void EnemyCanon::Clear() {
+	// 接触履歴を抹消
+	contactRecord_.Clear();
+}
+
 Vector3 EnemyCanon::GetWorldPosition() {
 	// ワールド座標を入れる変数
 	Vector3 worldPos;
@@ -114,14 +124,25 @@ void EnemyCanon::OnCollision(Collider* other) {
 	// 衝突相手がプレイヤーなら
 	if (typeID == static_cast<uint32_t>(CollisionTypeIdDef::kPlayer)) {
 		Player* player = static_cast<Player*>(other);
+		uint32_t serialNumber = player->GetSerialNumber();
+
+		// 接触履歴があれば何もせず抜ける
+		if (contactRecord_.CheckHistory(serialNumber)) {
+			return;
+		}
+
+		// 接触履歴に追加
+		contactRecord_.AddRecord(serialNumber);
+
 		player->Reaction(damage_);
 	}
 }
 
 Vector3 EnemyCanon::GetCenterPosition() const { 
 	// ローカル座標でのオフセット
-	const Vector3 offset = {0.0f, 1.5f, 0.0f};
+	const Vector3 offset = {0.0f, 0.0f, 5.0f};
 	// ワールド座標に変換
 	Vector3 worldPos = Transform(offset, worldTransform_.matWorld_);
+
 	return worldPos;
 }

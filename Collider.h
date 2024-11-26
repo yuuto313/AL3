@@ -43,6 +43,16 @@ public:
 	/// <returns></returns>
 	float GetRadius() { return radius_; }
 
+	Vector3 GetScale() const { return worldTransform_.scale_; }
+
+	/// <summary>
+	/// 識別IDを取得
+	/// </summary>
+	/// <returns></returns>
+	uint32_t GetTypeID() const { return typeID_; }
+
+	Vector3 GetTranslation() const { return worldTransform_.translation_; }
+
 	/// <summary>
 	/// 半径を設定
 	/// </summary>
@@ -51,24 +61,18 @@ public:
 	void SetRadius(float radius) { radius_ = radius; }
 
 	/// <summary>
-	/// 識別IDを取得
-	/// </summary>
-	/// <returns></returns>
-	uint32_t GetTypeID() const { return typeID_; }
-
-	/// <summary>
 	/// 識別IDを設定
 	/// </summary>
 	/// <param name="typeID"></param>
 	void SetTypeID(uint32_t typeID) { typeID_ = typeID; }
-
-	Vector3 GetScale() const { return worldTransform_.scale_; }
 
 	/// <summary>
 	/// 拡縮を設定
 	/// </summary>
 	/// <param name="scale"></param>
 	void SetScale(const Vector3& scale) { worldTransform_.scale_ = scale; }
+
+	void SetTranslate(const Vector3& translate) { worldTransform_.translation_ = translate; }
 
 private:
 	//衝突判定

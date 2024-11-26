@@ -1,6 +1,7 @@
 #pragma once
 #include "WorldTransform.h"
 #include "Collider.h"
+#include "CollisionRecord.h"
 #include <Model.h>
 
 class Enemy;
@@ -26,6 +27,11 @@ public:
 	/// 描画
 	/// </summary>
 	void Draw(const ViewProjection& viewProjection);
+
+	/// <summary>
+	/// 接触履歴を抹消
+	/// </summary>
+	void Clear();
 
 	/// <summary>
 	/// デスフラグゲッター
@@ -64,6 +70,8 @@ private:
 
 	Enemy* enemy_ = nullptr;
 	Player* player_ = nullptr;
+
+	CollisionRecord contactRecord_;
 
 	// 速度
 	Vector3 velocity_ = {};

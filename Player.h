@@ -86,25 +86,26 @@ public:
 	void UpdateFloatingGimmick();
 
 	/// <summary>
+	/// 衝突を検出したら呼び出されるコールバック関数
+	/// </summary>
+	void OnCollision([[maybe_unused]] Collider* other) override;
+
+	/// <summary>
+	/// 衝突時のリアクション
+	/// </summary>
+	void Reaction(uint32_t damage);
+
+	/// <summary>
 	/// 自キャラのWorldTransformを取得する
 	/// </summary>
 	/// <returns></returns>
-	const WorldTransform& GetWorldTransform() { return worldTransform_; }
+	const WorldTransform& GetWorldTransform() { return worldTransform_;}
+
 	/// <summary>
 	/// 自キャラのWorldTransformを取得する
 	/// </summary>
 	/// <returns></returns>
 	const ViewProjection* GetViewProjection() { return cameraViewProjection_; }
-	/// <summary>
-	/// 振る舞いを設定
-	/// </summary>
-	/// <param name="behavior"></param>
-	void SetBehavior(Behavior behavior) { behaviorRequest_ = behavior; }
-	/// <summary>
-	/// ロックオンセッター
-	/// </summary>
-	/// <param name="lockOn"></param>
-	void SetLockOn(LockOn* lockOn) { lockOn_ = lockOn; }
 
 	/// <summary>
 	/// 中心座標取得
@@ -119,20 +120,28 @@ public:
 	Vector3 GetWorldPosition();
 
 	/// <summary>
-	/// 衝突を検出したら呼び出されるコールバック関数
-	/// </summary>
-	void OnCollision([[maybe_unused]] Collider* other) override;
-
-	/// <summary>
-	/// 衝突時のリアクション
-	/// </summary>
-	void Reaction(uint32_t damage);
-
-	/// <summary>
 	/// ハンマーのゲッター
 	/// </summary>
 	/// <returns></returns>
 	Hammer* GetHammer() { return hammer_.get(); }
+
+	/// <summary>
+	/// シリアルナンバーゲッター
+	/// </summary>
+	/// <returns></returns>
+	uint32_t GetSerialNumber() const { return serialNumber_; }
+
+	/// <summary>
+	/// 振る舞いを設定
+	/// </summary>
+	/// <param name="behavior"></param>
+	void SetBehavior(Behavior behavior) { behaviorRequest_ = behavior; }
+
+	/// <summary>
+	/// ロックオンセッター
+	/// </summary>
+	/// <param name="lockOn"></param>
+	void SetLockOn(LockOn* lockOn) { lockOn_ = lockOn; }
 
 private:
 
@@ -161,6 +170,11 @@ private:
 	//カメラのビュープロジェクション
 	const ViewProjection* cameraViewProjection_ = nullptr;
 
+	// 個々のシリアルナンバー
+	uint32_t serialNumber_ = 0;
+
+	// 次のシリアルナンバー
+	static uint32_t nextSerialNumber_;
 
 	//浮遊ギミックの媒介変数
 	float floatingParameter_ = 0.0f;

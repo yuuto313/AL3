@@ -4,7 +4,14 @@
 #include "LockOn.h"
 #include "CollisionTypeIdDef.h"
 
-Player::Player() {}
+uint32_t Player::nextSerialNumber_ = 0;
+
+Player::Player() { 
+	// シリアル番号を振る
+	serialNumber_ = nextSerialNumber_;
+	// 次番号を1加算
+	++nextSerialNumber_;
+}
 
 Player::~Player() {}
 
