@@ -160,6 +160,8 @@ void Player::BehaviorRootUpdate() {
 	ImGui::SliderInt("floatingCycle", &floatingCycle_, -10, 10);
 	ImGui::SliderFloat("floatingAmplitude", &amplitude_, -10.0f, 10.0f);
 
+	ImGui::Text("HP : %d", health_);
+
 	ImGui::End();
 }
 
@@ -399,6 +401,10 @@ void Player::OnCollision([[maybe_unused]] Collider* other) {
 		behaviorRequest_ = Behavior::kJump;
 	}
 	
+}
+
+void Player::Reaction(uint32_t damage) { 
+	health_ = health_ - damage;
 }
 
 

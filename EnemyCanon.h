@@ -1,5 +1,6 @@
 #pragma once
 #include "WorldTransform.h"
+#include "Collider.h"
 #include <Model.h>
 
 class Enemy;
@@ -8,7 +9,7 @@ class Player;
 /// <summary>
 /// 敵の攻撃
 /// </summary>
-class EnemyCanon {
+class EnemyCanon final : public Collider{
 public:
 
 	/// <summary>
@@ -38,7 +39,24 @@ public:
 	/// <returns></returns>
 	Vector3 GetWorldPosition();
 
+	/// <summary>
+	/// 親子関係を結ぶ
+	/// </summary>
+	/// <param name="parent"></param>
+	void SetParent(const WorldTransform* parent) { worldTransform_.parent_ = parent; }
+
 	void SetPlayer(Player* player) { player_ = player; }
+
+	/// <summary>
+	/// 衝突を検出したら呼び出される
+	/// </summary>
+	void OnCollision([[maybe_unused]] Collider* other) override;
+
+	/// <summary>
+	/// 中心座標取得
+	/// </summary>
+	/// <returns></returns>
+	Vector3 GetCenterPosition() const override;
 
 private:
 	Model* model_ = nullptr;
@@ -46,8 +64,6 @@ private:
 
 	Enemy* enemy_ = nullptr;
 	Player* player_ = nullptr;
-
-	uint32_t textureHandel_;
 
 	// 速度
 	Vector3 velocity_ = {};
@@ -59,5 +75,6 @@ private:
 	// デスフラグ
 	bool isDead_ = false;
 
+	uint32_t damage_ = 50;
 
 };

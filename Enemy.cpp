@@ -14,12 +14,6 @@ Enemy::Enemy() {
 }
 
 Enemy::~Enemy() {
-	for (EnemyCanon* canon : canons_) {
-		delete canon;
-	}
-
-	canons_.clear();
-
 }
 
 void Enemy::Initialize(const std::vector<Model*>& models) { 
@@ -59,10 +53,6 @@ void Enemy::Update() {
 
 	Attack();
 
-	for (EnemyCanon* canon_ : canons_) {
-		canon_->Update();
-	}
-
 	//--------------------------------
 	// ワールド行列の更新
 	//--------------------------------
@@ -74,34 +64,14 @@ void Enemy::Update() {
 void Enemy::Draw(const ViewProjection& viewProjection) { 
 	models_[0]->Draw(worldTransform_, viewProjection);
 
-	for (EnemyCanon* canon : canons_) {
-		canon->Draw(viewProjection);
+	if (canon_) {
+		canon_->Draw(viewProjection);
 	}
 
 }
 
 void Enemy::Movement() { 
-	//--------------------------------
-	//  回転処理
-	//--------------------------------
 	
-	//回転速度
-	//Vector3 rotationSpeed = {0.0f, 0.03f, 0.0f};
-	//
-	////速度ベクトルを自機の向きに合わせて回転させる
-	//rotationSpeed = TransformNormal(rotationSpeed, worldTransform_.matWorld_);
-
-	//worldTransform_.rotation_ += rotationSpeed;
-
-	//--------------------------------
-	// 回転角度から位置を決める
-	//--------------------------------
-	
-	//円の半径
-	/*const float radius = 15.0f;
-
-	worldTransform_.translation_.x = radius * cos(worldTransform_.rotation_.y);
-	worldTransform_.translation_.z = radius * sin(worldTransform_.rotation_.y);*/
 
 	if (lockOn_ && lockOn_->ExistTarget()) {
 		// ロックオン座標
@@ -122,13 +92,6 @@ void Enemy::Movement() {
 void Enemy::Attack() {
 	
 	// デスフラグが立った大砲を削除
-	canons_.remove_if([](EnemyCanon* canon) {
-		if (canon->IsDead()) {
-			delete canon;
-			return true;
-		}
-		return false;
-	});
 
 	// 球の速度
 	const float kBulletSpeed = -1.0f;
@@ -152,17 +115,12 @@ void Enemy::Attack() {
 	float deltaTime = 1.0f / 60.0f;
 
 	coolTime_ -= deltaTime;
-
-	if (coolTime_ <= 0.0f) {
-		EnemyCanon* newCanon = new EnemyCanon();
-		newCanon->Initialize(models_[1], this, velocity);
-		newCanon->SetPlayer(player_);
-
-		// 弾を登録する
-		canons_.push_back(newCanon);
-
-		coolTime_ = 3.0f;
+	if (!canon_) {
+		canon_ = std::make_unique<EnemyCanon>();
+		canon_->Initialize(models_[1], this, velocity);
+		canon_->SetPlayer(player_);	
 	}
+	canon_->Update();
 
 }
 

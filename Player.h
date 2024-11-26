@@ -122,6 +122,12 @@ public:
 	/// 衝突を検出したら呼び出されるコールバック関数
 	/// </summary>
 	void OnCollision([[maybe_unused]] Collider* other) override;
+
+	/// <summary>
+	/// 衝突時のリアクション
+	/// </summary>
+	void Reaction(uint32_t damage);
+
 	/// <summary>
 	/// ハンマーのゲッター
 	/// </summary>
@@ -168,4 +174,6 @@ private:
 
 	//速度
 	Vector3 velocity_ = {};
+
+	uint32_t health_ = 100;
 };

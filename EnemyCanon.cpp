@@ -1,4 +1,5 @@
 #include "EnemyCanon.h"
+#include "CollisionTypeIdDef.h"
 #include "TextureManager.h"
 #include "ImGuiManager.h"
 #include "Enemy.h"
@@ -6,11 +7,11 @@
 
 void EnemyCanon::Initialize(Model* model, Enemy* enemy, const Vector3& velocity) { 
 
+	Collider::Initialize();
+
 	model_ = model;
 	enemy_ = enemy;
 	velocity_ = velocity;
-
-	textureHandel_ = TextureManager::Load("white1x1.png");
 
 	worldTransform_.Initialize();
 	//　敵の中心座標を取得
@@ -26,6 +27,11 @@ void EnemyCanon::Initialize(Model* model, Enemy* enemy, const Vector3& velocity)
 
 	// X軸周りの回転角度(θx)を計算
 	worldTransform_.rotation_.x = std::atan2(-velocity_.y, velocityXZ);
+
+	// 種別IDの設定
+	Collider::SetTypeID(static_cast<uint32_t>(CollisionTypeIdDef::kEnemyCanon));
+
+	Collider::SetRadius(3.0f);
 
 }
 
@@ -87,7 +93,7 @@ void EnemyCanon::Update() {
 
 void EnemyCanon::Draw(const ViewProjection& viewProjection) {
 
-	model_->Draw(worldTransform_, viewProjection, textureHandel_);
+	model_->Draw(worldTransform_, viewProjection);
 
 }
 
@@ -99,5 +105,23 @@ Vector3 EnemyCanon::GetWorldPosition() {
 	worldPos.y = worldTransform_.matWorld_.m[3][1];
 	worldPos.z = worldTransform_.matWorld_.m[3][2];
 
+	return worldPos;
+}
+
+void EnemyCanon::OnCollision(Collider* other) {
+	// 衝突相手の種別IDを取得
+	uint32_t typeID = other->GetTypeID();
+	// 衝突相手がプレイヤーなら
+	if (typeID == static_cast<uint32_t>(CollisionTypeIdDef::kPlayer)) {
+		Player* player = static_cast<Player*>(other);
+		player->Reaction(damage_);
+	}
+}
+
+Vector3 EnemyCanon::GetCenterPosition() const { 
+	// ローカル座標でのオフセット
+	const Vector3 offset = {0.0f, 1.5f, 0.0f};
+	// ワールド座標に変換
+	Vector3 worldPos = Transform(offset, worldTransform_.matWorld_);
 	return worldPos;
 }

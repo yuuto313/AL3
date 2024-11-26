@@ -3,9 +3,8 @@
 #include "Model.h"
 #include "WorldTransform.h"
 #include "ViewProjection.h"
-#include <list>
-
 #include "EnemyCanon.h"
+#include <list>
 
 class Player;
 class LockOnPlayer;
@@ -47,6 +46,8 @@ public:
 	/// </summary>
 	void Reaction();
 
+	EnemyCanon* GetCanon() { return canon_.get(); }
+
 	/// <summary>
 	/// 敵のWorldTransformを取得する
 	/// </summary>
@@ -84,11 +85,12 @@ private:
 	//次のシリアルナンバー
 	static uint32_t nextSerialNumber_;
 
-	std::list<EnemyCanon*> canons_;
 	float coolTime_ = 3.0f;
 
 	// 自キャラ
 	Player* player_ = nullptr;
+
+	std::unique_ptr<EnemyCanon> canon_;
 
 	// ロックオン
 	LockOnPlayer* lockOn_ = nullptr;

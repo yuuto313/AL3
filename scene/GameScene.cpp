@@ -278,6 +278,7 @@ void GameScene::CheckAllCollsions() {
 	//敵すべてに対して
 	for (const std::unique_ptr<Enemy>& enemy : enemies_) {
 		collisionManager_->AddCollider(enemy.get());
+		collisionManager_->AddCollider(enemy->GetCanon());
 	}
 
 	//衝突判定と応答
